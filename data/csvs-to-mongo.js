@@ -55,7 +55,7 @@ function mongoImport (filePath, Model, batchSize) {
         counter ++;
 
         stream.pause();
-        doc = rowToObj(row, Model.schema.obj);
+        var doc = rowToObj(row, Model.schema.obj);
         bulk.insert(doc);
 
         if (counter%batchSize!=0) {
