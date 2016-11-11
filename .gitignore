@@ -1,3 +1,8 @@
+# Charity Commission data
+*.zip
+*.bcp
+*.csv
+
 sftp-config.json
 
 .DS_Store
