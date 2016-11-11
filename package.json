@@ -1,0 +1,17 @@
+{
+  "name": "open-charities",
+  "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tithebarn/open-charities.git"
+  },
+  "dependencies": {
+    "adm-zip": "^0.4.7",
+    "command-line-args": "^3.0.2",
+    "fast-csv": "^2.3.0",
+    "mongoose": "^4.6.6",
+    "mongoose-write-stream": "0.0.0",
+    "request": "^2.78.0",
+  }
+}
