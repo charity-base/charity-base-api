@@ -1,8 +1,8 @@
 var fs = require('fs');
 var csv = require("fast-csv");
-var ccModels = require("./models/cc-extract.js");
 var mongoose = require('mongoose');
 var mongooseWriteStream = require('mongoose-write-stream');
+var ccModels = require("./models/cc-extract.js")(mongoose);
 var commandLineArgs = require('command-line-args');
 
 

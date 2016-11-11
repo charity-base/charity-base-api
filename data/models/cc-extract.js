@@ -1,9 +1,8 @@
-var mongoose = require('mongoose');
 
-var schemas = { "v0.1": {} };
 
-// Schemas defined at http://data.charitycommission.gov.uk/data-definition.aspx
+// Using th schemas defined at http://data.charitycommission.gov.uk/data-definition.aspx
 // Comments are taken from the same webpage but are not very accurate
+var schemas = { "v0.1": {} };
 
 schemas["v0.1"].extract_acct_submit = {
   "regno"       : String,
@@ -285,20 +284,25 @@ schemas["v0.1"].extract_trustee = {
 };
 
 
-var ccModels = {};
-for (var version in schemas) {
-  if (schemas.hasOwnProperty(version)) {
-    ccModels[version] = {};
-    for (var collectionName in schemas[version]) {
-      if (schemas[version].hasOwnProperty(collectionName)) {
-        var Schema = new mongoose.Schema(schemas[version][collectionName], {
-          timestamps: true,
-          collection: collectionName
-        });        
-        ccModels[version][collectionName] = mongoose.model(collectionName, Schema);
+function getModels (mongoose, connection) {
+  var modelCreator = (typeof connection !== 'undefined') ? connection : mongoose;
+  var ccModels = {};
+  for (var version in schemas) {
+    if (schemas.hasOwnProperty(version)) {
+      ccModels[version] = {};
+      for (var collectionName in schemas[version]) {
+        if (schemas[version].hasOwnProperty(collectionName)) {
+          var Schema = new mongoose.Schema(schemas[version][collectionName], {
+            timestamps: true,
+            collection: collectionName
+          });
+          ccModels[version][collectionName] = modelCreator.model(collectionName, Schema);
+        }
       }
     }
   }
+  return ccModels;
 }
 
-module.exports = ccModels;
+
+module.exports = getModels;
