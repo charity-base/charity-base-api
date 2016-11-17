@@ -1,13 +1,6 @@
 # open-charities
 
 ----
-## Update 11 November 2016
-Over the next week, the following will be added to the repository:
-
-* A method for converting the Charity Commission's 15 schemas into one database collection.
-* An API for querying the database.
-* An example UI for creating a charity search web app.
-
 
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
@@ -83,4 +76,21 @@ e.g. to write to a new database called 'my-new-database'
 
 ```bash
 $ node csvs-to-mongo.js --dbName my-new-database
+```
+
+### merge-extracts.js
+Merges the 15 collections in database 'cc-register' into a single collection in a new database 'open-charities'.  Makes use of the models and schema conversion defined in `open-charities/data/models`.
+
+Optional flags:
+
+Option              |    Default            | Description
+---                 | ---                   | ---
+`--ccExtractDb`     |    `cc-register`      | Name of database containing cc extract collections.
+`--openCharitiesDb` |    `open-charities`   | Name of new database to write to.
+`--batchSize`       |    `10000`            | Sets limit of object size to prevent memory issues.
+
+e.g.
+
+```bash
+$ node merge-extracts.js
 ```
