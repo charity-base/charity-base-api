@@ -5,14 +5,14 @@
 var schemas = { "v0.1": {} };
 
 schemas["v0.1"].extract_acct_submit = {
+  // regno integer null  registered number of a charity
   "regno"       : String,
-  // integer null  registered number of a charity
+  // submit_date smalldatetime null  date submitted
   "submit_date" : String,
-  // smalldatetime null  date submitted
+  // arno char(4) not null  annual return mailing cycle code
   "arno"        : String,
-  // char(4) not null  annual return mailing cycle code
+  // fyend varchar(4)  null  Charity’s financial year end date (may be blank)
   "fyend"       : String,
-  // varchar(4)  null  Charity’s financial year end date (may be blank)
 };
 
 schemas["v0.1"].extract_aoo_ref = {
@@ -296,6 +296,13 @@ function getModels (mongoose, connection) {
             timestamps: true,
             collection: collectionName
           });
+          if (Schema.obj.hasOwnProperty('regno')) {
+            var index = { regno : 1 };
+            if (Schema.obj.hasOwnProperty('subno')) {
+              index.subno = 1;
+            }
+            Schema.index(index);
+          }
           ccModels[version][collectionName] = modelCreator.model(collectionName, Schema);
         }
       }
