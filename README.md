@@ -30,6 +30,7 @@ The data directory contains several scripts for constructing a database of chari
 
 ### download-register.js
 Downloads the register of charities from the [Charity Commission](http://data.charitycommission.gov.uk/) (generally updated monthly).  It takes ~1 minute to download the register which should be a zipped directory of .bcp files (it's not necessary to unzip this - see `zip-to-csvs.js`).
+The data download contains public sector information licensed under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
 
 Optional flags:
 
