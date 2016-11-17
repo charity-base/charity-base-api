@@ -8,10 +8,12 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "body-parser": "^1.15.2",
     "command-line-args": "^3.0.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
     "fast-csv": "^2.3.0",
     "mongoose": "^4.6.6",
-    "mongoose-write-stream": "0.0.0",
-    "request": "^2.78.0",
+    "request": "^2.78.0"
   }
 }

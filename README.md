@@ -1,13 +1,6 @@
 # open-charities
 
 ----
-## Update 11 November 2016
-Over the next week, the following will be added to the repository:
-
-* A method for converting the Charity Commission's 15 schemas into one database collection.
-* An API for querying the database.
-* An example UI for creating a charity search web app.
-
 
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
@@ -30,18 +23,21 @@ To install the dependencies, navigate to the open-charities directory and run:
 $ npm install
 ```
 
+----
+
 ## open-charities/data
 The data directory contains several scripts for constructing a database of charities registered in England & Wales.  To run these scripts, navigate to the open-charities/data directory on the command line.
 
 ### download-register.js
 Downloads the register of charities from the [Charity Commission](http://data.charitycommission.gov.uk/) (generally updated monthly).  It takes ~1 minute to download the register which should be a zipped directory of .bcp files (it's not necessary to unzip this - see `zip-to-csvs.js`).
+The data download contains public sector information licensed under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
 
 Optional flags:
 
 Option       |    Default              | Description
 ---          | ---                     | ---
 `--year`     |    `2016`               | Four digit year of register.
-`--month`    |    `10`                 | Two digit numbered month of register.
+`--month`    |    `11`                 | Two digit numbered month of register.
 `--url`      |    *no default*         | Specify file to download (overrides year & month options).
 `--out`      |    `./cc-register.zip`  | Path of file to write to.
 
@@ -84,3 +80,25 @@ e.g. to write to a new database called 'my-new-database'
 ```bash
 $ node csvs-to-mongo.js --dbName my-new-database
 ```
+
+### merge-extracts.js
+Merges the 15 collections in database 'cc-register' into a single collection in a new database 'open-charities'.  Makes use of the models and schema conversion defined in `open-charities/data/models`.
+
+Optional flags:
+
+Option              |    Default            | Description
+---                 | ---                   | ---
+`--ccExtractDb`     |    `cc-register`      | Name of database containing cc extract collections.
+`--openCharitiesDb` |    `open-charities`   | Name of new database to write to.
+`--batchSize`       |    `10000`            | Sets limit of object size to prevent memory issues.
+
+e.g.
+
+```bash
+$ node merge-extracts.js
+```
+
+----
+
+## open-charities/api
+Documentation coming soon...

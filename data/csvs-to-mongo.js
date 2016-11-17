@@ -1,8 +1,7 @@
 var fs = require('fs');
 var csv = require("fast-csv");
-var ccModels = require("./models/cc-extract.js");
 var mongoose = require('mongoose');
-var mongooseWriteStream = require('mongoose-write-stream');
+var ccModels = require("./models/cc-extract.js")(mongoose);
 var commandLineArgs = require('command-line-args');
 
 
@@ -22,7 +21,6 @@ function tDiff (tStart) {
 
 function connectToDb (dbName) {
   mongoose.connect("mongodb://localhost:27017/"+dbName, {config: { autoIndex: true }});
-  mongoose.plugin(mongooseWriteStream);
   return mongoose.connection;
 }
 
@@ -57,7 +55,7 @@ function mongoImport (filePath, Model, batchSize) {
         counter ++;
 
         stream.pause();
-        doc = rowToObj(row, Model.schema.obj);
+        var doc = rowToObj(row, Model.schema.obj);
         bulk.insert(doc);
 
         if (counter%batchSize!=0) {

@@ -7,7 +7,7 @@ function validateOptions () {
     { name: 'url', type: String, defaultValue : null },
     { name: 'out', type: String, defaultValue : './cc-register.zip' },
     { name: 'year', type: String, defaultValue : '2016' },
-    { name: 'month', type: String, defaultValue : '10' }
+    { name: 'month', type: String, defaultValue : '11' }
   ]);
 
   return options;

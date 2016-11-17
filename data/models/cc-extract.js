@@ -1,19 +1,18 @@
-var mongoose = require('mongoose');
 
+
+// Using th schemas defined at http://data.charitycommission.gov.uk/data-definition.aspx
+// Comments are taken from the same webpage but are not very accurate
 var schemas = { "v0.1": {} };
 
-// Schemas defined at http://data.charitycommission.gov.uk/data-definition.aspx
-// Comments are taken from the same webpage but are not very accurate
-
 schemas["v0.1"].extract_acct_submit = {
+  // regno integer null  registered number of a charity
   "regno"       : String,
-  // integer null  registered number of a charity
+  // submit_date smalldatetime null  date submitted
   "submit_date" : String,
-  // smalldatetime null  date submitted
+  // arno char(4) not null  annual return mailing cycle code
   "arno"        : String,
-  // char(4) not null  annual return mailing cycle code
+  // fyend varchar(4)  null  Charity’s financial year end date (may be blank)
   "fyend"       : String,
-  // varchar(4)  null  Charity’s financial year end date (may be blank)
 };
 
 schemas["v0.1"].extract_aoo_ref = {
@@ -285,20 +284,32 @@ schemas["v0.1"].extract_trustee = {
 };
 
 
-var ccModels = {};
-for (var version in schemas) {
-  if (schemas.hasOwnProperty(version)) {
-    ccModels[version] = {};
-    for (var collectionName in schemas[version]) {
-      if (schemas[version].hasOwnProperty(collectionName)) {
-        var Schema = new mongoose.Schema(schemas[version][collectionName], {
-          timestamps: true,
-          collection: collectionName
-        });        
-        ccModels[version][collectionName] = mongoose.model(collectionName, Schema);
+function getModels (mongoose, connection) {
+  var modelCreator = (typeof connection !== 'undefined') ? connection : mongoose;
+  var ccModels = {};
+  for (var version in schemas) {
+    if (schemas.hasOwnProperty(version)) {
+      ccModels[version] = {};
+      for (var collectionName in schemas[version]) {
+        if (schemas[version].hasOwnProperty(collectionName)) {
+          var Schema = new mongoose.Schema(schemas[version][collectionName], {
+            timestamps: true,
+            collection: collectionName
+          });
+          if (Schema.obj.hasOwnProperty('regno')) {
+            var index = { regno : 1 };
+            if (Schema.obj.hasOwnProperty('subno')) {
+              index.subno = 1;
+            }
+            Schema.index(index);
+          }
+          ccModels[version][collectionName] = modelCreator.model(collectionName, Schema);
+        }
       }
     }
   }
+  return ccModels;
 }
 
-module.exports = ccModels;
+
+module.exports = getModels;
