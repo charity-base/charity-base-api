@@ -23,6 +23,8 @@ To install the dependencies, navigate to the open-charities directory and run:
 $ npm install
 ```
 
+----
+
 ## open-charities/data
 The data directory contains several scripts for constructing a database of charities registered in England & Wales.  To run these scripts, navigate to the open-charities/data directory on the command line.
 
@@ -94,3 +96,8 @@ e.g.
 ```bash
 $ node merge-extracts.js
 ```
+
+----
+
+## open-charities/api
+Documentation coming soon...
