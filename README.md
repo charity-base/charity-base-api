@@ -41,7 +41,7 @@ Optional flags:
 Option       |    Default              | Description
 ---          | ---                     | ---
 `--year`     |    `2016`               | Four digit year of register.
-`--month`    |    `10`                 | Two digit numbered month of register.
+`--month`    |    `11`                 | Two digit numbered month of register.
 `--url`      |    *no default*         | Specify file to download (overrides year & month options).
 `--out`      |    `./cc-register.zip`  | Path of file to write to.
 
