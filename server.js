@@ -1,7 +1,6 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    session = require('express-session'),
     mongoose = require('mongoose'),
     fs = require('fs'),
     https = require('https'),
@@ -9,9 +8,6 @@ var express = require('express'),
     config = require('./api/config/config')();
 
 mongoose.connect(config.mongo.address, { config: config.mongo.config });
-
-// configure the environment and API credentials
-app.use(session({ secret: config.sessionSecret }));
 
 
 // Use middleware to inject bodyparser

@@ -10,7 +10,6 @@ module.exports = function () {
       certificateFile: null,
       intermediateFile: null,
     },
-    sessionSecret: "example-session-secret",
     baseUrl: function() {
       if (this.ssl.runHttps) {
         return "https://" + this.domain + ":" + this.ssl.listenPort;
