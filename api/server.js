@@ -4,8 +4,8 @@ var express = require('express'),
     mongoose = require('mongoose'),
     fs = require('fs'),
     https = require('https'),
-    charityController = require('./api/controllers/charity-controller'),
-    config = require('./api/config/config')();
+    charityController = require('./controllers/charity-controller'),
+    config = require('./config/config')();
 
 mongoose.connect(config.mongo.address, { config: config.mongo.config });
 
