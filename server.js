@@ -13,7 +13,6 @@ mongoose.connect(config.mongo.address, { config: config.mongo.config });
 // Use middleware to inject bodyparser
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use('/', express.static(__dirname + '/'));
 
 if (config.ssl.runHttps) {
   // redirect http requests
