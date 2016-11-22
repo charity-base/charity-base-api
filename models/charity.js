@@ -126,7 +126,8 @@ function createSchema (mongoose) {
       remDate : Date,
       remCode : String
     }],
-    trustees : [String]
+    trustees : [String],
+    supplementary : {unexpectedError: Boolean, fyEnd:String, numbers:[Number]}
     // redundant:
     // aob_defined : String,
     // nhs : Boolean,

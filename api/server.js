@@ -1,23 +1,18 @@
 var express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
-    session = require('express-session'),
     mongoose = require('mongoose'),
     fs = require('fs'),
     https = require('https'),
-    charityController = require('./api/controllers/charity-controller'),
-    config = require('./api/config/config')();
+    charityController = require('./controllers/charity-controller'),
+    config = require('./config/config')();
 
 mongoose.connect(config.mongo.address, { config: config.mongo.config });
-
-// configure the environment and API credentials
-app.use(session({ secret: config.sessionSecret }));
 
 
 // Use middleware to inject bodyparser
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use('/', express.static(__dirname + '/'));
 
 if (config.ssl.runHttps) {
   // redirect http requests

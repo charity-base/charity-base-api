@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Charity = require('../../data/models/charity')(mongoose);
+var Charity = require('../../models/charity')(mongoose);
 
 
 module.exports.getCharities = function (req, res) {

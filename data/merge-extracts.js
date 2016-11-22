@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var getCcModels = require("./models/cc-extract.js");
-var getOpenModel = require("./models/charity.js");
-var schemaConversion = require('./models/schema-conversion');
+var getCcModels = require("../models/cc-extract.js");
+var getOpenModel = require("../models/charity.js");
+var schemaConversion = require('./utils/schema-conversion.js');
 var commandLineArgs = require('command-line-args');
 
 function validateOptions () {
