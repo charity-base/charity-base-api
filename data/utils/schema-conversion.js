@@ -1,11 +1,11 @@
-var textFormatting = require('./formatting.js');
+var tF = require('./formatting.js');
 
 function findQuery (ccExtractObj) {
   var query = {};
-  query.charityNumber = textFormatting.parseNumber(ccExtractObj.regno);
+  query.charityNumber = tF.parseNumber(ccExtractObj.regno);
   query.subNumber = 0;
   if (ccExtractObj.hasOwnProperty('subno')) {
-    query.subNumber = textFormatting.parseNumber(ccExtractObj.subno);
+    query.subNumber = tF.parseNumber(ccExtractObj.subno);
   }
   return query;
 }
@@ -14,9 +14,9 @@ var schemaConversion = {};
 
 schemaConversion.extract_charity = function (ccCharityObj, openCharitiesModel) {
   var charity = {
-    charityNumber : textFormatting.parseNumber(ccCharityObj.regno),
-    subNumber : textFormatting.parseNumber(ccCharityObj.subno),
-    name : textFormatting.titleCase(ccCharityObj.name),
+    charityNumber : tF.parseNumber(ccCharityObj.regno),
+    subNumber : tF.parseNumber(ccCharityObj.subno),
+    name : tF.titleCase(ccCharityObj.name),
     registered : {'R': true, 'RM': false}[ccCharityObj.orgtype],
     govDoc : ccCharityObj.gd,
     areaOfBenefit : ccCharityObj.aob,
@@ -43,8 +43,8 @@ schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesMod
     trustees: {'T': true, 'F': false}[ccExtractObj.trustees],
     fyEnd : ccExtractObj.fyend,
     welsh : {'T': true, 'F': false}[ccExtractObj.welsh],
-    incomeDate : textFormatting.parseDate(ccExtractObj.incomedate),
-    income : textFormatting.parseNumber(ccExtractObj.income),
+    incomeDate : tF.parseDate(ccExtractObj.incomedate),
+    income : tF.parseNumber(ccExtractObj.income),
     groupType : ccExtractObj.grouptype,
     email : ccExtractObj.email,
     website : ccExtractObj.web
@@ -55,7 +55,7 @@ schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesMod
 
 schemaConversion.extract_acct_submit = function (ccExtractObj, openCharitiesModel) {
   var submission = {
-    submitDate : textFormatting.parseDate(ccExtractObj.submit_date),
+    submitDate : tF.parseDate(ccExtractObj.submit_date),
     arno : ccExtractObj.arno,
     fyEnd : ccExtractObj.fyend
   };
@@ -65,7 +65,7 @@ schemaConversion.extract_acct_submit = function (ccExtractObj, openCharitiesMode
 
 schemaConversion.extract_ar_submit = function (ccExtractObj, openCharitiesModel) {
   var submission = {
-    submitDate : textFormatting.parseDate(ccExtractObj.submit_date),
+    submitDate : tF.parseDate(ccExtractObj.submit_date),
     arno : ccExtractObj.arno
   };
   var updateQuery = { '$push' : { returnSubmission : submission } };
@@ -75,26 +75,26 @@ schemaConversion.extract_ar_submit = function (ccExtractObj, openCharitiesModel)
 schemaConversion.extract_charity_aoo = function (ccExtractObj, openCharitiesModel) {
   var a = {
     aooType : ccExtractObj.aootype,
-    aooKey : textFormatting.parseNumber(ccExtractObj.aookey),
+    aooKey : tF.parseNumber(ccExtractObj.aookey),
     welsh : {'Y': true, 'N': false}[ccExtractObj.welsh],
-    master : textFormatting.parseNumber(ccExtractObj.master)
+    master : tF.parseNumber(ccExtractObj.master)
   };
   var updateQuery = { '$push' : { areaOfOperation : a } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
 schemaConversion.extract_class = function (ccExtractObj, openCharitiesModel) {
-  var c = textFormatting.parseNumber(ccExtractObj.class);
+  var c = tF.parseNumber(ccExtractObj.class);
   var updateQuery = { '$push' : { class : c } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
 schemaConversion.extract_financial = function (ccExtractObj, openCharitiesModel) {
   var f = {
-    fyStart : textFormatting.parseDate(ccExtractObj.fystart),
-    fyEnd : textFormatting.parseDate(ccExtractObj.fyend),
-    income : textFormatting.parseNumber(ccExtractObj.income),
-    spending : textFormatting.parseNumber(ccExtractObj.expend)
+    fyStart : tF.parseDate(ccExtractObj.fystart),
+    fyEnd : tF.parseDate(ccExtractObj.fyend),
+    income : tF.parseNumber(ccExtractObj.income),
+    spending : tF.parseNumber(ccExtractObj.expend)
   };
   var updateQuery = { '$push' : { financial : f } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
@@ -102,8 +102,8 @@ schemaConversion.extract_financial = function (ccExtractObj, openCharitiesModel)
 
 schemaConversion.extract_name = function (ccExtractObj, openCharitiesModel) {
   var n = {
-    name : textFormatting.titleCase(ccExtractObj.name),
-    nameId : textFormatting.parseNumber(ccExtractObj.nameno)
+    name : tF.titleCase(ccExtractObj.name),
+    nameId : tF.parseNumber(ccExtractObj.nameno)
   };
   var updateQuery = { '$push' : { otherNames : n } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
@@ -118,69 +118,69 @@ schemaConversion.extract_objects = function (ccExtractObj, openCharitiesModel) {
 schemaConversion.extract_partb = function (ccExtractObj, openCharitiesModel) {
   var b = {
     arno : ccExtractObj.artype,
-    fyStart : textFormatting.parseDate(ccExtractObj.fystart),
-    fyEnd : textFormatting.parseDate(ccExtractObj.fyend),
+    fyStart : tF.parseDate(ccExtractObj.fystart),
+    fyEnd : tF.parseDate(ccExtractObj.fyend),
     income : {
-      voluntary : textFormatting.parseNumber(ccExtractObj.inc_vol),
-      trading : textFormatting.parseNumber(ccExtractObj.inc_fr),
-      investment : textFormatting.parseNumber(ccExtractObj.inc_invest),
-      activities : textFormatting.parseNumber(ccExtractObj.inc_char),
-      other : textFormatting.parseNumber(ccExtractObj.inc_other),
-      total : textFormatting.parseNumber(ccExtractObj.inc_total),
+      voluntary : tF.parseNumber(ccExtractObj.inc_vol),
+      trading : tF.parseNumber(ccExtractObj.inc_fr),
+      investment : tF.parseNumber(ccExtractObj.inc_invest),
+      activities : tF.parseNumber(ccExtractObj.inc_char),
+      other : tF.parseNumber(ccExtractObj.inc_other),
+      total : tF.parseNumber(ccExtractObj.inc_total),
       unknown : {
-        inc_leg : textFormatting.parseNumber(ccExtractObj.inc_leg),
-        inc_end : textFormatting.parseNumber(ccExtractObj.inc_end)
+        inc_leg : tF.parseNumber(ccExtractObj.inc_leg),
+        inc_end : tF.parseNumber(ccExtractObj.inc_end)
       }
     },
     spending : {
-      voluntary : textFormatting.parseNumber(ccExtractObj.exp_vol),
-      trading : textFormatting.parseNumber(ccExtractObj.exp_trade),
-      activities : textFormatting.parseNumber(ccExtractObj.exp_charble),
-      governance : textFormatting.parseNumber(ccExtractObj.exp_gov),
-      invManagement : textFormatting.parseNumber(ccExtractObj.exp_invest),
-      other : textFormatting.parseNumber(ccExtractObj.exp_other),
-      total : textFormatting.parseNumber(ccExtractObj.exp_total),
+      voluntary : tF.parseNumber(ccExtractObj.exp_vol),
+      trading : tF.parseNumber(ccExtractObj.exp_trade),
+      activities : tF.parseNumber(ccExtractObj.exp_charble),
+      governance : tF.parseNumber(ccExtractObj.exp_gov),
+      invManagement : tF.parseNumber(ccExtractObj.exp_invest),
+      other : tF.parseNumber(ccExtractObj.exp_other),
+      total : tF.parseNumber(ccExtractObj.exp_total),
       unknown : {
-        exp_grant : textFormatting.parseNumber(ccExtractObj.exp_grant),
-        exp_support : textFormatting.parseNumber(ccExtractObj.exp_support),
-        exp_dep : textFormatting.parseNumber(ccExtractObj.exp_dep)
+        exp_grant : tF.parseNumber(ccExtractObj.exp_grant),
+        exp_support : tF.parseNumber(ccExtractObj.exp_support),
+        exp_dep : tF.parseNumber(ccExtractObj.exp_dep)
       }
     },
     assets : {
       fixed : {
-        investment : textFormatting.parseNumber(ccExtractObj.fixed_assets),
-        total : textFormatting.parseNumber(ccExtractObj.asset_close)
+        investment : tF.parseNumber(ccExtractObj.fixed_assets),
+        total : tF.parseNumber(ccExtractObj.asset_close)
       },
       current : {
-        cash : textFormatting.parseNumber(ccExtractObj.cash_assets),
-        investment : textFormatting.parseNumber(ccExtractObj.invest_assets),
-        total : textFormatting.parseNumber(ccExtractObj.current_assets)
+        cash : tF.parseNumber(ccExtractObj.cash_assets),
+        investment : tF.parseNumber(ccExtractObj.invest_assets),
+        total : tF.parseNumber(ccExtractObj.current_assets)
       },
       pension : {
-        total : textFormatting.parseNumber(ccExtractObj.pension_assets) // Can be +ve (asset) or -ve (liability)
+        total : tF.parseNumber(ccExtractObj.pension_assets) // Can be +ve (asset) or -ve (liability)
       },
       credit : {
-        oneYear : textFormatting.parseNegative(ccExtractObj.credit_1), // I think these should always be -ve (liability)
-        longTerm : textFormatting.parseNegative(ccExtractObj.credit_long),
+        oneYear : tF.parseNegative(ccExtractObj.credit_1), // I think these should always be -ve (liability)
+        longTerm : tF.parseNegative(ccExtractObj.credit_long),
         total : null
       },
-      net : textFormatting.parseNumber(ccExtractObj.total_assets),
+      net : tF.parseNumber(ccExtractObj.total_assets),
       unknown : {
-        invest_gain : textFormatting.parseNumber(ccExtractObj.invest_gain),
-        asset_gain : textFormatting.parseNumber(ccExtractObj.asset_gain),
-        pension_gain : textFormatting.parseNumber(ccExtractObj.pension_gain),
-        reserves : textFormatting.parseNumber(ccExtractObj.reserves)
+        invest_gain : tF.parseNumber(ccExtractObj.invest_gain),
+        asset_gain : tF.parseNumber(ccExtractObj.asset_gain),
+        pension_gain : tF.parseNumber(ccExtractObj.pension_gain),
+        reserves : tF.parseNumber(ccExtractObj.reserves)
       }
     },
     funds : {
-      endowment : textFormatting.parseNumber(ccExtractObj.funds_end),
-      restricted : textFormatting.parseNumber(ccExtractObj.funds_restrict),
-      unrestricted : textFormatting.parseNumber(ccExtractObj.funds_unrestrict),
-      total : textFormatting.parseNumber(ccExtractObj.funds_total)
+      endowment : tF.parseNumber(ccExtractObj.funds_end),
+      restricted : tF.parseNumber(ccExtractObj.funds_restrict),
+      unrestricted : tF.parseNumber(ccExtractObj.funds_unrestrict),
+      total : tF.parseNumber(ccExtractObj.funds_total)
     },
     people : {
-      employees : textFormatting.parseNumber(ccExtractObj.employees),
-      volunteers : textFormatting.parseNumber(ccExtractObj.volunteers)
+      employees : tF.parseNumber(ccExtractObj.employees),
+      volunteers : tF.parseNumber(ccExtractObj.volunteers)
     },
     consolidated : ['T', 'YES', 'ConsolidatedAccounts', 'CONSOLIDATEDACCOUNTS'].indexOf(ccExtractObj.cons_acc) > -1 || false,
     charityOnly : ['T', 'TRUE', 'YES', 'CharityOnlyAccounts'].indexOf(ccExtractObj.charity_acc) > -1 || false
@@ -194,8 +194,8 @@ schemaConversion.extract_partb = function (ccExtractObj, openCharitiesModel) {
 
 schemaConversion.extract_registration = function (ccExtractObj, openCharitiesModel) {
   var r = {
-    regDate : textFormatting.parseDate(ccExtractObj.regdate),
-    remDate : textFormatting.parseDate(ccExtractObj.remdate),
+    regDate : tF.parseDate(ccExtractObj.regdate),
+    remDate : tF.parseDate(ccExtractObj.remdate),
     remCode : ccExtractObj.remcode || null
   };
   var updateQuery = { '$push' : { registration : r } };
