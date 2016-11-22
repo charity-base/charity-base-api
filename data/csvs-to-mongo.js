@@ -1,7 +1,7 @@
 var fs = require('fs');
 var csv = require("fast-csv");
 var mongoose = require('mongoose');
-var ccModels = require("./models/cc-extract.js")(mongoose);
+var ccModels = require("../models/cc-extract.js")(mongoose);
 var commandLineArgs = require('command-line-args');
 
 
