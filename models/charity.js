@@ -23,7 +23,7 @@ function createSchema (mongoose) {
       income : Number,
       groupType : String,
       email : String,
-      web : String
+      website : String
     },
     accountSubmission : [{
       submitDate : Date,
