@@ -8,6 +8,21 @@ Make sure you have installed all of the following prerequisites on your developm
 * Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager. If you encounter any problems, you can also use this [GitHub Gist](https://gist.github.com/isaacs/579814) to install Node.js.
 * MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
 
+## Running on small machines
+These steps aren't essential but will help things run smoothly on computers without much memory.
+* Allocate swap space - This is good practice in general, and will prevent MongoDB from crashing on systems without much RAM (e.g. [Add swap on ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04))
+* Reduce WiredTiger cache - Since version 3.2, MongoDB uses the WiredTiger storage engine by default whose internal cache uses at least 1GB by default.  On smaller machines you should reduce this e.g. if you have 512MB RAM, reduce it to 200MB by including the following in the config file (usually found at /etc/mongod.conf)
+```bash
+storage:
+  wiredTiger:
+    engineConfig:
+      configString: "cache_size=200M"
+```
+After updating the config file, restart MongoDB on the command line:
+```bash
+$ sudo service mongod restart
+```
+
 ## Downloading open-charities
 The best way to get open-charities is with Git, which usually comes installed on Mac OSX and Linux computers.  On the command-line, navigate to the directory you want open-charities to live in and run:
 ```bash
