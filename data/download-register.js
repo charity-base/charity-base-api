@@ -23,6 +23,10 @@ function monthName (monthNumber) {
 }
 
 function generateUrl (year, month) {
+  if (month=='11') {
+    // The CC added '_2' into the url for the re-uploaded November register.
+    return 'http://apps.charitycommission.gov.uk/data/201611_2/extract1/RegPlusExtract_November_2016.zip';
+  }
   return 'http://apps.charitycommission.gov.uk/data/'+year+month+'/extract1/RegPlusExtract_'+monthName(Number(month))+'_'+year+'.zip';
 }
 
