@@ -12,30 +12,30 @@ function findQuery (ccExtractObj) {
 
 var schemaConversion = {};
 
-schemaConversion.extract_charity = function (ccCharityObj, openCharitiesModel) {
+schemaConversion.extract_charity = function (ccExtractObj, openCharitiesModel) {
   var charity = {
-    charityNumber : tF.parseNumber(ccCharityObj.regno),
-    subNumber : tF.parseNumber(ccCharityObj.subno),
-    name : tF.titleCase(ccCharityObj.name),
-    registered : {'R': true, 'RM': false}[ccCharityObj.orgtype],
-    govDoc : ccCharityObj.gd,
-    areaOfBenefit : ccCharityObj.aob,
+    charityNumber : tF.parseNumber(ccExtractObj.regno),
+    subNumber : tF.parseNumber(ccExtractObj.subno),
+    name : tF.titleCase(ccExtractObj.name),
+    registered : {'R': true, 'RM': false}[ccExtractObj.orgtype],
+    govDoc : ccExtractObj.gd,
+    areaOfBenefit : ccExtractObj.aob,
     contact : {
-      correspondant : ccCharityObj.corr,
-      phone : ccCharityObj.phone,
-      fax : ccCharityObj.fax,
+      correspondant : ccExtractObj.corr,
+      phone : ccExtractObj.phone,
+      fax : ccExtractObj.fax,
       address : [],
-      postcode : ccCharityObj.postcode
+      postcode : ccExtractObj.postcode
     }
   };
   var addressKeys = ['add1', 'add2', 'add3', 'add4', 'add5'];
   for (var i=0; i<addressKeys.length; i++) {
-    if (ccCharityObj[addressKeys[i]]) {
-      charity.contact.address.push(ccCharityObj[addressKeys[i]]);
+    if (ccExtractObj[addressKeys[i]]) {
+      charity.contact.address.push(ccExtractObj[addressKeys[i]]);
     }
   }
   var updateQuery = { '$set' : charity };
-  return openCharitiesModel.find(findQuery(ccCharityObj)).upsert().updateOne(updateQuery); // use replaceOne for clean update
+  return openCharitiesModel.find(findQuery(ccExtractObj)).upsert().updateOne(updateQuery); // use replaceOne for clean update
 };
 
 schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesModel) {
