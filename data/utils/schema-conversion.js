@@ -10,6 +10,15 @@ function findQuery (ccExtractObj) {
   return query;
 }
 
+function unsetQuery (query, unsetFields) {
+  if (unsetFields.length>0) {
+    query['$unset'] = {};
+    for (var i=0; i<unsetFields.length; i++) {
+      query['$unset'][unsetFields[i]] = true;
+    }
+  }
+}
+
 var schemaConversion = {};
 
 schemaConversion.extract_charity = function (ccExtractObj, openCharitiesModel) {
@@ -35,6 +44,8 @@ schemaConversion.extract_charity = function (ccExtractObj, openCharitiesModel) {
     }
   }
   var updateQuery = { '$set' : charity };
+  var unsetFields = [];
+  unsetQuery(updateQuery, unsetFields);
   return openCharitiesModel.find(findQuery(ccExtractObj)).upsert().updateOne(updateQuery);
 };
 
