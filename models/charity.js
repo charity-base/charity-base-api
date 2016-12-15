@@ -139,8 +139,9 @@ function createSchema (mongoose) {
     // },
 
   }, {
-    timestamps : true,
-    collection : 'charities'
+    collection : 'charities',
+    strict : true,
+    timestamps : true
   });
 
   charitySchema.index( { charityNumber : 1, subNumber : 1 }, { unique : true } );
