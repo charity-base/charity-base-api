@@ -144,11 +144,10 @@ function createSchema (mongoose) {
     timestamps : true
   });
 
-  charitySchema.index( { charityNumber : 1, subNumber : 1 }, { unique : true } );
-  charitySchema.index( { subNumber : 1 } );
-  charitySchema.index( { registered : 1 } );
-
-  charitySchema.index( { name: 'text' } );
+  charitySchema.index( { 'charityNumber' : 1, 'subNumber' : 1 }, { unique : true } );
+  charitySchema.index( { 'subNumber' : 1, 'registered' : 1 } );
+  charitySchema.index( { 'registered' : 1 } );
+  charitySchema.index( { 'name': 'text' } );
 
   return charitySchema;
 }
