@@ -22,12 +22,11 @@ function connectToDb (dbName) {
   return mongoose.createConnection(`mongodb://localhost:27017/${dbName}`, {config: { autoIndex: true }});
 }
 
-function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
+function addToModel (filterQuery, ccExtractModel, openCharitiesModel, update, batchSize) {
 
   return function () {
-
     var countPromise = new Promise(function(resolve, reject) {
-      ccExtractModel.count({}, function(err, count) {
+      ccExtractModel.count(filterQuery, function(err, count) {
         if (err) {
           console.log("Error counting documents.");
           reject(err);
@@ -48,7 +47,7 @@ function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
         var bulk = openCharitiesModel.collection.initializeOrderedBulkOp(),
             t0 = Date.now(),
             counter = 0,
-            stream = ccExtractModel.find().lean().cursor();
+            stream = ccExtractModel.find(filterQuery).lean().cursor();
 
         stream.on("data", function(doc) {
           counter ++;
@@ -125,7 +124,8 @@ function updateAll (ccExtractConn, openCharitiesConn, batchSize) {
     }
 
     var updateFunc = schemaConversion[extractName];
-    chain = chain.then(addToModel(extracts[extractName], openCharity, updateFunc, batchSize));
+    var filterQuery = {}; // To select specific charities to update E.g. filterQuery = { regno : '200000' };
+    chain = chain.then(addToModel(filterQuery, extracts[extractName], openCharity, updateFunc, batchSize));
   }
 
   chain.then(function() {
