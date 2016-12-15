@@ -44,6 +44,7 @@ function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
           return resolve();
         }
 
+        // Warning: bulk operations do not take notice of schema options e.g. { strict : true }
         var bulk = openCharitiesModel.collection.initializeOrderedBulkOp(),
             t0 = Date.now(),
             counter = 0,
