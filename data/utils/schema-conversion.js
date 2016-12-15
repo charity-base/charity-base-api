@@ -34,7 +34,8 @@ schemaConversion.extract_charity = function (ccCharityObj, openCharitiesModel) {
       charity.contact.address.push(ccCharityObj[addressKeys[i]]);
     }
   }
-  return openCharitiesModel.insert(charity);
+  var updateQuery = { '$set' : charity };
+  return openCharitiesModel.find(findQuery(ccCharityObj)).upsert().updateOne(updateQuery); // use replaceOne for clean update
 };
 
 schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesModel) {
