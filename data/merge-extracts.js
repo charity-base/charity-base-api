@@ -89,7 +89,7 @@ function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
 }
 
 
-function updateAll (insert, ccExtractConn, openCharitiesConn, batchSize) {
+function updateAll (ccExtractConn, openCharitiesConn, batchSize) {
 
   var extracts = getCcModels(mongoose, ccExtractConn)['v0.1'];
   var openCharity = getOpenModel(mongoose, openCharitiesConn);
@@ -97,20 +97,30 @@ function updateAll (insert, ccExtractConn, openCharitiesConn, batchSize) {
   console.log("Starting tasks");
   var chain = Promise.resolve();
 
-  if (insert) {
-    chain = chain.then(addToModel(extracts.extract_charity, openCharity, schemaConversion.extract_charity, batchSize));
-  }
+  var extractsToMerge = [
+    'extract_charity',
+    'extract_main_charity',
+    'extract_acct_submit',
+    'extract_ar_submit',
+    'extract_charity_aoo',
+    'extract_class',
+    'extract_financial',
+    'extract_name',
+    'extract_objects',
+    'extract_partb',
+    'extract_registration',
+    'extract_trustee'
+  ];
 
-  for (var extractName in schemaConversion) {
+  for (var i=0; i<extractsToMerge.length; i++) {
 
+    var extractName = extractsToMerge[i];
     if (!schemaConversion.hasOwnProperty(extractName)) {
+      console.log(`Couldn't find conversion for ${extractName}, skipping.`)
       continue;
     }
     if (!extracts.hasOwnProperty(extractName)) {
-      console.log(`Couldn't find model for ${extractName}, skipping.`)
-      continue;
-    }
-    if (extractName=='extract_charity') {
+      console.log(`Couldn't find db model for ${extractName}, skipping.`)
       continue;
     }
 
@@ -141,6 +151,6 @@ var ccExtractConn = connectToDb(options.ccExtractDb);
 ccExtractConn.on("open",function(err,conn) {
   var openCharitiesConn = connectToDb(options.openCharitiesDb);
   openCharitiesConn.on("open",function(err2,conn2) {
-    updateAll(true, ccExtractConn, openCharitiesConn, options.batchSize);
+    updateAll(ccExtractConn, openCharitiesConn, options.batchSize);
   });
 });
