@@ -10,31 +10,43 @@ function findQuery (ccExtractObj) {
   return query;
 }
 
+function unsetQuery (query, unsetFields) {
+  if (unsetFields.length>0) {
+    query['$unset'] = {};
+    for (var i=0; i<unsetFields.length; i++) {
+      query['$unset'][unsetFields[i]] = true;
+    }
+  }
+}
+
 var schemaConversion = {};
 
-schemaConversion.extract_charity = function (ccCharityObj, openCharitiesModel) {
+schemaConversion.extract_charity = function (ccExtractObj, openCharitiesModel) {
   var charity = {
-    charityNumber : tF.parseNumber(ccCharityObj.regno),
-    subNumber : tF.parseNumber(ccCharityObj.subno),
-    name : tF.titleCase(ccCharityObj.name),
-    registered : {'R': true, 'RM': false}[ccCharityObj.orgtype],
-    govDoc : ccCharityObj.gd,
-    areaOfBenefit : ccCharityObj.aob,
+    charityNumber : tF.parseNumber(ccExtractObj.regno),
+    subNumber : tF.parseNumber(ccExtractObj.subno),
+    name : tF.titleCase(ccExtractObj.name),
+    registered : {'R': true, 'RM': false}[ccExtractObj.orgtype],
+    govDoc : ccExtractObj.gd,
+    areaOfBenefit : ccExtractObj.aob,
     contact : {
-      correspondant : ccCharityObj.corr,
-      phone : ccCharityObj.phone,
-      fax : ccCharityObj.fax,
+      correspondant : ccExtractObj.corr,
+      phone : ccExtractObj.phone,
+      fax : ccExtractObj.fax,
       address : [],
-      postcode : ccCharityObj.postcode
+      postcode : ccExtractObj.postcode
     }
   };
   var addressKeys = ['add1', 'add2', 'add3', 'add4', 'add5'];
   for (var i=0; i<addressKeys.length; i++) {
-    if (ccCharityObj[addressKeys[i]]) {
-      charity.contact.address.push(ccCharityObj[addressKeys[i]]);
+    if (ccExtractObj[addressKeys[i]]) {
+      charity.contact.address.push(ccExtractObj[addressKeys[i]]);
     }
   }
-  return openCharitiesModel.insert(charity);
+  var updateQuery = { '$set' : charity };
+  var unsetFields = [];
+  unsetQuery(updateQuery, unsetFields);
+  return openCharitiesModel.find(findQuery(ccExtractObj)).upsert().updateOne(updateQuery);
 };
 
 schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesModel) {
@@ -59,7 +71,7 @@ schemaConversion.extract_acct_submit = function (ccExtractObj, openCharitiesMode
     arno : ccExtractObj.arno,
     fyEnd : ccExtractObj.fyend
   };
-  var updateQuery = { '$push' : { accountSubmission : submission } };
+  var updateQuery = { '$addToSet' : { accountSubmission : submission } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
@@ -68,7 +80,7 @@ schemaConversion.extract_ar_submit = function (ccExtractObj, openCharitiesModel)
     submitDate : tF.parseDate(ccExtractObj.submit_date),
     arno : ccExtractObj.arno
   };
-  var updateQuery = { '$push' : { returnSubmission : submission } };
+  var updateQuery = { '$addToSet' : { returnSubmission : submission } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
@@ -79,13 +91,13 @@ schemaConversion.extract_charity_aoo = function (ccExtractObj, openCharitiesMode
     welsh : {'Y': true, 'N': false}[ccExtractObj.welsh],
     master : tF.parseNumber(ccExtractObj.master)
   };
-  var updateQuery = { '$push' : { areaOfOperation : a } };
+  var updateQuery = { '$addToSet' : { areaOfOperation : a } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
 schemaConversion.extract_class = function (ccExtractObj, openCharitiesModel) {
   var c = tF.parseNumber(ccExtractObj.class);
-  var updateQuery = { '$push' : { class : c } };
+  var updateQuery = { '$addToSet' : { class : c } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
@@ -96,7 +108,7 @@ schemaConversion.extract_financial = function (ccExtractObj, openCharitiesModel)
     income : tF.parseNumber(ccExtractObj.income),
     spending : tF.parseNumber(ccExtractObj.expend)
   };
-  var updateQuery = { '$push' : { financial : f } };
+  var updateQuery = { '$addToSet' : { financial : f } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
@@ -105,13 +117,13 @@ schemaConversion.extract_name = function (ccExtractObj, openCharitiesModel) {
     name : tF.titleCase(ccExtractObj.name),
     nameId : tF.parseNumber(ccExtractObj.nameno)
   };
-  var updateQuery = { '$push' : { otherNames : n } };
+  var updateQuery = { '$addToSet' : { otherNames : n } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
 schemaConversion.extract_objects = function (ccExtractObj, openCharitiesModel) {
   var o = ccExtractObj.object;
-  var updateQuery = { '$push' : { objects : o } };
+  var updateQuery = { '$addToSet' : { objects : o } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
@@ -188,7 +200,7 @@ schemaConversion.extract_partb = function (ccExtractObj, openCharitiesModel) {
 
   b.assets.credit.total = b.assets.credit.oneYear + b.assets.credit.longTerm;
 
-  var updateQuery = { '$push' : { partB : b } };
+  var updateQuery = { '$addToSet' : { partB : b } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
@@ -198,13 +210,13 @@ schemaConversion.extract_registration = function (ccExtractObj, openCharitiesMod
     remDate : tF.parseDate(ccExtractObj.remdate),
     remCode : ccExtractObj.remcode || null
   };
-  var updateQuery = { '$push' : { registration : r } };
+  var updateQuery = { '$addToSet' : { registration : r } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
 schemaConversion.extract_trustee = function (ccExtractObj, openCharitiesModel) {
   var t = ccExtractObj.trustee;
-  var updateQuery = { '$push' : { trustees : t } };
+  var updateQuery = { '$addToSet' : { trustees : t } };
   return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 

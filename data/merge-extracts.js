@@ -22,12 +22,11 @@ function connectToDb (dbName) {
   return mongoose.createConnection(`mongodb://localhost:27017/${dbName}`, {config: { autoIndex: true }});
 }
 
-function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
+function addToModel (filterQuery, ccExtractModel, openCharitiesModel, update, batchSize) {
 
   return function () {
-
     var countPromise = new Promise(function(resolve, reject) {
-      ccExtractModel.count({}, function(err, count) {
+      ccExtractModel.count(filterQuery, function(err, count) {
         if (err) {
           console.log("Error counting documents.");
           reject(err);
@@ -44,10 +43,11 @@ function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
           return resolve();
         }
 
+        // Warning: bulk operations do not take notice of schema options e.g. { strict : true }
         var bulk = openCharitiesModel.collection.initializeOrderedBulkOp(),
             t0 = Date.now(),
             counter = 0,
-            stream = ccExtractModel.find().lean().cursor();
+            stream = ccExtractModel.find(filterQuery).lean().cursor();
 
         stream.on("data", function(doc) {
           counter ++;
@@ -88,7 +88,7 @@ function addToModel (ccExtractModel, openCharitiesModel, update, batchSize) {
 }
 
 
-function updateAll (insert, ccExtractConn, openCharitiesConn, batchSize) {
+function updateAll (ccExtractConn, openCharitiesConn, batchSize) {
 
   var extracts = getCcModels(mongoose, ccExtractConn)['v0.1'];
   var openCharity = getOpenModel(mongoose, openCharitiesConn);
@@ -96,25 +96,36 @@ function updateAll (insert, ccExtractConn, openCharitiesConn, batchSize) {
   console.log("Starting tasks");
   var chain = Promise.resolve();
 
-  if (insert) {
-    chain = chain.then(addToModel(extracts.extract_charity, openCharity, schemaConversion.extract_charity, batchSize));
-  }
+  var extractsToMerge = [
+    'extract_charity',
+    'extract_main_charity',
+    'extract_acct_submit',
+    'extract_ar_submit',
+    'extract_charity_aoo',
+    'extract_class',
+    'extract_financial',
+    'extract_name',
+    'extract_objects',
+    'extract_partb',
+    'extract_registration',
+    'extract_trustee'
+  ];
 
-  for (var extractName in schemaConversion) {
+  for (var i=0; i<extractsToMerge.length; i++) {
 
+    var extractName = extractsToMerge[i];
     if (!schemaConversion.hasOwnProperty(extractName)) {
+      console.log(`Couldn't find conversion for ${extractName}, skipping.`)
       continue;
     }
     if (!extracts.hasOwnProperty(extractName)) {
-      console.log(`Couldn't find model for ${extractName}, skipping.`)
-      continue;
-    }
-    if (extractName=='extract_charity') {
+      console.log(`Couldn't find db model for ${extractName}, skipping.`)
       continue;
     }
 
     var updateFunc = schemaConversion[extractName];
-    chain = chain.then(addToModel(extracts[extractName], openCharity, updateFunc, batchSize));
+    var filterQuery = {}; // To select specific charities to update E.g. filterQuery = { regno : '200000' };
+    chain = chain.then(addToModel(filterQuery, extracts[extractName], openCharity, updateFunc, batchSize));
   }
 
   chain.then(function() {
@@ -140,6 +151,6 @@ var ccExtractConn = connectToDb(options.ccExtractDb);
 ccExtractConn.on("open",function(err,conn) {
   var openCharitiesConn = connectToDb(options.openCharitiesDb);
   openCharitiesConn.on("open",function(err2,conn2) {
-    updateAll(true, ccExtractConn, openCharitiesConn, options.batchSize);
+    updateAll(ccExtractConn, openCharitiesConn, options.batchSize);
   });
 });

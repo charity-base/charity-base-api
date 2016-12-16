@@ -71,7 +71,8 @@ module.exports.getCharities = function (req, res) {
   var sorting = generateSorting(req.query);
 
   var nPerPage = 10;
-  var pageNumber = req.query.l_pageNumber>0 ? req.query.l_pageNumber : 1;
+  var pageNumber = Number(req.query.l_pageNumber);
+  var pageNumber = pageNumber>0 ? pageNumber : 1;
 
   Charity.count(filter).exec(function (err1, count) {
     if (err1) {
@@ -81,7 +82,13 @@ module.exports.getCharities = function (req, res) {
       if (err2) {
         return res.status(400).send({message: err2});
       }
-      return res.send({count: count, charities: charities});
+      return res.send({
+        totalMatches : count,
+        pageSize : nPerPage,
+        pageNumber : pageNumber,
+        request : { query : req.query },
+        charities : charities
+      });
     });
   });
 
