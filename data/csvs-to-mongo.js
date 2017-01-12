@@ -4,6 +4,7 @@ var mongoose = require('mongoose');
 var ccModels = require("../models/cc-extract.js")(mongoose);
 var commandLineArgs = require('command-line-args');
 
+mongoose.Promise = global.Promise;
 
 function validateOptions () {
   var options = commandLineArgs([

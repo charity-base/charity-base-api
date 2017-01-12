@@ -4,6 +4,8 @@ var getOpenModel = require("../models/charity.js");
 var schemaConversion = require('./utils/schema-conversion.js');
 var commandLineArgs = require('command-line-args');
 
+mongoose.Promise = global.Promise;
+
 function validateOptions () {
   var options = commandLineArgs([
     { name: 'ccExtractDb', type: String, defaultValue : 'cc-register' },
