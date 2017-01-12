@@ -31,22 +31,29 @@ function generateFilter (urlQuery) {
 
 
 function generateProjection (urlQuery) {
+  var mandatoryFields = ['charityNumber', 'subNumber', 'name', 'registered'];
   var optionalFields = ['govDoc', 'areaOfBenefit', 'mainCharity', 'contact', 'accountSubmission', 'returnSubmission', 'areaOfOperation', 'class', 'financial', 'otherNames', 'objects', 'partB', 'registration', 'trustees'];
 
   var projection = {};
   projection._id = false;
+
+  // Project mandatory fields
+  for (var i=0; i<mandatoryFields.length; i++) {
+    var field = mandatoryFields[i];
+    projection[field] = true;
+  }
 
   // If the user specified a search term, return the text-match strength so we can sort results
   if (urlQuery.f_searchTerm) {
     projection.score = { "$meta" : "textScore" };
   }
 
-  // Do not return the fields named in optionalFields unless user specified "p_fieldName=true"
+  // Project the optional fields specified by user with query string: "p_fieldName=true"
   for (var i=0; i<optionalFields.length; i++) {
     var field = optionalFields[i];
     var key = `p_${field}`;
-    if (urlQuery[key]!='true') {
-      projection[field] = false;
+    if (urlQuery[key]=='true') {
+      projection[field] = true;
     }
   }
 
