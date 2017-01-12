@@ -154,6 +154,7 @@ function createSchema (mongoose) {
   charitySchema.index( { 'charityNumber' : 1, 'subNumber' : 1 }, { unique : true } );
   charitySchema.index( { 'subNumber' : 1, 'registered' : 1 } );
   charitySchema.index( { 'registered' : 1 } );
+  charitySchema.index( { 'mainCharity.income': 1 } );
   charitySchema.index( { 'otherNames.name': 'text' } );
 
   return charitySchema;
