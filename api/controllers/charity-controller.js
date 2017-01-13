@@ -90,6 +90,7 @@ module.exports.getCharities = function (req, res) {
         return res.status(400).send({message: err2});
       }
       return res.send({
+        version : 'v1',
         totalMatches : count,
         pageSize : nPerPage,
         pageNumber : pageNumber,

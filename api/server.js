@@ -24,7 +24,7 @@ if (config.ssl.runHttps) {
   });
 }
 
-app.get('/api/charities', charityController.getCharities);
+app.get('/api/v1/charities', charityController.getCharities);
 
 if (config.ssl.runHttps) {
 
