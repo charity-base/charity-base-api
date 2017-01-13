@@ -4,6 +4,8 @@ OpenCharities is an open source database + API which provides detailed informati
 
 The OpenCharities database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>).
 
+See [OpenCharities.org.uk] (http://opencharities.org.uk/) for a demonstration of the API.
+
 ## Contents
 - [Getting Started] (#getting-started)
   - [Prerequisites] (#prerequisites)
