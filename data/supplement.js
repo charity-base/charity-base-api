@@ -54,11 +54,11 @@ var openCharitiesConn = connectToDb(opts.openCharitiesDb);
 openCharitiesConn.on("open",function(err, conn) {
   var openCharity = getOpenModel(mongoose, openCharitiesConn);
   streamScrapeUpdate(
-    filters=updateOptions.filterQuery,
-    projections=updateOptions.projectionQuery,
+    filters=dbOptions.filterQuery,
+    projections=dbOptions.projectionQuery,
     urlFunc=scrapingOptions.url,
     extractor=scrapingOptions.extractor,
-    dbUpdate=updateOptions.updateQueryFunc,
+    dbUpdate=dbOptions.updateQueryFunc,
     openCharitiesModel=openCharity,
     bulkBatchSize=opts.bulkBatchSize,
     scrapeBatchSize=opts.scrapeBatchSize
