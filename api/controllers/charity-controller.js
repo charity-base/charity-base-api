@@ -32,7 +32,7 @@ function generateFilter (urlQuery) {
 
 function generateProjection (urlQuery) {
   var mandatoryFields = ['charityNumber', 'subNumber', 'name', 'registered'];
-  var optionalFields = ['govDoc', 'areaOfBenefit', 'mainCharity', 'contact', 'accountSubmission', 'returnSubmission', 'areaOfOperation', 'class', 'financial', 'otherNames', 'objects', 'partB', 'registration', 'trustees'];
+  var optionalFields = ['govDoc', 'areaOfBenefit', 'mainCharity', 'contact', 'accountSubmission', 'returnSubmission', 'areaOfOperation', 'class', 'financial', 'otherNames', 'objects', 'partB', 'registration', 'trustees', 'beta'];
 
   var projection = {};
   projection._id = false;
