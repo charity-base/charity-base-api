@@ -81,11 +81,18 @@ module.exports.getCharities = function (req, res) {
   var pageNumber = Number(req.query.l_pageNumber);
   var pageNumber = pageNumber>0 ? pageNumber : 1;
 
-  Charity.count(filter).exec(function (err1, count) {
+  Charity
+  .count(filter)
+  .exec(function (err1, count) {
     if (err1) {
       return res.status(400).send({message: err1});
     }
-    Charity.find(filter, projection).sort(sorting).skip((pageNumber-1)*nPerPage).limit(nPerPage).exec(function (err2, charities) {
+    Charity
+    .find(filter, projection)
+    .sort(sorting)
+    .skip((pageNumber - 1) * nPerPage)
+    .limit(nPerPage)
+    .exec(function (err2, charities) {
       if (err2) {
         return res.status(400).send({message: err2});
       }
