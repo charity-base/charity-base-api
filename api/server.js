@@ -5,6 +5,7 @@ var express = require('express'),
     config = require('./config/config')();
 
 mongoose.connect(config.mongo.address, { config: config.mongo.config });
+mongoose.Promise = global.Promise;
 
 app.get('/api/v1/charities', charityController.getCharities);
 
