@@ -1,6 +1,4 @@
 # open-charities
-
-## Contents
 - [Introduction] (#introduction)
 - [Prerequisites] (#prerequisites)
 - [Installation] (#installation)

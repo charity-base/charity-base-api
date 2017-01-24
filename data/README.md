@@ -1,6 +1,4 @@
 # open-charities/data
-
-## Contents
 - [Introduction] (#introduction)
 - [Downloading the Register] (#downloading-the-register)
 - [Converting to CSV] (#converting-to-csv)
