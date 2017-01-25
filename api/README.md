@@ -17,7 +17,7 @@ Now visit `http://localhost:3000` - you should see it running.
 The API has one endpoint - `GET /api/v1/charities/` - which returns charity documents from the database. Options are specified in the URL query string and there is no user authentication.
 
 For example, calling the endpoint with no options in the query string will return the following response.
-```bash
+```javascript
 {
   "version": "v1",
   "totalMatches": 349886,
