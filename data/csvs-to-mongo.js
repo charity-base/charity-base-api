@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise;
 
 function validateOptions () {
   var options = commandLineArgs([
-    { name: 'in', type: String, defaultValue : './cc-register-csvs' },
+    { name: 'in', type: String, defaultValue : './cc-register-csvs/RegPlusExtract_January_2017' },
     { name: 'dbName', type: String, defaultValue : 'cc-register' },
     { name: 'batchSize', type: Number, defaultValue : 10000 }
   ]);

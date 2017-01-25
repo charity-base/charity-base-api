@@ -15,15 +15,15 @@ Optional flags:
 
 Option       |    Default              | Description
 ---          | ---                     | ---
-`--year`     |    `2016`               | Four digit year of register.
-`--month`    |    `11`                 | Two digit numbered month of register.
+`--year`     |    `2017`               | Four digit year of register.
+`--month`    |    `01`                 | Two digit numbered month of register.
 `--url`      |    *no default*         | Specify file to download (overrides year & month options).
 `--out`      |    `./cc-register.zip`  | Path of file to write to.
 
 e.g. to download the register from September 2016
 
 ```bash
-$ node download-register.js --month 09
+$ node download-register.js --year 2016 --month 09
 ```
 
 ## Converting to CSV
@@ -48,11 +48,11 @@ The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB wi
 
 Optional flags:
 
-Option          |    Default                | Description
----             | ---                       | ---
-`--in`          |    `./cc-register-csvs`   | Path to directory of .csv files.
-`--dbName`      |    `cc-register`          | Name of new database to write to.
-`--batchSize`   |    `10000`                | Sets limit of object size to prevent memory issues.
+Option          | Default                                          | Description
+---             | ---                                              | ---
+`--in`          | `./cc-register-csvs/RegPlusExtract_January_2017` | Path to directory of .csv files.
+`--dbName`      | `cc-register`                                    | Name of new database to write to.
+`--batchSize`   | `10000`                                          | Sets limit of object size to prevent memory issues.
 
 e.g. to write to a new database called 'my-new-database'
 
