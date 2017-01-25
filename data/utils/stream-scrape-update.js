@@ -77,16 +77,16 @@ function scrapeBatch (charities, urlFunc, extractor, dbUpdate, bulk, errorCounts
   });
 }
 
-function streamScrapeUpdate (filters, projections, urlFunc, extractor, dbUpdate, openCharitiesModel, bulkBatchSize, scrapeBatchSize) {
+function streamScrapeUpdate (filters, projections, urlFunc, extractor, dbUpdate, charityBaseModel, bulkBatchSize, scrapeBatchSize) {
 
   return function () {
     var countPromise = new Promise(function(resolve, reject) {
-      openCharitiesModel.count(filters, function(err, count) {
+      charityBaseModel.count(filters, function(err, count) {
         if (err) {
           console.log("Error counting documents.");
           reject(err);
         }
-        console.log(`Reading ${count} records from '${openCharitiesModel.collection.collectionName}' collection`);
+        console.log(`Reading ${count} records from '${charityBaseModel.collection.collectionName}' collection`);
         resolve(count);
       });
     });
@@ -99,13 +99,13 @@ function streamScrapeUpdate (filters, projections, urlFunc, extractor, dbUpdate,
         }
 
         // Warning: bulk operations do not take notice of schema options e.g. { strict : true }
-        var bulk = openCharitiesModel.collection.initializeOrderedBulkOp(),
+        var bulk = charityBaseModel.collection.initializeOrderedBulkOp(),
             charities = [],
             errorCounts = {},
             t0 = Date.now(),
             t,
             counter = 0,
-            stream = openCharitiesModel.find(filters, projections).lean().cursor();
+            stream = charityBaseModel.find(filters, projections).lean().cursor();
 
         stream.on("data", function(doc) {
           counter ++;
@@ -137,7 +137,7 @@ function streamScrapeUpdate (filters, projections, urlFunc, extractor, dbUpdate,
                 var avgRate = Math.round(counter/t);
                 console.log(`Scraped ${counter} pages in ${t} seconds with ${percentError}% error rate. Avg ${avgRate} pgs/sec. ${Math.round(t/60)} mins elapsed, ${tRemaining} mins remaining.`);
                 console.log(`Error causes: ${JSON.stringify(errorCounts)}`);
-                bulk = openCharitiesModel.collection.initializeOrderedBulkOp();
+                bulk = charityBaseModel.collection.initializeOrderedBulkOp();
                 if (counter==totalCount) {
                   console.log(`Persisted ${counter} records in ${t} seconds.`);
                   return resolve();

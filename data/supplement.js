@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var getOpenModel = require("../models/charity.js");
+var getCharityModel = require("../models/charity.js");
 var commandLineArgs = require('command-line-args');
 var Case = require('case');
 var streamScrapeUpdate = require('./utils/stream-scrape-update.js');
@@ -8,7 +8,7 @@ mongoose.Promise = global.Promise;
 
 function validateOptions () {
   var options = commandLineArgs([
-    { name: 'openCharitiesDb', type: String, defaultValue : 'open-charities' },
+    { name: 'charityBaseDB', type: String, defaultValue : 'charity-base' },
     { name: 'scrapeBatchSize', type: Number, defaultValue : 80 },
     { name: 'bulkBatchSize', type: Number, defaultValue : 800 }
   ]);
@@ -50,24 +50,24 @@ var scrapingOptions = {
   }
 };
 
-var openCharitiesConn = connectToDb(opts.openCharitiesDb);
-openCharitiesConn.on("open",function(err, conn) {
-  var openCharity = getOpenModel(mongoose, openCharitiesConn);
+var charityBaseConn = connectToDb(opts.charityBaseDB);
+charityBaseConn.on("open",function(err, conn) {
+  var charityBaseModel = getCharityModel(mongoose, charityBaseConn);
   streamScrapeUpdate(
     filters=dbOptions.filterQuery,
     projections=dbOptions.projectionQuery,
     urlFunc=scrapingOptions.url,
     extractor=scrapingOptions.extractor,
     dbUpdate=dbOptions.updateQueryFunc,
-    openCharitiesModel=openCharity,
+    charityBaseModel=charityBaseModel,
     bulkBatchSize=opts.bulkBatchSize,
     scrapeBatchSize=opts.scrapeBatchSize
   )()
   .catch(function(reason) {
     console.log(`Failed: ${reason}`);
-    openCharitiesConn.close();
+    charityBaseConn.close();
   })
   .then(function() {
-    openCharitiesConn.close();
+    charityBaseConn.close();
   });
 });

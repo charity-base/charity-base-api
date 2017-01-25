@@ -1,10 +1,10 @@
-# open-charities/data
-This directory contains several scripts for constructing the OpenCharities database on your own computer.
+# charity-base/data
+This directory contains several scripts for constructing the CharityBase database on your own computer.
 
 - [Downloading the Register] (#downloading-the-register)
 - [Converting to CSV] (#converting-to-csv)
 - [Loading to MongoDB] (#loading-to-mongodb)
-- [Creating/Updating open-charities DB] (#creatingupdating-open-charities-db)
+- [Creating/Updating charity-base DB] (#creatingupdating-charity-base-db)
 - [Scraping Supplementary Data] (#scraping-supplementary-data)
 
 ## Downloading the Register
@@ -15,15 +15,15 @@ Optional flags:
 
 Option       |    Default              | Description
 ---          | ---                     | ---
-`--year`     |    `2016`               | Four digit year of register.
-`--month`    |    `11`                 | Two digit numbered month of register.
+`--year`     |    `2017`               | Four digit year of register.
+`--month`    |    `01`                 | Two digit numbered month of register.
 `--url`      |    *no default*         | Specify file to download (overrides year & month options).
 `--out`      |    `./cc-register.zip`  | Path of file to write to.
 
 e.g. to download the register from September 2016
 
 ```bash
-$ node download-register.js --month 09
+$ node download-register.js --year 2016 --month 09
 ```
 
 ## Converting to CSV
@@ -44,15 +44,15 @@ $ node zip-to-csvs.js
 ```
 
 ## Loading to MongoDB
-The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the [Commission's schema] (http://data.charitycommission.gov.uk/data-definition.aspx).  Makes use of the models defined in `open-charities/data/models/cc-extract.js`.
+The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the [Commission's schema] (http://data.charitycommission.gov.uk/data-definition.aspx).  Makes use of the models defined in `charity-base/data/models/cc-extract.js`.
 
 Optional flags:
 
-Option          |    Default                | Description
----             | ---                       | ---
-`--in`          |    `./cc-register-csvs`   | Path to directory of .csv files.
-`--dbName`      |    `cc-register`          | Name of new database to write to.
-`--batchSize`   |    `10000`                | Sets limit of object size to prevent memory issues.
+Option          | Default                                          | Description
+---             | ---                                              | ---
+`--in`          | `./cc-register-csvs/RegPlusExtract_January_2017` | Path to directory of .csv files.
+`--dbName`      | `cc-register`                                    | Name of new database to write to.
+`--batchSize`   | `10000`                                          | Sets limit of object size to prevent memory issues.
 
 e.g. to write to a new database called 'my-new-database'
 
@@ -60,17 +60,17 @@ e.g. to write to a new database called 'my-new-database'
 $ node csvs-to-mongo.js --dbName my-new-database
 ```
 
-## Creating/Updating open-charities DB
-The script `merge-extracts.js` will read the 15 collections in database 'cc-register' and upsert into a single-collection database, adopting the open-charities schema defined in `open-charities/data/models/charity.js`.  Makes use of the schema conversion defined in `utils/schema-conversion.js`.
+## Creating/Updating charity-base DB
+The script `merge-extracts.js` will read the 15 collections in database 'cc-register' and upsert into a single-collection database, adopting the charity-base schema defined in `charity-base/data/models/charity.js`.  Makes use of the schema conversion defined in `utils/schema-conversion.js`.
 
-**_What does upsert mean?_** The first time you run this script it will create the open-charities database from scratch.  Subsequent calls will update the existing records instead of inserting duplicates.  It will still insert any new charities if the cc-register database has been udpated since the last call.
+**_What does upsert mean?_** The first time you run this script it will create the charity-base database from scratch.  Subsequent calls will update the existing records instead of inserting duplicates.  It will still insert any new charities if the cc-register database has been udpated since the last call.
 
 Optional flags:
 
 Option              |    Default            | Description
 ---                 | ---                   | ---
 `--ccExtractDb`     |    `cc-register`      | Name of database containing cc extract collections.
-`--openCharitiesDb` |    `open-charities`   | Name of new database to write to.
+`--charityBaseDB`   |    `charity-base`     | Name of new database to write to.
 `--batchSize`       |    `10000`            | Sets limit of object size to prevent memory issues.
 
 e.g. to limit bulk upserts to batches of 5000
@@ -80,7 +80,7 @@ $ node merge-extracts.js --batchSize 5000
 ```
 
 ## Scraping Supplementary Data
-The script `supplement.js` makes use of `utils/stream-scrape-update.js` to read through the open-charities database, visit webpages unique to each record, scrape specified content from each and persist it to the database.
+The script `supplement.js` makes use of `utils/stream-scrape-update.js` to read through the charity-base database, visit webpages unique to each record, scrape specified content from each and persist it to the database.
 
 Before running you must customise the `dbOptions` object in `supplement.js` to specify which records to consider and how to persist new content.  You must also customise the `scrapingOptions` object to specifiy the target URLs (e.g. a function of charity number) and a jQuery-like method for extracting the desired content from the HTML.
 
@@ -88,7 +88,7 @@ Optional flags:
 
 Option              |    Default          | Description
 ---                 | ---                 | ---
-`--openCharitiesDb` |    `open-charities` | Name of OpenCharities database.
+`--charityBaseDB`   |    `charity-base`   | Name of CharityBase database.
 `--scrapeBatchSize` |    `80`             | Number of pages to visit at once.
 `--bulkBatchSize`   |    `800`            | Batch size of bulk DB updates.
 

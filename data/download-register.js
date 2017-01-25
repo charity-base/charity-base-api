@@ -6,8 +6,8 @@ function validateOptions () {
   var options = commandLineArgs([
     { name: 'url', type: String, defaultValue : null },
     { name: 'out', type: String, defaultValue : './cc-register.zip' },
-    { name: 'year', type: String, defaultValue : '2016' },
-    { name: 'month', type: String, defaultValue : '11' }
+    { name: 'year', type: String, defaultValue : '2017' },
+    { name: 'month', type: String, defaultValue : '01' }
   ]);
 
   return options;

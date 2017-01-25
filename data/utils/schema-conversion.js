@@ -21,7 +21,7 @@ function unsetQuery (query, unsetFields) {
 
 var schemaConversion = {};
 
-schemaConversion.extract_charity = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_charity = function (ccExtractObj, charityBaseModel) {
   var charity = {
     charityNumber : tF.parseNumber(ccExtractObj.regno),
     subNumber : tF.parseNumber(ccExtractObj.subno),
@@ -46,10 +46,10 @@ schemaConversion.extract_charity = function (ccExtractObj, openCharitiesModel) {
   var updateQuery = { '$set' : charity };
   var unsetFields = [];
   unsetQuery(updateQuery, unsetFields);
-  return openCharitiesModel.find(findQuery(ccExtractObj)).upsert().updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).upsert().updateOne(updateQuery);
 };
 
-schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_main_charity = function (ccExtractObj, charityBaseModel) {
   var main = {
     companyNumber: ccExtractObj.coyno,
     trustees: {'T': true, 'F': false}[ccExtractObj.trustees],
@@ -62,29 +62,29 @@ schemaConversion.extract_main_charity = function (ccExtractObj, openCharitiesMod
     website : ccExtractObj.web
   };
   var updateQuery = { '$set' : { mainCharity : main } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_acct_submit = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_acct_submit = function (ccExtractObj, charityBaseModel) {
   var submission = {
     submitDate : tF.parseDate(ccExtractObj.submit_date),
     arno : ccExtractObj.arno,
     fyEnd : ccExtractObj.fyend
   };
   var updateQuery = { '$addToSet' : { accountSubmission : submission } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_ar_submit = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_ar_submit = function (ccExtractObj, charityBaseModel) {
   var submission = {
     submitDate : tF.parseDate(ccExtractObj.submit_date),
     arno : ccExtractObj.arno
   };
   var updateQuery = { '$addToSet' : { returnSubmission : submission } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_charity_aoo = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_charity_aoo = function (ccExtractObj, charityBaseModel) {
   var a = {
     aooType : ccExtractObj.aootype,
     aooKey : tF.parseNumber(ccExtractObj.aookey),
@@ -92,16 +92,16 @@ schemaConversion.extract_charity_aoo = function (ccExtractObj, openCharitiesMode
     master : tF.parseNumber(ccExtractObj.master)
   };
   var updateQuery = { '$addToSet' : { areaOfOperation : a } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_class = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_class = function (ccExtractObj, charityBaseModel) {
   var c = tF.parseNumber(ccExtractObj.class);
   var updateQuery = { '$addToSet' : { class : c } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_financial = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_financial = function (ccExtractObj, charityBaseModel) {
   var f = {
     fyStart : tF.parseDate(ccExtractObj.fystart),
     fyEnd : tF.parseDate(ccExtractObj.fyend),
@@ -109,25 +109,25 @@ schemaConversion.extract_financial = function (ccExtractObj, openCharitiesModel)
     spending : tF.parseNumber(ccExtractObj.expend)
   };
   var updateQuery = { '$addToSet' : { financial : f } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_name = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_name = function (ccExtractObj, charityBaseModel) {
   var n = {
     name : tF.titleCase(ccExtractObj.name),
     nameId : tF.parseNumber(ccExtractObj.nameno)
   };
   var updateQuery = { '$addToSet' : { otherNames : n } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_objects = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_objects = function (ccExtractObj, charityBaseModel) {
   var o = ccExtractObj.object;
   var updateQuery = { '$addToSet' : { objects : o } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_partb = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_partb = function (ccExtractObj, charityBaseModel) {
   var b = {
     arno : ccExtractObj.artype,
     fyStart : tF.parseDate(ccExtractObj.fystart),
@@ -201,23 +201,23 @@ schemaConversion.extract_partb = function (ccExtractObj, openCharitiesModel) {
   b.assets.credit.total = b.assets.credit.oneYear + b.assets.credit.longTerm;
 
   var updateQuery = { '$addToSet' : { partB : b } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_registration = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_registration = function (ccExtractObj, charityBaseModel) {
   var r = {
     regDate : tF.parseDate(ccExtractObj.regdate),
     remDate : tF.parseDate(ccExtractObj.remdate),
     remCode : ccExtractObj.remcode || null
   };
   var updateQuery = { '$addToSet' : { registration : r } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
-schemaConversion.extract_trustee = function (ccExtractObj, openCharitiesModel) {
+schemaConversion.extract_trustee = function (ccExtractObj, charityBaseModel) {
   var t = ccExtractObj.trustee;
   var updateQuery = { '$addToSet' : { trustees : t } };
-  return openCharitiesModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
+  return charityBaseModel.find(findQuery(ccExtractObj)).updateOne(updateQuery);
 };
 
 

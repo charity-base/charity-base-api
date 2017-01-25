@@ -1,10 +1,10 @@
 {
-  "name": "open-charities",
+  "name": "charity-base",
   "version": "0.0.1",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tithebarn/open-charities.git"
+    "url": "https://github.com/tithebarn/charity-base.git"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
