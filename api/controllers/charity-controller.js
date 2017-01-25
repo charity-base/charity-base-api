@@ -31,22 +31,29 @@ function generateFilter (urlQuery) {
 
 
 function generateProjection (urlQuery) {
-  var optionalFields = ['govDoc', 'areaOfBenefit', 'mainCharity', 'contact', 'accountSubmission', 'returnSubmission', 'areaOfOperation', 'class', 'financial', 'otherNames', 'objects', 'partB', 'registration', 'trustees'];
+  var mandatoryFields = ['charityNumber', 'subNumber', 'name', 'registered'];
+  var optionalFields = ['govDoc', 'areaOfBenefit', 'mainCharity', 'contact', 'accountSubmission', 'returnSubmission', 'areaOfOperation', 'class', 'financial', 'otherNames', 'objects', 'partB', 'registration', 'trustees', 'beta'];
 
   var projection = {};
   projection._id = false;
+
+  // Project mandatory fields
+  for (var i=0; i<mandatoryFields.length; i++) {
+    var field = mandatoryFields[i];
+    projection[field] = true;
+  }
 
   // If the user specified a search term, return the text-match strength so we can sort results
   if (urlQuery.f_searchTerm) {
     projection.score = { "$meta" : "textScore" };
   }
 
-  // Do not return the fields named in optionalFields unless user specified "p_fieldName=true"
+  // Project the optional fields specified by user with query string: "p_fieldName=true"
   for (var i=0; i<optionalFields.length; i++) {
     var field = optionalFields[i];
     var key = `p_${field}`;
-    if (urlQuery[key]!='true') {
-      projection[field] = false;
+    if (urlQuery[key]=='true') {
+      projection[field] = true;
     }
   }
 
@@ -74,15 +81,23 @@ module.exports.getCharities = function (req, res) {
   var pageNumber = Number(req.query.l_pageNumber);
   var pageNumber = pageNumber>0 ? pageNumber : 1;
 
-  Charity.count(filter).exec(function (err1, count) {
+  Charity
+  .count(filter)
+  .exec(function (err1, count) {
     if (err1) {
       return res.status(400).send({message: err1});
     }
-    Charity.find(filter, projection).sort(sorting).skip((pageNumber-1)*nPerPage).limit(nPerPage).exec(function (err2, charities) {
+    Charity
+    .find(filter, projection)
+    .sort(sorting)
+    .skip((pageNumber - 1) * nPerPage)
+    .limit(nPerPage)
+    .exec(function (err2, charities) {
       if (err2) {
         return res.status(400).send({message: err2});
       }
       return res.send({
+        version : 'v1',
         totalMatches : count,
         pageSize : nPerPage,
         pageNumber : pageNumber,

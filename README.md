@@ -1,6 +1,11 @@
 # open-charities
+[OpenCharities.org.uk] (http://opencharities.org.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>). The following gives instruction of how to build your own version of OpenCharities.
 
-----
+- [Prerequisites] (#prerequisites)
+- [Installation] (#installation)
+- [Advice for small machines] (#advice-for-small-machines)
+- [Data] (#data)
+- [API] (#api)
 
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
@@ -8,112 +13,42 @@ Make sure you have installed all of the following prerequisites on your developm
 * Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager. If you encounter any problems, you can also use this [GitHub Gist](https://gist.github.com/isaacs/579814) to install Node.js.
 * MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
 
-## Running on small machines
-These steps aren't essential but will help things run smoothly on computers without much memory.
-* Allocate swap space - This is good practice in general, and will prevent MongoDB from crashing on systems without much RAM (e.g. [Add swap on ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04))
-* Reduce WiredTiger cache - Since version 3.2, MongoDB uses the WiredTiger storage engine by default whose internal cache uses at least 1GB by default.  On smaller machines you should reduce this e.g. if you have 512MB RAM, reduce it to 200MB by including the following in the config file (usually found at /etc/mongod.conf)
-```bash
-storage:
-  wiredTiger:
-    engineConfig:
-      configString: "cache_size=200M"
-```
-After updating the config file, restart MongoDB on the command line:
-```bash
-$ sudo service mongod restart
-```
+## Installation
 
-## Downloading open-charities
-The best way to get open-charities is with Git, which usually comes installed on Mac OSX and Linux computers.  On the command-line, navigate to the directory you want open-charities to live in and run:
+Once you've installed the prerequisites, you're just a few steps away from running your own version of OpenCharities.
+
+First, download the code using Git, which normally comes installed on Mac and Linux.  On the command-line, navigate to the directory you want open-charities to live in and run:
 ```bash
 $ git clone https://github.com/tithebarn/open-charities.git open-charities
 ```
 If that doesn't work you might need to [download & install Git](https://git-scm.com/downloads).
 
-## Installation
-Once you've downloaded the code and installed the prerequisites, you're just a few steps away from running your own version of open-charities.
-
-To install the dependencies, navigate to the open-charities directory and run:
+Now simply navigate into the newly created directory and install the dependencies listed in `package.json`:
 ```bash
+$ cd open-charities
 $ npm install
 ```
 
-----
+## Advice for small machines
+These steps aren't essential but will help things run smoothly on computers without much memory.
 
-## open-charities/data
-The data directory contains several scripts for constructing a database of charities registered in England & Wales.  To run these scripts, navigate to the open-charities/data directory on the command line.
+* Allocate swap space - This is good practice in general, and will prevent MongoDB from crashing on systems without much RAM (e.g. [Add swap on ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04))
 
-### download-register.js
-Downloads the register of charities from the [Charity Commission](http://data.charitycommission.gov.uk/) (generally updated monthly).  It takes ~1 minute to download the register which should be a zipped directory of .bcp files (it's not necessary to unzip this - see `zip-to-csvs.js`).
-The data download contains public sector information licensed under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
+* Reduce WiredTiger cache - Since version 3.2, MongoDB uses the WiredTiger storage engine by default whose internal cache uses at least 1GB by default.  On smaller machines you should reduce this e.g. if you have 512MB RAM, reduce it to 200MB by including the following in the config file (usually found at `/etc/mongod.conf`)
+    ```bash
+    storage:
+      wiredTiger:
+        engineConfig:
+          configString: "cache_size=200M"
+    ```
+    After updating the config file, restart MongoDB on the command line:
+    ```bash
+    $ sudo service mongod restart
+    ```
 
-Optional flags:
+## Data
+The data directory [open-charities/data](https://github.com/tithebarn/open-charities/tree/master/data) contains several scripts for constructing the OpenCharities database on your own computer.  Take a look at the README.md in the data directory for more information.
 
-Option       |    Default              | Description
----          | ---                     | ---
-`--year`     |    `2016`               | Four digit year of register.
-`--month`    |    `11`                 | Two digit numbered month of register.
-`--url`      |    *no default*         | Specify file to download (overrides year & month options).
-`--out`      |    `./cc-register.zip`  | Path of file to write to.
+## API
+The API directory [open-charities/api](https://github.com/tithebarn/open-charities/tree/master/api) gives instructions for running your own API to query your OpenCharities database.  Take a look at the README.md in the API directory for more information.
 
-e.g. to download the register from September 2016
-
-```bash
-$ node download-register.js --month 09
-```
-
-### zip-to-csvs.js
-Converts the .bcp files in the downloaded .zip to .csv files.
-This script requires you have [Perl](https://www.perl.org/get.html) - it usually comes installed on Mac OSX and Linux computers.
-
-Optional flags:
-
-Option     |    Default                | Description
----        | ---                       | ---
-`--in`     |    `./cc-register.zip`    | Path to .zip file downloaded from charity commission.
-`--out`    |    `./cc-register-csvs`   | Path to new (non-existent) directory to write to.
-
-e.g. to read the file ./cc-register.zip and write CSVs to ./cc-register-csvs
-
-```bash
-$ node zip-to-csvs.js
-```
-
-### csvs-to-mongo.js
-Loads a directory of CSV files into MongoDB (one collection per file).  Makes use of the models defined in `open-charities/data/models`
-
-Optional flags:
-
-Option          |    Default                | Description
----             | ---                       | ---
-`--in`          |    `./cc-register-csvs`   | Path to directory of .csv files.
-`--dbName`      |    `cc-register`          | Name of new database to write to.
-`--batchSize`   |    `10000`                | Sets limit of object size to prevent memory issues.
-
-e.g. to write to a new database called 'my-new-database'
-
-```bash
-$ node csvs-to-mongo.js --dbName my-new-database
-```
-
-### merge-extracts.js
-Merges the 15 collections in database 'cc-register' into a single collection in a new database 'open-charities'.  Makes use of the models and schema conversion defined in `open-charities/data/models`.
-
-Optional flags:
-
-Option              |    Default            | Description
----                 | ---                   | ---
-`--ccExtractDb`     |    `cc-register`      | Name of database containing cc extract collections.
-`--openCharitiesDb` |    `open-charities`   | Name of new database to write to.
-`--batchSize`       |    `10000`            | Sets limit of object size to prevent memory issues.
-
-e.g.
-
-```bash
-$ node merge-extracts.js
-```
-
-----
-
-## open-charities/api
-Documentation coming soon...

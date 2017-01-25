@@ -1,43 +1,33 @@
 var express = require('express'),
     app = express(),
-    bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
-    fs = require('fs'),
-    https = require('https'),
     charityController = require('./controllers/charity-controller'),
     config = require('./config/config')();
 
 mongoose.connect(config.mongo.address, { config: config.mongo.config });
+mongoose.Promise = global.Promise;
 
+var homeTemplate = `
+  <!DOCTYPE html>
+  <div>
+    Congratulations, you've made an API!
+  </div>
+  <div>
+    The main endpoint is
+    <a href="/api/v1/charities">/api/v1/charities</a>
+  </div>
+  <div>
+    Take a look at the
+    <a href="https://github.com/tithebarn/open-charities/blob/master/api/README.md">README</a>
+    for more information.
+  </div>
+`;
 
-// Use middleware to inject bodyparser
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
+app.get('/', function(req, res) {
+  res.send(homeTemplate);
+});
 
-if (config.ssl.runHttps) {
-  // redirect http requests
-  app.use(function(req, res, next) {
-    if(!req.secure) {
-      return res.redirect(config.baseUrl() + req.url);
-    }
-    next();
-  });
-}
-
-app.get('/api/charities', charityController.getCharities);
-
-if (config.ssl.runHttps) {
-
-  var sslCreds = {
-    key: fs.readFileSync(config.ssl.privateKeyFile, 'utf8'),
-    cert: fs.readFileSync(config.ssl.certificateFile, 'utf8'),
-    ca: fs.readFileSync(config.ssl.intermediateFile, 'utf8')
-  };
-
-  https.createServer(sslCreds, app).listen(config.ssl.listenPort, function() {
-    console.log('Listening on port ' + config.ssl.listenPort);
-  });
-}
+app.get('/api/v1/charities', charityController.getCharities);
 
 app.listen(config.listenPort, function() {
   console.log('Listening on port ' + config.listenPort);
