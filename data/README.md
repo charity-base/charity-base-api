@@ -1,13 +1,11 @@
 # open-charities/data
-- [Introduction] (#introduction)
+This directory contains several scripts for constructing the OpenCharities database on your own computer.
+
 - [Downloading the Register] (#downloading-the-register)
 - [Converting to CSV] (#converting-to-csv)
 - [Loading to MongoDB] (#loading-to-mongodb)
 - [Creating/Updating open-charities DB] (#creatingupdating-open-charities-db)
 - [Scraping Supplementary Data] (#scraping-supplementary-data)
-
-## Introduction
-This directory contains several scripts for constructing the OpenCharities database on your own computer.
 
 ## Downloading the Register
 The script `download-register.js` will download the register of charities (~122MB) from the [Charity Commission](http://data.charitycommission.gov.uk/) (generally updated monthly).  It takes ~1 minute to download the register which should be a zipped directory of .bcp files (it's not necessary to manually unzip this - see [Converting to CSV] (#converting-to-csv)).
