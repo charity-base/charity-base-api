@@ -18,7 +18,7 @@ var homeTemplate = `
   </div>
   <div>
     Take a look at the
-    <a href="https://github.com/tithebarn/open-charities/blob/master/api/README.md">README</a>
+    <a href="https://github.com/tithebarn/charity-base/blob/master/api/README.md">README</a>
     for more information.
   </div>
 `;

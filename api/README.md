@@ -1,4 +1,4 @@
-# open-charities/api
+# charity-base/api
 - [Running] (#running)
 - [Endpoint] (#endpoint)
 - [Pagination] (#pagination)
@@ -6,7 +6,7 @@
 - [Projection Parameters] (#projection-parameters)
 
 ## Running
-Once you've built the open-charities database - as described in [open-charities/data] (https://github.com/tithebarn/open-charities/tree/master/data) - running the API is easy. Assuming you're in the open-charities directory:
+Once you've built the charity-base database - as described in [charity-base/data] (https://github.com/tithebarn/charity-base/tree/master/data) - running the API is easy. Assuming you're in the charity-base directory:
 ```bash
 $ cd api
 $ node server.js
@@ -55,7 +55,7 @@ Results can be filtered by specifying filter parameters in the query string. The
 
 * To request only charities which are still registered, specify `f_registeredOnly==true` in the query string.  Any other value will result in the default behaviour of both registered and de-registered charities being returned.
 
-* Search for charities by name using `f_searchTerm`.  The value will be split into words and only charities matching all words will be returned.  MongoDB's text search rules apply.  By default the text index specified in `open-charities/models/charity.js` is on the `otherNames.name` field which covers all given names for each charity.  For example, to find registered charities with "London" and "NHS" in one of their working names:
+* Search for charities by name using `f_searchTerm`.  The value will be split into words and only charities matching all words will be returned.  MongoDB's text search rules apply.  By default the text index specified in `charity-base/models/charity.js` is on the `otherNames.name` field which covers all given names for each charity.  For example, to find registered charities with "London" and "NHS" in one of their working names:
     ```bash
     GET /api/v1/charities/?f_registeredOnly=true&f_searchTerm=nhs+london
     ```
@@ -63,7 +63,7 @@ Results can be filtered by specifying filter parameters in the query string. The
 ## Projection Parameters
 Returned charity objects always have the following properties: `charityNumber`, `subNumber`, `name` and `registered`.  Respectively, these provide the registration number, subsidiary number (0 for non-subsidiary charities), official name and whether or not the charity is still registered.
 
-All other top-level fields defined in the schema `open-charities/models/charity.js` can be requested by specifying `p_fieldName=true` in the URL query string, where `fieldName` should be replaced accordingly.  For example, to return the basic financial information with each charity:
+All other top-level fields defined in the schema `charity-base/models/charity.js` can be requested by specifying `p_fieldName=true` in the URL query string, where `fieldName` should be replaced accordingly.  For example, to return the basic financial information with each charity:
 ```bash
 GET /api/v1/charities/?p_financial=true
 ```

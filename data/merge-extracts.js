@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var getCcModels = require("../models/cc-extract.js");
-var getOpenModel = require("../models/charity.js");
+var getCharityModel = require("../models/charity.js");
 var schemaConversion = require('./utils/schema-conversion.js');
 var commandLineArgs = require('command-line-args');
 
@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 function validateOptions () {
   var options = commandLineArgs([
     { name: 'ccExtractDb', type: String, defaultValue : 'cc-register' },
-    { name: 'openCharitiesDb', type: String, defaultValue : 'open-charities' },
+    { name: 'charityBaseDB', type: String, defaultValue : 'charity-base' },
     { name: 'batchSize', type: Number, defaultValue : 10000 }
   ]);
 
@@ -24,7 +24,7 @@ function connectToDb (dbName) {
   return mongoose.createConnection(`mongodb://localhost:27017/${dbName}`, {config: { autoIndex: true }});
 }
 
-function addToModel (filterQuery, ccExtractModel, openCharitiesModel, update, batchSize) {
+function addToModel (filterQuery, ccExtractModel, charityBaseModel, update, batchSize) {
 
   return function () {
     var countPromise = new Promise(function(resolve, reject) {
@@ -46,7 +46,7 @@ function addToModel (filterQuery, ccExtractModel, openCharitiesModel, update, ba
         }
 
         // Warning: bulk operations do not take notice of schema options e.g. { strict : true }
-        var bulk = openCharitiesModel.collection.initializeOrderedBulkOp(),
+        var bulk = charityBaseModel.collection.initializeOrderedBulkOp(),
             t0 = Date.now(),
             counter = 0,
             stream = ccExtractModel.find(filterQuery).lean().cursor();
@@ -70,7 +70,7 @@ function addToModel (filterQuery, ccExtractModel, openCharitiesModel, update, ba
               return reject(err);
             }
             process.stdout.write("Persisted " + counter + " records in " + tDiff(t0) + " seconds.\r");
-            bulk = openCharitiesModel.collection.initializeOrderedBulkOp();
+            bulk = charityBaseModel.collection.initializeOrderedBulkOp();
             if (counter==totalCount) {
               console.log("Persisted " + counter + " records in " + tDiff(t0) + " seconds.");
               return resolve();
@@ -90,10 +90,10 @@ function addToModel (filterQuery, ccExtractModel, openCharitiesModel, update, ba
 }
 
 
-function updateAll (ccExtractConn, openCharitiesConn, batchSize) {
+function updateAll (ccExtractConn, charityBaseConn, batchSize) {
 
   var extracts = getCcModels(mongoose, ccExtractConn)['v0.1'];
-  var openCharity = getOpenModel(mongoose, openCharitiesConn);
+  var charityBaseModel = getCharityModel(mongoose, charityBaseConn);
 
   console.log("Starting tasks");
   var chain = Promise.resolve();
@@ -127,13 +127,13 @@ function updateAll (ccExtractConn, openCharitiesConn, batchSize) {
 
     var updateFunc = schemaConversion[extractName];
     var filterQuery = {}; // To select specific charities to update E.g. filterQuery = { regno : '200000' };
-    chain = chain.then(addToModel(filterQuery, extracts[extractName], openCharity, updateFunc, batchSize));
+    chain = chain.then(addToModel(filterQuery, extracts[extractName], charityBaseModel, updateFunc, batchSize));
   }
 
   chain.then(function() {
-    console.log("Finished updating open-charities successfully.");
+    console.log("Finished updating charity-base successfully.");
     ccExtractConn.close();
-    openCharitiesConn.close();
+    charityBaseConn.close();
     return;
   });
 
@@ -141,7 +141,7 @@ function updateAll (ccExtractConn, openCharitiesConn, batchSize) {
     console.log("Failed to complete chain.");
     console.log(reason);
     ccExtractConn.close();
-    openCharitiesConn.close();
+    charityBaseConn.close();
     return;
   });
 
@@ -151,8 +151,8 @@ var options = validateOptions();
 
 var ccExtractConn = connectToDb(options.ccExtractDb);
 ccExtractConn.on("open",function(err,conn) {
-  var openCharitiesConn = connectToDb(options.openCharitiesDb);
-  openCharitiesConn.on("open",function(err2,conn2) {
-    updateAll(ccExtractConn, openCharitiesConn, options.batchSize);
+  var charityBaseConn = connectToDb(options.charityBaseDB);
+  charityBaseConn.on("open",function(err2,conn2) {
+    updateAll(ccExtractConn, charityBaseConn, options.batchSize);
   });
 });

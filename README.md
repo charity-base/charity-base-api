@@ -1,5 +1,5 @@
-# open-charities
-[OpenCharities.org.uk] (http://opencharities.org.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>). The following gives instruction of how to build your own version of OpenCharities.
+# charity-base
+[CharityBase.uk] (http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>). The following gives instruction of how to build your own version of CharityBase.
 
 - [Prerequisites] (#prerequisites)
 - [Installation] (#installation)
@@ -15,17 +15,17 @@ Make sure you have installed all of the following prerequisites on your developm
 
 ## Installation
 
-Once you've installed the prerequisites, you're just a few steps away from running your own version of OpenCharities.
+Once you've installed the prerequisites, you're just a few steps away from running your own version of CharityBase.
 
-First, download the code using Git, which normally comes installed on Mac and Linux.  On the command-line, navigate to the directory you want open-charities to live in and run:
+First, download the code using Git, which normally comes installed on Mac and Linux.  On the command-line, navigate to the directory you want charity-base to live in and run:
 ```bash
-$ git clone https://github.com/tithebarn/open-charities.git open-charities
+$ git clone https://github.com/tithebarn/charity-base.git charity-base
 ```
 If that doesn't work you might need to [download & install Git](https://git-scm.com/downloads).
 
 Now simply navigate into the newly created directory and install the dependencies listed in `package.json`:
 ```bash
-$ cd open-charities
+$ cd charity-base
 $ npm install
 ```
 
@@ -47,8 +47,8 @@ These steps aren't essential but will help things run smoothly on computers with
     ```
 
 ## Data
-The data directory [open-charities/data](https://github.com/tithebarn/open-charities/tree/master/data) contains several scripts for constructing the OpenCharities database on your own computer.  Take a look at the README.md in the data directory for more information.
+Take a look at the README.md in the data directory [charity-base/data](https://github.com/tithebarn/charity-base/tree/master/data) for help constructing the CharityBase database on your own computer.
 
 ## API
-The API directory [open-charities/api](https://github.com/tithebarn/open-charities/tree/master/api) gives instructions for running your own API to query your OpenCharities database.  Take a look at the README.md in the API directory for more information.
+Take a look at the README.md in the API directory [charity-base/api](https://github.com/tithebarn/charity-base/tree/master/api) for instruction on running your own API to query your database.
 
