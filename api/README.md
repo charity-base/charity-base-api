@@ -20,7 +20,7 @@ For example, calling the endpoint with no options in the query string will retur
 ```javascript
 {
   "version": "v1",
-  "totalMatches": 349886,
+  "totalMatches": null,
   "pageSize": 10,
   "pageNumber": 1,
   "request": {
@@ -33,8 +33,14 @@ For example, calling the endpoint with no options in the query string will retur
 ```
 The `charities` value is an array of up to 10 JSON objects from the database.
 
+## Counting Results
+By default the value of `totalMatches` in the response is `null` because counting the total number matches for some queries is slow.  However you can explicitly request the value by including `countResults` in the query string:
+```bash
+GET /api/v1/charities/?countResults
+```
+
 ## Pagination
-The number of charities returned is limited to 10. If the value of `totalMatches` in the response is greater than 10 you can page through the results by specifying `l_pageNumber` in the query string. For example, to get the 2nd page of results:
+The number of charities returned is limited to 10. If the value of `totalMatches` in the response is greater than 10 (when `countResults` included in query) you can page through the results by specifying `l_pageNumber` in the query string. For example, to get the 2nd page of results:
 ```bash
 GET /api/v1/charities/?l_pageNumber=2
 ```

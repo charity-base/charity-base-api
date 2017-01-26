@@ -93,20 +93,31 @@ module.exports.getCharities = function (req, res) {
   var pageNumber = Number(req.query.l_pageNumber);
   var pageNumber = pageNumber>0 ? pageNumber : 1;
 
-  Charity
-  .count(filter)
-  .exec(function (err1, count) {
-    if (err1) {
-      return res.status(400).send({message: err1});
+  return Promise.resolve(
+    req.query.hasOwnProperty('countResults')
+  )
+  .then((countResults) => {
+    if (!countResults) {
+      return null;
     }
-    Charity
+    return Charity
+    .count(filter)
+    .exec(function (err, count) {
+      if (err) {
+        return res.status(400).send({message: err});
+      }
+      return count;
+    });
+  })
+  .then((count) => {
+    return Charity
     .find(filter, projection)
     .sort(sorting)
     .skip((pageNumber - 1) * nPerPage)
     .limit(nPerPage)
-    .exec(function (err2, charities) {
-      if (err2) {
-        return res.status(400).send({message: err2});
+    .exec(function (err, charities) {
+      if (err) {
+        return res.status(400).send({message: err});
       }
       return res.send({
         version : 'v1',
