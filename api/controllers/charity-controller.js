@@ -15,15 +15,25 @@ function generateFilter (urlQuery) {
     // Explanation: http://apps.charitycommission.gov.uk/Showcharity/ShowCharity_Help_Page.aspx?ContentType=Help_Constituents&SelectedLanguage=English
     filter.subNumber = Number(urlQuery.f_subNumber);
   }
-  if (urlQuery.f_registeredOnly=='true') {
-    // Do not return de-registered charities
-    filter.registered = true;
+  if (['true', 'false'].indexOf(urlQuery.f_registered) > -1) {
+    // If specified true/false, only return registered/de-registered charities respectively
+    filter.registered = urlQuery.f_registered === 'true';
   }
   if (urlQuery.f_searchTerm) {
     // Perform AND text-search on charity name
     var quotedWords = urlQuery.f_searchTerm.split('"').join('').split(' ').join('" "');
     quotedWords = `"${quotedWords}"`;
     filter["$text"] = { "$search" : quotedWords };
+  }
+  if (urlQuery.f_$gte_income || urlQuery.f_$lt_income) {
+    // Filter by charity income (lower limit inclusive, upper limit exclusive)
+    filter['mainCharity.income'] = {};
+    if (urlQuery.f_$gte_income) {
+      filter['mainCharity.income']['$gte'] = Number(urlQuery.f_$gte_income);
+    }
+    if (urlQuery.f_$lt_income) {
+      filter['mainCharity.income']['$lt'] = Number(urlQuery.f_$lt_income);
+    }
   }
 
   return filter;
@@ -66,6 +76,8 @@ function generateSorting (urlQuery) {
   // If the user specified a search term, sort results by text-match strength
   if (urlQuery.f_searchTerm) {
     sorting.score = { "$meta" : "textScore" };
+  } else {
+    sorting.charityNumber = 1;
   }
   return sorting;
 }
@@ -81,20 +93,31 @@ module.exports.getCharities = function (req, res) {
   var pageNumber = Number(req.query.l_pageNumber);
   var pageNumber = pageNumber>0 ? pageNumber : 1;
 
-  Charity
-  .count(filter)
-  .exec(function (err1, count) {
-    if (err1) {
-      return res.status(400).send({message: err1});
+  return Promise.resolve(
+    req.query.hasOwnProperty('countResults')
+  )
+  .then((countResults) => {
+    if (!countResults) {
+      return null;
     }
-    Charity
+    return Charity
+    .count(filter)
+    .exec(function (err, count) {
+      if (err) {
+        return res.status(400).send({message: err});
+      }
+      return count;
+    });
+  })
+  .then((count) => {
+    return Charity
     .find(filter, projection)
     .sort(sorting)
     .skip((pageNumber - 1) * nPerPage)
     .limit(nPerPage)
-    .exec(function (err2, charities) {
-      if (err2) {
-        return res.status(400).send({message: err2});
+    .exec(function (err, charities) {
+      if (err) {
+        return res.status(400).send({message: err});
       }
       return res.send({
         version : 'v1',
