@@ -66,6 +66,8 @@ function generateSorting (urlQuery) {
   // If the user specified a search term, sort results by text-match strength
   if (urlQuery.f_searchTerm) {
     sorting.score = { "$meta" : "textScore" };
+  } else {
+    sorting.charityNumber = 1;
   }
   return sorting;
 }
