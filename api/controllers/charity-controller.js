@@ -15,9 +15,9 @@ function generateFilter (urlQuery) {
     // Explanation: http://apps.charitycommission.gov.uk/Showcharity/ShowCharity_Help_Page.aspx?ContentType=Help_Constituents&SelectedLanguage=English
     filter.subNumber = Number(urlQuery.f_subNumber);
   }
-  if (urlQuery.f_registeredOnly=='true') {
-    // Do not return de-registered charities
-    filter.registered = true;
+  if (['true', 'false'].indexOf(urlQuery.f_registered) > -1) {
+    // If specified true/false, only return registered/de-registered charities respectively
+    filter.registered = urlQuery.f_registered === 'true';
   }
   if (urlQuery.f_searchTerm) {
     // Perform AND text-search on charity name

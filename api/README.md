@@ -53,11 +53,14 @@ Results can be filtered by specifying filter parameters in the query string. The
     GET /api/v1/charities/?f_charityNumber=207043&f_subNumber=99
     ```
 
-* To request only charities which are still registered, specify `f_registeredOnly==true` in the query string.  Any other value will result in the default behaviour of both registered and de-registered charities being returned.
+* The database contains registered charities as well as those which used to be registered but are no longer.  By default, both are returned.  You can request only registered or only de-registered using the boolean query parameter `f_registered`.  For example, to request main charities which are still registered:
+    ```bash
+    GET /api/v1/charities/?f_subNumber=0&f_registered=true
+    ```
 
 * Search for charities by name using `f_searchTerm`.  The value will be split into words and only charities matching all words will be returned.  MongoDB's text search rules apply.  By default the text index specified in `charity-base/models/charity.js` is on the `otherNames.name` field which covers all given names for each charity.  For example, to find registered charities with "London" and "NHS" in one of their working names:
     ```bash
-    GET /api/v1/charities/?f_registeredOnly=true&f_searchTerm=nhs+london
+    GET /api/v1/charities/?f_registered=true&f_searchTerm=nhs+london
     ```
 
 ## Projection Parameters
