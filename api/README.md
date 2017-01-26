@@ -41,7 +41,7 @@ GET /api/v1/charities/?l_pageNumber=2
 When `l_pageNumber` is unspecified, the default page number is 1.
 
 ## Filter Parameters
-Results can be filtered by specifying filter parameters in the query string. There are four accepted filter parameters, all starting with `f_`:
+Results can be filtered by specifying filter parameters in the query string. There are six accepted filter parameters, all starting with `f_`:
 
 * Subsidiary number can be specified using `f_subNumber`, which is zero for main charities.  Some main charities have hundreds of subsidiaries which are each numbered, starting from 1.  For example, to request only main charities:
     ```bash
@@ -61,6 +61,11 @@ Results can be filtered by specifying filter parameters in the query string. The
 * Search for charities by name using `f_searchTerm`.  The value will be split into words and only charities matching all words will be returned.  MongoDB's text search rules apply.  By default the text index specified in `charity-base/models/charity.js` is on the `otherNames.name` field which covers all given names for each charity.  For example, to find registered charities with "London" and "NHS" in one of their working names:
     ```bash
     GET /api/v1/charities/?f_registered=true&f_searchTerm=nhs+london
+    ```
+
+* Filter the results by gross income using the inclusive lower limit `f_$gte_income` and exclusive upper limit `f_$lt_income` parameters.  The vast majory of main (non-subsidiary) registered charities have income information in the database.  Exceptions include recently registered charities which have not yet reported their income.  No subsidiary charities, and almost no de-registered charities have income information.  To request main, registered charities with gross income between £0 and £17k:
+    ```bash
+    GET /api/v1/charities/?f_subNumber=0&f_registered=true&f_$gte_income=0&f_$lt_income=17000
     ```
 
 ## Projection Parameters

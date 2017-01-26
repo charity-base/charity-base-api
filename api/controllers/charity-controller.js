@@ -25,6 +25,16 @@ function generateFilter (urlQuery) {
     quotedWords = `"${quotedWords}"`;
     filter["$text"] = { "$search" : quotedWords };
   }
+  if (urlQuery.f_$gte_income || urlQuery.f_$lt_income) {
+    // Filter by charity income (lower limit inclusive, upper limit exclusive)
+    filter['mainCharity.income'] = {};
+    if (urlQuery.f_$gte_income) {
+      filter['mainCharity.income']['$gte'] = Number(urlQuery.f_$gte_income);
+    }
+    if (urlQuery.f_$lt_income) {
+      filter['mainCharity.income']['$lt'] = Number(urlQuery.f_$lt_income);
+    }
+  }
 
   return filter;
 }
