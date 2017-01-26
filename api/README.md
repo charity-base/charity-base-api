@@ -1,6 +1,7 @@
 # charity-base/api
 - [Running] (#running)
 - [Endpoint] (#endpoint)
+- [Counting Results] (#counting-results)
 - [Pagination] (#pagination)
 - [Filter Parameters] (#filter-parameters)
 - [Projection Parameters] (#projection-parameters)
