@@ -1,7 +1,7 @@
-  
+
 function createSchema (mongoose) {
   var charitySchema = new mongoose.Schema({
-    charityNumber : Number,
+    charityNumber : String,
     subNumber : Number,
     name : String,
     registered : Boolean,
@@ -28,7 +28,7 @@ function createSchema (mongoose) {
     accountSubmission : [{
       submitDate : Date,
       arno : String,
-      fyEnd : String 
+      fyEnd : String
     }],
     returnSubmission : [{
       submitDate : String,
