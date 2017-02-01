@@ -1,10 +1,16 @@
 var textFormatting = {};
 
 textFormatting.capitalize = function (text) {
+  if (text==null) {
+    return null;
+  }
   return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
 }
 
 textFormatting.titleCase = function (text) {
+  if (text==null) {
+    return null;
+  }
   return text.replace(/\w\S*/g, this.capitalize);
 }
 
@@ -23,8 +29,11 @@ textFormatting.parseDate = function (dateString) {
 }
 
 textFormatting.parseNumber = function (numberString) {
+  if (numberString==null) {
+    return null;
+  }
   numberString = numberString.replace(/ /g, '');
-  if (numberString==null || numberString=='') {
+  if (numberString=='') {
     return null;
   }
   var number = Number(numberString);
