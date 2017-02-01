@@ -43,6 +43,13 @@ e.g. to read the file ./cc-register.zip and write CSVs to ./cc-register-csvs
 $ node zip-to-csvs.js
 ```
 
+A python version of the script - `zip-to-csvs.py` - can be used in the same way
+as an alternative
+
+```bash
+$ python zip-to-csvs.py
+```
+
 ## Loading to MongoDB
 The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the [Commission's schema] (http://data.charitycommission.gov.uk/data-definition.aspx).  Makes use of the models defined in `charity-base/models/cc-extract.js`.
 
