@@ -9,7 +9,6 @@
   "dependencies": {
     "adm-zip": "^0.4.7",
     "api-query-params": "^4.3.0",
-    "body-parser": "^1.15.2",
     "case": "^1.4.2",
     "cheerio": "^0.22.0",
     "command-line-args": "^3.0.2",
