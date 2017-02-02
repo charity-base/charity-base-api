@@ -115,7 +115,13 @@ module.exports.getCharities = function (req, res) {
         totalMatches : count,
         pageSize : nPerPage,
         pageNumber : pageNumber,
-        request : { query : req.query },
+        query : {
+          filter : query.filter,
+          projection : query.projection,
+          sort : query.sort,
+          skip : (pageNumber - 1) * nPerPage,
+          limit : nPerPage
+        },
         charities : charities
       });
     });
