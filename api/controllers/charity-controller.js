@@ -6,31 +6,32 @@ var {filteredObject, isAncestorProperty} = require('../helpers/index');
 var latestVersion = 'v0.2.0';
 
 
-function customiseProjection (projection) {
+function validateProjection (query) {
 
-  var custom = projection || {};
+  query.projection = query.projection || {};
 
   var privateFields = [];
   var compulsoryFields = ['charityNumber', 'subNumber', 'registered', 'name'];
 
   // Remove exclusions since projection cannot have a mix of inclusion and exclusion:
-  var custom = filteredObject(custom, (key, value) => value===1);
+  query.projection = filteredObject(query.projection, (key, value) => value===1);
 
   // Remove projection if it or its (grand-)parent is in privateFields:
-  var custom = filteredObject(custom, (key, value) => !privateFields.some(isAncestorProperty(key)));
+  query.projection = filteredObject(query.projection, (key, value) => !privateFields.some(isAncestorProperty(key)));
 
   // Do not return ID
-  custom._id = 0;
+  query.projection._id = 0;
+
   // Always return compulsoryFields
   for (var i=0; i<compulsoryFields.length; i++) {
-    custom[compulsoryFields[i]] = 1;
+    query.projection[compulsoryFields[i]] = 1;
   }
 
-  return custom;
 }
 
 
 function addSearchQuery (query, searchTerm) {
+
   if (!searchTerm) {
     return;
   }
@@ -38,14 +39,17 @@ function addSearchQuery (query, searchTerm) {
   // Perform AND text-search on charity name:
   var quotedWords = '"' + searchTerm.split('"').join('').split(' ').join('" "') + '"';
   query.filter["$text"] = { "$search" : quotedWords };
+
   // Project text-match score:
   query.projection.score = { "$meta" : "textScore" };
+
   // If no sorting specified, sort by score:
   if (!query.sort) {
     query.sort = {
       score : { "$meta" : "textScore" }
     };
   }
+
 }
 
 
@@ -87,7 +91,7 @@ module.exports.getCharities = function (req, res) {
   });
   // Note: the following accepted query parameters are not processed by aqp: ['search', 'countResults']
 
-  query.projection = customiseProjection(query.projection);
+  validateProjection(query);
 
   addSearchQuery(query, req.query.search);
 
