@@ -14,7 +14,7 @@ var homeTemplate = `
   </div>
   <div>
     The main endpoint is
-    <a href="/api/v0.1.0/charities">/api/v0.1.0/charities</a>
+    <a href="/api/v0.2.0/charities">/api/v0.2.0/charities</a>
   </div>
   <div>
     Take a look at the
