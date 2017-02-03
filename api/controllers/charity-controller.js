@@ -113,7 +113,7 @@ module.exports.getCharities = function (req, res) {
     .count(query.filter)
     .exec(function (err, count) {
       if (err) {
-        return res.status(400).send({message: err});
+        return res.status(400).send(err);
       }
       return count;
     });
@@ -127,18 +127,12 @@ module.exports.getCharities = function (req, res) {
     .limit(query.limit)
     .exec(function (err, charities) {
       if (err) {
-        return res.status(400).send({message: err});
+        return res.status(400).send(err);
       }
       return res.send({
         version : latestVersion,
         totalMatches : count,
-        query : {
-          filter : query.filter,
-          projection : query.projection,
-          sort : query.sort,
-          skip : query.skip,
-          limit : query.limit
-        },
+        query : query,
         charities : charities
       });
     });

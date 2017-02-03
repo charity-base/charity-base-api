@@ -18,26 +18,27 @@ Now visit `http://localhost:3000` - you should see it running.
 ## Endpoint
 The API has one endpoint - `GET /api/v0.2.0/charities/` - which returns charity documents from the database. Options are specified in the URL query string and there is no user authentication.
 
-For example, calling the endpoint with no options in the query string will return the following response.
+The API responds to successful requests with status code `200` and a JSON body of the form
 ```javascript
 {
   "version": "v0.2.0",
   "totalMatches": null,
-  "pageSize": 10,
-  "pageNumber": 1,
   "query": {
-    "filter": {},
-    "projection": {...},
-    "sort": {...},
-    "skip": 0,
-    "limit": 10
+    ...
   },
   "charities": [{
     ...
   }]
 }
 ```
-The `charities` value is an array of up to 10 JSON objects from the database.
+
+Failed requests will receive status code `400` and a body of the form
+```javascript
+{
+  "message": "Your request failed because..."
+}
+```
+
 
 ## Counting Results
 By default the value of `totalMatches` in the response is `null` because counting the total number matches for some queries is slow.  However you can explicitly request the value by including `countResults` in the query string:
