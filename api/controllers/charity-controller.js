@@ -3,7 +3,7 @@ var Charity = require('../../models/charity')(mongoose);
 var aqp = require('api-query-params');
 var {filteredObject, isAncestorProperty} = require('../helpers/index');
 
-var latestVersion = 'v0.0.1';
+var latestVersion = 'v0.1.0';
 
 
 function customiseProjection (projection) {
@@ -38,10 +38,10 @@ function addSearchQuery (query, searchTerm) {
   // Perform AND text-search on charity name:
   var quotedWords = '"' + searchTerm.split('"').join('').split(' ').join('" "') + '"';
   query.filter["$text"] = { "$search" : quotedWords };
-
-  // If no sorting specified, project & sort by text-match score:
+  // Project text-match score:
+  query.projection.score = { "$meta" : "textScore" };
+  // If no sorting specified, sort by score:
   if (!query.sort) {
-    query.projection.score = { "$meta" : "textScore" };
     query.sort = {
       score : { "$meta" : "textScore" }
     };
@@ -71,6 +71,7 @@ module.exports.getCharities = function (req, res) {
     // whitelist only allows filters on these fields (not including their children)
     whitelist: ['charityNumber', 'subNumber', 'registered', 'mainCharity.income']
   });
+  // Note: the following accepted query parameters are not processed by aqp: ['search', 'l_pageNumber', 'countResults']
 
   query.projection = customiseProjection(query.projection);
 
@@ -111,7 +112,7 @@ module.exports.getCharities = function (req, res) {
         return res.status(400).send({message: err});
       }
       return res.send({
-        version : 'v0.0.1',
+        version : latestVersion,
         totalMatches : count,
         pageSize : nPerPage,
         pageNumber : pageNumber,

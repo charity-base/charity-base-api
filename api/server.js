@@ -14,7 +14,7 @@ var homeTemplate = `
   </div>
   <div>
     The main endpoint is
-    <a href="/api/v1/charities">/api/v1/charities</a>
+    <a href="/api/v0.1.0/charities">/api/v0.1.0/charities</a>
   </div>
   <div>
     Take a look at the
@@ -27,7 +27,7 @@ app.get('/', function(req, res) {
   res.send(homeTemplate);
 });
 
-app.get('/api/v1/charities', charityController.getCharities);
+app.get('/api/:version/charities', charityController.getCharities);
 
 app.listen(config.listenPort, function() {
   console.log('Listening on port ' + config.listenPort);
