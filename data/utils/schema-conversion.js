@@ -2,7 +2,7 @@ var tF = require('./formatting.js');
 
 function findQuery (ccExtractObj) {
   var query = {};
-  query.charityNumber = ccExtractObj.regno;
+  query.charityNumber = tF.parseCharityNumber(ccExtractObj.regno);
   query.subNumber = 0;
   if (ccExtractObj.hasOwnProperty('subno')) {
     query.subNumber = tF.parseNumber(ccExtractObj.subno);
@@ -23,7 +23,7 @@ var schemaConversion = {};
 
 schemaConversion.extract_charity = function (ccExtractObj, charityBaseModel) {
   var charity = {
-    charityNumber : ccExtractObj.regno,
+    charityNumber : tF.parseCharityNumber(ccExtractObj.regno),
     subNumber : tF.parseNumber(ccExtractObj.subno),
     name : tF.titleCase(ccExtractObj.name),
     registered : {'R': true, 'RM': false}[ccExtractObj.orgtype],

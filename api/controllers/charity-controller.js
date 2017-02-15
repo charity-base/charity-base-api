@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Charity = require('../../models/charity')(mongoose);
-
+var tF = require('../../data/utils/formatting.js');
 
 function generateFilter (urlQuery) {
 
@@ -8,7 +8,7 @@ function generateFilter (urlQuery) {
 
   if (urlQuery.f_charityNumber) {
     // Match specified charity number (could return multiple results if f_subNumber not specified)
-    filter.charityNumber = urlQuery.f_charityNumber;
+    filter.charityNumber = tf.parseCharityNumber(urlQuery.f_charityNumber);
   }
   if (urlQuery.f_subNumber) {
     // Match specified subsidiary number e.g. "f_subNumber=0" to return main charities only
