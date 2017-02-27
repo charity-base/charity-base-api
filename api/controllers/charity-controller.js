@@ -8,7 +8,7 @@ function generateFilter (urlQuery) {
 
   if (urlQuery.f_charityNumber) {
     // Match specified charity number (could return multiple results if f_subNumber not specified)
-    filter.charityNumber = tf.parseCharityNumber(urlQuery.f_charityNumber);
+    filter.charityNumber = tF.parseCharityNumber(urlQuery.f_charityNumber);
   }
   if (urlQuery.f_subNumber) {
     // Match specified subsidiary number e.g. "f_subNumber=0" to return main charities only
