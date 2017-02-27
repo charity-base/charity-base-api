@@ -1,5 +1,6 @@
 var express = require('express'),
     app = express(),
+    cors = require('cors'),
     mongoose = require('mongoose'),
     charityController = require('./controllers/charity-controller'),
     config = require('./config/config')();
@@ -22,6 +23,8 @@ var homeTemplate = `
     for more information.
   </div>
 `;
+
+app.use(cors());
 
 app.get('/', function(req, res) {
   res.send(homeTemplate);
