@@ -59,13 +59,7 @@ function getModels (mongoose, connection) {
             timestamps: true,
             collection: collectionName
           });
-          if (Schema.obj.hasOwnProperty('regno')) {
-            var index = { regno : 1 };
-            if (Schema.obj.hasOwnProperty('subno')) {
-              index.subno = 1;
-            }
-            Schema.index(index);
-          }
+          Schema.index( { "Charity Number": 1 }, { unique : true } );
           ccModels[version][collectionName] = modelCreator.model(collectionName, Schema);
         }
       }
