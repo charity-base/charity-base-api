@@ -1,6 +1,6 @@
 {
   "name": "charity-base",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.4.7",
-    "body-parser": "^1.15.2",
+    "api-query-params": "^4.3.0",
     "case": "^1.4.2",
     "cheerio": "^0.22.0",
     "command-line-args": "^3.0.2",
