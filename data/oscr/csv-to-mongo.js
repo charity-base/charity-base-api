@@ -33,20 +33,6 @@ function connectToDb (dbName) {
   return mongoose.connection;
 }
 
-// @todo duplicated with csvs-to-mongo.js - maybe move to separate file
-function rowToObj (row, schemaObj) {
-  // WARNING: assumes object key order is preserved
-  var i = 0,
-      obj = {};
-  for (var key in schemaObj) {
-    if (schemaObj.hasOwnProperty(key)) {
-      obj[key] = row[i];
-      i++;
-    }
-  }
-  return obj;
-}
-
 
 function mongoImport (filePath, Model, batchSize) {
 
@@ -55,7 +41,7 @@ function mongoImport (filePath, Model, batchSize) {
 
       var collectionName = Model.collection.collectionName,
           bulk = Model.collection.initializeOrderedBulkOp(),
-          stream = csv.fromPath(filePath, {trim: true}),
+          stream = csv.fromPath(filePath, {trim: true, headers: true}),
           t0 = Date.now(),
           counter=0;
 
@@ -66,8 +52,7 @@ function mongoImport (filePath, Model, batchSize) {
         counter ++;
 
         stream.pause();
-        var doc = rowToObj(row, Model.schema.obj);
-        bulk.insert(doc);
+        bulk.insert(row);
 
         if (counter%batchSize!=0) {
           return stream.resume();
@@ -109,10 +94,6 @@ function loadData (dataDirectory, dbConnection, batchSize) {
         var Model = oscrModel['v0.1']['oscr_register'];
 
         chain = chain.then(mongoImport(filePath, Model, batchSize));
-      });
-
-      chain.then(function() {
-        console.log("Add financial records to financial table.");
       });
 
       chain.then(function() {
