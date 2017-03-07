@@ -97,3 +97,42 @@ e.g. to limit the number of parallel HTTP requests to 5:
 ```bash
 $ node supplement.js --scrapeBatchSize 5
 ```
+
+## Importing Scottish data
+
+Data can also be downloaded from the Office of the Scottish Charity Regulator, covering charities registered in Scotland. The register zip can be downloaded from [the OSCR website](http://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download). You will need to accept the terms and conditions before downloading the data.
+
+### Extract the CSV file
+
+The script `oscr/import-csv.js` will output the OSCR data into a CSV file.
+
+Optional flags:
+
+Option     |    Default                              | Description
+---        | ---                                     | ---
+`--in`     |    `./CharityExport-07-Feb-2017.zip`    | Path to .zip file downloaded from OSCR.
+`--out`    |    `./oscr-register-csv`                 | Path to new (non-existent) directory to write to.
+
+e.g. to read the file CharityExport-07-Feb-2017.zip and write CSVs to ./oscr/cc-register-csv
+
+```bash
+$ node oscr/import-csv.js --in "./CharityExport-07-Feb-2017.zip" --out "./oscr/oscr-register-csv"
+```
+
+
+## Loading to MongoDB
+The script `oscr/csv-to-mongo.js` will load a CSV file from a directory into a MongoDB collection.  Makes use of the models defined in `charity-base/models/oscr-extract.js`.
+
+Optional flags:
+
+Option          | Default               | Description
+---             | ---                   | ---
+`--in`          | `./oscr-register-csv` | Path to director with .csv file in.
+`--dbName`      | `oscr-register`       | Name of new database to write to.
+`--batchSize`   | `10000`               | Sets limit of object size to prevent memory issues.
+
+e.g. to write to a new database called 'my-new-database'
+
+```bash
+$ node csvs-to-mongo.js --dbName my-new-database --in "./oscr/oscr-register-csv"
+```
