@@ -120,7 +120,7 @@ $ node oscr/import-csv.js --in "./CharityExport-07-Feb-2017.zip" --out "./oscr/o
 ```
 
 
-## Loading to MongoDB
+### Loading to MongoDB
 The script `oscr/csv-to-mongo.js` will load a CSV file from a directory into a MongoDB collection.  Makes use of the models defined in `charity-base/models/oscr-extract.js`.
 
 Optional flags:
