@@ -30,7 +30,7 @@ var opts = validateOptions();
 
 var dbOptions = {
   filterQuery : { registered : true, subNumber : 0, scrapedEntities : { $exists : false } },
-  projectionQuery : { _id : true, charityNumber : true },
+  projectionQuery : { _id : 1, charityNumber : 1 },
   updateQueryFunc : function (entities) {
     return { '$set' : { 'scrapedEntities' : entities } };
   }
@@ -40,7 +40,7 @@ var dbOptions = {
 var scrapingOptions = {
   url : function (charity) {
     var regno = charity.charityNumber;
-    return 'http://example.com/?regid=${regno}&subid=0'
+    return `http://example.com/?regid=${regno}&subid=0`;
   },
   extractor : function ($) {
     var entities = {};
