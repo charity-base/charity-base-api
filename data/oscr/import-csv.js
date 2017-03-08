@@ -1,7 +1,7 @@
 var fs = require('fs');
 var AdmZip = require('adm-zip');
 var mongoose = require('mongoose');
-var oscrModel = require("../models/oscr-extract.js")(mongoose);
+var oscrModel = require("../../models/oscr-extract.js")(mongoose);
 var commandLineArgs = require('command-line-args');
 
 
