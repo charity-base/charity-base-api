@@ -26,8 +26,10 @@ e.g. to download the register from September 2016
 $ node download-register.js --year 2016 --month 09
 ```
 
+**_Note:_** The scottish register can be downloaded from [the OSCR website](http://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download) after accepting the terms and conditions.
+
 ## Converting to CSV
-The script `zip-to-csvs.js` will read the downloaded .zip and write a directory of .csv files - one for each of the 15 tables in the [Commission's schema] (http://data.charitycommission.gov.uk/data-definition.aspx).
+The script `zip-to-csvs.js` will read a downloaded .zip and write a directory of .csv files.
 This script requires you have [Perl](https://www.perl.org/get.html) (which usually comes installed on Mac OSX and Linux computers).
 
 Optional flags:
@@ -36,15 +38,16 @@ Option     |    Default                | Description
 ---        | ---                       | ---
 `--in`     |    `./cc-register.zip`    | Path to .zip file downloaded from charity commission.
 `--out`    |    `./cc-register-csvs`   | Path to new (non-existent) directory to write to.
+`--type`   |    `cc`                   | Type of data: `cc` or `oscr`.
 
-e.g. to read the file ./cc-register.zip and write CSVs to ./cc-register-csvs
+e.g. to convert the OSCR download:
 
 ```bash
-$ node zip-to-csvs.js
+$ node zip-to-csvs.js --in CharityExport-08-Mar-2017.zip --out oscr-register-csvs --type oscr
 ```
 
 ## Loading to MongoDB
-The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the [Commission's schema] (http://data.charitycommission.gov.uk/data-definition.aspx).  Makes use of the models defined in `charity-base/models/cc-extract.js`.
+The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the regulator's data schema i.e. `cc-extract.js` or `oscr-extract.js` in `charity-base/models/`.
 
 Optional flags:
 
@@ -52,12 +55,13 @@ Option          | Default                                          | Description
 ---             | ---                                              | ---
 `--in`          | `./cc-register-csvs/RegPlusExtract_January_2017` | Path to directory of .csv files.
 `--dbName`      | `cc-register`                                    | Name of new database to write to.
+`--type`        | `cc`                                             | Type of data: `cc` or `oscr`.
 `--batchSize`   | `10000`                                          | Sets limit of object size to prevent memory issues.
 
-e.g. to write to a new database called 'my-new-database'
+e.g. to load Scottish csv data to a new database `oscr-register`:
 
 ```bash
-$ node csvs-to-mongo.js --dbName my-new-database
+$ node csvs-to-mongo.js --in oscr-register-csvs --dbName oscr-register --type oscr
 ```
 
 ## Creating/Updating charity-base DB
@@ -96,43 +100,4 @@ e.g. to limit the number of parallel HTTP requests to 5:
 
 ```bash
 $ node supplement.js --scrapeBatchSize 5
-```
-
-## Importing Scottish data
-
-Data can also be downloaded from the Office of the Scottish Charity Regulator, covering charities registered in Scotland. The register zip can be downloaded from [the OSCR website](http://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download). You will need to accept the terms and conditions before downloading the data.
-
-### Extract the CSV file
-
-The script `oscr/import-csv.js` will output the OSCR data into a CSV file.
-
-Optional flags:
-
-Option     |    Default                              | Description
----        | ---                                     | ---
-`--in`     |    `./CharityExport-07-Feb-2017.zip`    | Path to .zip file downloaded from OSCR.
-`--out`    |    `./oscr-register-csv`                 | Path to new (non-existent) directory to write to.
-
-e.g. to read the file CharityExport-07-Feb-2017.zip and write CSVs to ./oscr/cc-register-csv
-
-```bash
-$ node oscr/import-csv.js --in "./CharityExport-07-Feb-2017.zip" --out "./oscr/oscr-register-csv"
-```
-
-
-### Loading to MongoDB
-The script `oscr/csv-to-mongo.js` will load a CSV file from a directory into a MongoDB collection.  Makes use of the models defined in `charity-base/models/oscr-extract.js`.
-
-Optional flags:
-
-Option          | Default               | Description
----             | ---                   | ---
-`--in`          | `./oscr-register-csv` | Path to director with .csv file in.
-`--dbName`      | `oscr-register`       | Name of new database to write to.
-`--batchSize`   | `10000`               | Sets limit of object size to prevent memory issues.
-
-e.g. to write to a new database called 'my-new-database'
-
-```bash
-$ node csvs-to-mongo.js --dbName my-new-database --in "./oscr/oscr-register-csv"
 ```
