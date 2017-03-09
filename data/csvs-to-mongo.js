@@ -39,19 +39,6 @@ function getModels (type) {
   return require(`../models/${type==='cc' ? 'cc-extract.js' : 'oscr-extract.js'}`)(mongoose);
 }
 
-function rowToObj (row, schemaObj) {
-  // WARNING: assumes object key order is preserved
-  var i = 0,
-      obj = {};    
-  for (var key in schemaObj) {
-    if (schemaObj.hasOwnProperty(key)) {
-      obj[key] = row[i];
-      i++;
-    }
-  }
-  return obj;
-}
-
 function mongoImport (filePath, Model, batchSize) {
 
   return function () {
@@ -59,18 +46,17 @@ function mongoImport (filePath, Model, batchSize) {
 
       var collectionName = Model.collection.collectionName,
           bulk = Model.collection.initializeOrderedBulkOp(),
-          stream = csv.fromPath(filePath, {trim: true}),
+          stream = csv.fromPath(filePath, {trim: true, headers: Object.keys(Model.schema.obj)}),
           t0 = Date.now(),
           counter=0;
 
-      stream.on("data", function(row) {
+      stream.on("data", function(doc) {
 
-        if (row.length==0) {return;}
+        if (Object.keys(doc).length === 0) return;
 
         counter ++;
 
         stream.pause();
-        var doc = rowToObj(row, Model.schema.obj);
         bulk.insert(doc);
 
         if (counter%batchSize!=0) {
