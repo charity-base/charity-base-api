@@ -1,71 +1,55 @@
 
-
 // Using th schema from the CSV download available at http://www.oscr.org.uk/charities/search-scottish-charity-register/charity-register-download
 var schemas = { "v0.1": {} };
 
 schemas["v0.1"].oscr_register = {
-  // registered number of a charity
-  "Charity Number": String,
-  // regsitered name of charity
-  "Charity Name": String,
-  "Registered Date": String,
-  "Known As": String,
-  "Charity Status": String,
+  "Charity_Number": String,
+  "Charity_Name": String,
+  "Registered_Date": String,
+  "Known_As": String,
+  "Charity_Status": String,
   "Postcode": String,
-  "Constitutional Form": String,
-  "Previous Constitutional Form 1": String,
-  "Geographical Spread": String,
-  "Main Operating Location": String,
+  "Constitutional_Form": String,
+  "Previous_Constitutional_Form_1": String,
+  "Geographical_Spread": String,
+  "Main_Operating_Location": String,
   "Purposes": String,
   "Beneficiaries": String,
   "Activities": String,
   "Objectives": String,
-  "Principal Office/Trustees Address": String,
+  "Principal_Office/Trustees_Address": String,
   "Website": String,
-  "Most recent year income": String,
-  "Most recent year expenditure": String,
-  "Mailing cycle": String,
-  "Year End": String,
-  "Parent charity name": String,
-  "Parent charity number": String,
-  "Parent charity country of registration": String,
-  "Designated religious body": String,
-  "Regulatory Type": String
-}
-/*
-schemas["v0.1"].financial = {
-  charityNumber: {type: String, index: true},
-  financial: [{
-    fye: {type: Date, index: true, unique: true},
-    income: Number,
-    expend: Number
-  }]
+  "Most_recent_year_income": String,
+  "Most_recent_year_expenditure": String,
+  "Mailing_cycle": String,
+  "Year_End": String,
+  "Parent_charity_name": String,
+  "Parent_charity_number": String,
+  "Parent_charity_country_of_registration": String,
+  "Designated_religious_body": String,
+  "Regulatory_Type": String
 }
 
-schemas["v0.1"].oscr_ccew_match = {
-  charityNumberOSCR: String,
-  charityNumberCCEW: String
-}
-*/
+
 function getModels (mongoose, connection) {
   var modelCreator = (typeof connection !== 'undefined') ? connection : mongoose;
-  var ccModels = {};
+  var models = {};
   for (var version in schemas) {
     if (schemas.hasOwnProperty(version)) {
-      ccModels[version] = {};
+      models[version] = {};
       for (var collectionName in schemas[version]) {
         if (schemas[version].hasOwnProperty(collectionName)) {
           var Schema = new mongoose.Schema(schemas[version][collectionName], {
             timestamps: true,
             collection: collectionName
           });
-          Schema.index( { "Charity Number": 1 }, { unique : true } );
-          ccModels[version][collectionName] = modelCreator.model(collectionName, Schema);
+          Schema.index( { "Charity_Number": 1 }, { unique : true } );
+          models[version][collectionName] = modelCreator.model(collectionName, Schema);
         }
       }
     }
   }
-  return ccModels;
+  return models;
 }
 
 
