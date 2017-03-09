@@ -28,6 +28,12 @@ function validateOptions () {
   return options;
 }
 
+function removeHeader () {
+  return [
+    {match: '.', replace: '', message: "Removing header", condition: "if $.==1"},
+    {match: '\\n', replace: '', message: "Removing new line", condition: "if $.==1"}
+  ]
+}
 
 function bcpReplacements () {
   // The order of these tasks is important
@@ -103,7 +109,7 @@ var options = validateOptions(),
     writeDir = options.out,
     zip = new AdmZip(options.in),
     unzip = zip.extractEntryTo,
-    tasks = options.type==='cc' ? bcpReplacements() : [],
+    tasks = options.type==='cc' ? bcpReplacements() : removeHeader(),
     chain = Promise.resolve();
 
 zip.getEntries().forEach(function(zipEntry) {
