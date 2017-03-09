@@ -1,7 +1,6 @@
 var fs = require('fs');
 var csv = require("fast-csv");
 var mongoose = require('mongoose');
-var ccModels = require("../models/cc-extract.js")(mongoose);
 var commandLineArgs = require('command-line-args');
 
 mongoose.Promise = global.Promise;
@@ -10,8 +9,19 @@ function validateOptions () {
   var options = commandLineArgs([
     { name: 'in', type: String, defaultValue : './cc-register-csvs/RegPlusExtract_January_2017' },
     { name: 'dbName', type: String, defaultValue : 'cc-register' },
+    { name: 'type', type: String, defaultValue : 'cc' },
     { name: 'batchSize', type: Number, defaultValue : 10000 }
   ]);
+
+  if (!fs.existsSync(options.in)) {
+    console.log(`Error: couldn't find directory '${options.in}'`);
+    return process.exit(1);
+  }
+
+  if (['cc', 'oscr'].indexOf(options.type) < 0) {
+    console.log("Error: option --type must be one of 'cc' or 'oscr'");
+    return process.exit(1);
+  }
 
   return options;
 }
@@ -23,6 +33,10 @@ function tDiff (tStart) {
 function connectToDb (dbName) {
   mongoose.connect("mongodb://localhost:27017/"+dbName, {config: { autoIndex: true }});
   return mongoose.connection;
+}
+
+function getModels (type) {
+  return require(`../models/${type==='cc' ? 'cc-extract.js' : 'oscr-extract.js'}`)(mongoose);
 }
 
 function rowToObj (row, schemaObj) {
@@ -85,7 +99,7 @@ function mongoImport (filePath, Model, batchSize) {
   }
 }
 
-function loadData (dataDirectory, dbConnection, batchSize) {
+function loadData (dataDirectory, dbConnection, models, type, batchSize) {
   dbConnection.on("open",function(err,conn) {
     fs.readdir(dataDirectory, function (readErr, files) {
 
@@ -95,9 +109,12 @@ function loadData (dataDirectory, dbConnection, batchSize) {
       files.forEach(function(fileName) {
 
         var filePath = [dataDirectory, fileName].join('/');
-        var collectionName = fileName.substr(0, fileName.length-4);
 
-        var Model = ccModels['v0.1'][collectionName];
+        var collectionName = type==='cc'
+          ? fileName.substr(0, fileName.length-4)
+          : 'oscr_register';
+
+        var Model = models[collectionName];
 
         chain = chain.then(mongoImport(filePath, Model, batchSize));
       });
@@ -121,6 +138,7 @@ var options = validateOptions();
 
 var dbConnection = connectToDb(options.dbName),
     csvDataDir = options.in,
-    batchSize = options.batchSize;
+    batchSize = options.batchSize,
+    models = getModels(options.type)['v0.1'];
 
-loadData(csvDataDir, dbConnection, batchSize);
+loadData(csvDataDir, dbConnection, models, options.type, batchSize);
