@@ -7,7 +7,8 @@ var exec = require('child_process').exec;
 function validateOptions () {
   var options = commandLineArgs([
     { name: 'in', type: String, defaultValue : './cc-register.zip' },
-    { name: 'out', type: String, defaultValue : './cc-register-csvs' }
+    { name: 'out', type: String, defaultValue : './cc-register-csvs' },
+    { name: 'type', type: String, defaultValue : 'cc' }
   ]);
 
   if (!fs.existsSync(options.in) || options.in.substr(-4)!='.zip') {
@@ -17,6 +18,10 @@ function validateOptions () {
   if (fs.existsSync(options.out)) {
     console.log("Exiting to avoid overwriting files in '" + options.out + "'");
     console.log("Please remove the directory or specify another (non-existent) one with the --out option.");
+    return process.exit(1);
+  }
+  if (['cc', 'oscr'].indexOf(options.type) < 0) {
+    console.log("Error: option --type must be one of 'cc' or 'oscr'");
     return process.exit(1);
   }
 
@@ -41,7 +46,7 @@ function bcpReplacements () {
 }
 
 
-function writeBcp (unzip, writeDir, sourceFilename) {
+function unzipFile (unzip, writeDir, sourceFilename) {
   return function() {
     return new Promise(function(resolve, reject) {
       try {
@@ -98,11 +103,11 @@ var options = validateOptions(),
     writeDir = options.out,
     zip = new AdmZip(options.in),
     unzip = zip.extractEntryTo,
-    tasks = bcpReplacements(),
+    tasks = options.type==='cc' ? bcpReplacements() : [],
     chain = Promise.resolve();
 
 zip.getEntries().forEach(function(zipEntry) {
-  chain = chain.then(writeBcp(unzip, writeDir, zipEntry.entryName));
+  chain = chain.then(unzipFile(unzip, writeDir, zipEntry.entryName));
   for (var i=0; i<tasks.length; i++) {
     var t = tasks[i];
     chain = chain.then(findAndReplace(t.match, t.replace, t.condition, t.message));
