@@ -88,7 +88,7 @@ function findAndReplace (match, replace, condition, message) {
 }
 
 
-function ammendExtension () {
+function amendExtension () {
   return function (bcpFileName) {
     return new Promise(function(resolve, reject) {
       var csvFileName = bcpFileName.substr(0, bcpFileName.length-4) + '.csv';
@@ -118,7 +118,7 @@ zip.getEntries().forEach(function(zipEntry) {
     var t = tasks[i];
     chain = chain.then(findAndReplace(t.match, t.replace, t.condition, t.message));
   }
-  chain = chain.then(ammendExtension());
+  chain = chain.then(amendExtension());
 })
 
 chain.then(function() {
