@@ -75,7 +75,7 @@ function findAndReplace (match, replace, condition, message) {
     process.stdout.write(`${message}${padding}\r`);
     return new Promise(function(resolve, reject) {
       // Perl has similar syntax to GNU sed and is consistent across operating systems:
-      var command = `perl -i.bak -pe "s/${match}/${replace}/g ${condition||''}" ${fileName}`;
+      var command = `perl -i'*' -pe "s/${match}/${replace}/g ${condition||''}" ${fileName}`;
       exec(command, function (error, stdout, stderr) {
         if (error) {
           console.error(`Execution error: ${error}`);
