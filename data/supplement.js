@@ -36,19 +36,21 @@ var dbOptions = {
   }
 };
 
-
 var scrapingOptions = {
   url : function (charity) {
     var regno = charity.charityNumber;
     return `http://example.com/?regid=${regno}&subid=0`;
   },
   extractor : function ($) {
+    if (!$) return null;
     var entities = {};
     entities['field1'] = $('#field1-element-id').text();
     entities['field2'] = Case.sentence($('#field2-element-id').text(), []);
     return entities;
-  }
+  },
+  type : 'html'
 };
+
 
 var charityBaseConn = connectToDb(opts.charityBaseDB);
 charityBaseConn.on("open",function(err, conn) {
@@ -57,6 +59,7 @@ charityBaseConn.on("open",function(err, conn) {
     filters=dbOptions.filterQuery,
     projections=dbOptions.projectionQuery,
     urlFunc=scrapingOptions.url,
+    type=scrapingOptions.type,
     extractor=scrapingOptions.extractor,
     dbUpdate=dbOptions.updateQueryFunc,
     charityBaseModel=charityBaseModel,
