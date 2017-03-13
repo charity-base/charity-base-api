@@ -26,20 +26,23 @@ function countKeys (obj) {
   return total;
 }
 
-var scrapeOne = function(url, extractor, errorCounts, responseTimeout) {
+var scrapeOne = function(url, type, extractor, errorCounts, responseTimeout) {
   return rp({
     uri: url,
     timeout: responseTimeout,
+    encoding: type==='binary' ? null : undefined,
     transform: function (body) {
-      return cheerio.load(body);
+      if (type==='html') return cheerio.load(body);
+      if (type==='json') return JSON.parse(body);
+      return body;
     }
   })
   .catch(errors.TransformError, function (reason) {
-    increment(errorCounts, 'cheerioTransform');
+    increment(errorCounts, 'bodyTransform');
     return null;
   })
   .catch(errors.StatusCodeError, function (reason) {
-    increment(errorCounts, 'StatusCodeError');
+    increment(errorCounts, 'statusCode');
     return null;
   })
   .catch(function (reason) {
@@ -47,27 +50,24 @@ var scrapeOne = function(url, extractor, errorCounts, responseTimeout) {
     if (reason.error && reason.error.code) {
       increment(errorCounts, reason.error.code);
     } else {
-      increment(errorCounts, 'rpUnknown');
+      increment(errorCounts, 'unknown');
     }
     return null;
   })
   .then(function ($) {
-    if ($==null) {
-      return null;
-    }
     return extractor($);
   })
   .catch(function (reason) {
-    increment(errorCounts, 'cheerioPlucking');
+    increment(errorCounts, 'extractor');
     return null;
   });
 }
 
-function scrapeBatch (charities, urlFunc, extractor, dbUpdate, bulk, errorCounts) {
+function scrapeBatch (charities, urlFunc, type, extractor, dbUpdate, bulk, errorCounts) {
   var requestArray = [];
   for (var i=0; i<charities.length; i++) {
     var url = urlFunc(charities[i]);
-    requestArray.push(scrapeOne(url, extractor, errorCounts, 4000));
+    requestArray.push(scrapeOne(url, type, extractor, errorCounts, 4000));
   }
   return Promise.all(requestArray).then(function(values) {
     for (var i=0; i<charities.length; i++) {
@@ -77,7 +77,7 @@ function scrapeBatch (charities, urlFunc, extractor, dbUpdate, bulk, errorCounts
   });
 }
 
-function streamScrapeUpdate (filters, projections, urlFunc, extractor, dbUpdate, charityBaseModel, bulkBatchSize, scrapeBatchSize) {
+function streamScrapeUpdate (filters, projections, urlFunc, type, extractor, dbUpdate, charityBaseModel, bulkBatchSize, scrapeBatchSize) {
 
   return function () {
     var countPromise = new Promise(function(resolve, reject) {
@@ -114,7 +114,7 @@ function streamScrapeUpdate (filters, projections, urlFunc, extractor, dbUpdate,
 
           if (counter%scrapeBatchSize==0 || counter==totalCount) {
             stream.pause();
-            var scrapePromise = scrapeBatch(charities, urlFunc, extractor, dbUpdate, bulk, errorCounts);
+            var scrapePromise = scrapeBatch(charities, urlFunc, type, extractor, dbUpdate, bulk, errorCounts);
             scrapePromise.catch(function(reason) {
               console.log(`Batch scraping error`);
               return reject(reason);
