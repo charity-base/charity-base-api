@@ -1,11 +1,11 @@
 # charity-base
-[CharityBase.uk] (http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>). The following gives instruction of how to build your own version of CharityBase.
+[CharityBase.uk](http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>). The following gives instruction of how to build your own version of CharityBase.
 
-- [Prerequisites] (#prerequisites)
-- [Installation] (#installation)
-- [Advice for small machines] (#advice-for-small-machines)
-- [Data] (#data)
-- [API] (#api)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Advice for small machines](#advice-for-small-machines)
+- [Data](#data)
+- [API](#api)
 
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
