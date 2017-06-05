@@ -136,6 +136,7 @@ function createSchema (mongoose) {
         volunteers : Number
       }
     },
+    favicon: Buffer,
     geo: {
       // [lng, lat] coordinates of registered address:
       address : {
