@@ -1,54 +1,99 @@
 # charity-base
-[CharityBase.uk](http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>). The following gives instruction of how to build your own version of CharityBase.
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Advice for small machines](#advice-for-small-machines)
-- [Data](#data)
-- [API](#api)
+[CharityBase.uk](http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>).
 
-## Prerequisites
-Make sure you have installed all of the following prerequisites on your development machine:
+## API docs
+- [Endpoint](#endpoint)
+- [Counting Results](#counting-results)
+- [Pagination](#pagination)
+- [Filter Parameters](#filter-parameters)
+- [Projection Parameters](#projection-parameters)
+- [Sorting Parameters](#sorting-parameters)
 
-* Node.js v6.9 - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager. If you encounter any problems, you can also use this [GitHub Gist](https://gist.github.com/isaacs/579814) to install Node.js.
-* MongoDB v3.2 - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
+### Endpoint
+* The API has one `GET` endpoint: `https://charitybase.uk/api/v0.2.0/charities/`
+* Options are specified in the URL query string
+* There is no user authentication
 
-## Installation
-
-Once you've installed the prerequisites, you're just a few steps away from running your own version of CharityBase.
-
-First, download the code using Git, which normally comes installed on Mac and Linux.  On the command-line, navigate to the directory you want charity-base to live in and run:
-```bash
-$ git clone https://github.com/tithebarn/charity-base.git charity-base
+The API responds to successful requests with status code `200` and a JSON body of the form
+```javascript
+{
+  "version": "v0.2.0",
+  "totalMatches": null,
+  "query": {
+    ...
+  },
+  "charities": [{
+    ...
+  }]
+}
 ```
-If that doesn't work you might need to [download & install Git](https://git-scm.com/downloads).
 
-Now simply navigate into the newly created directory and install the dependencies listed in `package.json`:
-```bash
-$ cd charity-base
-$ npm install
+Failed requests will receive status code `400` and a body of the form
+```javascript
+{
+  "message": "Your request failed because..."
+}
 ```
 
-## Advice for small machines
-These steps aren't essential but will help things run smoothly on computers without much memory.
 
-* Allocate swap space - This is good practice in general, and will prevent MongoDB from crashing on systems without much RAM (e.g. [Add swap on ubuntu 14.04](https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04))
+### Counting Results
+By default the value of `totalMatches` in the response is `null` because counting the total number matches for some queries is slow.  However you can explicitly request the value by including `countResults` in the query string:
+```bash
+GET /api/v0.2.0/charities/?countResults
+```
 
-* Reduce WiredTiger cache - Since version 3.2, MongoDB uses the WiredTiger storage engine by default whose internal cache uses at least 1GB by default.  On smaller machines you should reduce this e.g. if you have 512MB RAM, reduce it to 200MB by including the following in the config file (usually found at `/etc/mongod.conf`)
+### Pagination
+By default the number of charities returned from each request is limited to `10`.  This can be changed with the `limit` query parameter whose value is capped at `50`.
+
+If the value of `totalMatches` in the response is greater than 10 (when `countResults` included in query) you can page through the results by specifying `skip` in the query string (`skip` can take any value but use multiples of `limit` to get sequential pages).
+
+For example, to return the third page of results with 30 charities per request:
+```bash
+GET /api/v0.2.0/charities/?limit=30&skip=60
+```
+
+### Filter Parameters
+The fields `charityNumber`, `subNumber`, `registered` and `mainCharity.income` (defined in the schema `charity-base/models/charity.js`) can be specified in the query string to filter results.  The package `api-query-params` is used to translate these query string parameters to a database query, supporting a wide range of [filter options](https://github.com/loris/api-query-params#supported-features).
+
+For example:
+* Request registered, main (non-subsidiary) charities with no reported income:
+
     ```bash
-    storage:
-      wiredTiger:
-        engineConfig:
-          configString: "cache_size=200M"
+    GET /api/v0.2.0/charities/?registered=true&subNumber=0&!mainCharity.income
     ```
-    After updating the config file, restart MongoDB on the command line:
+
+* Request & count de-registered, subsidiary charities of The Royal Society (the answer is 94)
+
     ```bash
-    $ sudo service mongod restart
+    GET /api/v0.2.0/charities?countResults&registered=false&charityNumber=207043&subNumber>0
     ```
 
-## Data
-Take a look at the README.md in the data directory [charity-base/data](https://github.com/tithebarn/charity-base/tree/master/data) for help constructing the CharityBase database on your own computer.
+* Request registered, main charities with non-zero gross income less than (or equal) £17k
 
-## API
-Take a look at the README.md in the API directory [charity-base/api](https://github.com/tithebarn/charity-base/tree/master/api) for instruction on running your own API to query your database.
+    ```bash
+    GET /api/v0.2.0/charities?registered=true&subNumber=0&mainCharity.income>0&mainCharity.income<=17000
+    ```
 
+In addition to filtering by the fields above, there is another filter parameter `search` which performs a text search over all working names of each charity (accepts `=` operator only).  For example, to find registered charities with "London" and "NHS" in one of their working names:
+```bash
+GET /api/v0.2.0/charities/?registered=true&search=nhs+london
+```
+
+### Projection Parameters
+Returned charity objects always have the following properties: `charityNumber`, `subNumber`, `name` and `registered`.  All other fields defined in the schema `charity-base/models/charity.js` can be requested using the query parameter `fields`, which expects a comma-separated list of fields.
+
+For example, to return the gross income, registration history and number of volunteers of each registered, main charity:
+```bash
+GET /api/v0.2.0/charities/?registered=true&subNumber=0&fields=mainCharity.income,registration,beta.people.volunteers
+```
+
+Note: if the `search` filter parameter is used, the `score` of the text-matching will also be returned with each charity.
+
+### Sorting Parameters
+Unless the `search` parameter is used, results are by default returned in order of ascending `charityNumber` and then `subNumber`.  If `search` is used they are returned in order of descending `score` (i.e. most relevant first).
+
+This behaviour can be overridden using the query parameter `sort`, which expects a comma-separated list of fields.  It is recommended to only sort by fields which have an index defined in `charity-base/models/charity.js`.  Fields in the list may be prefixed with `-` to sort in descending order.  For example, to find charities in descending order of gross income (and to project the income):
+```bash
+GET /api/v0.2.0/charities/?sort=-mainCharity.income&fields=mainCharity.income
+```
