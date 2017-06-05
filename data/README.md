@@ -1,14 +1,14 @@
 # charity-base/data
 This directory contains several scripts for constructing the CharityBase database on your own computer.
 
-- [Downloading the Register] (#downloading-the-register)
-- [Converting to CSV] (#converting-to-csv)
-- [Loading to MongoDB] (#loading-to-mongodb)
-- [Creating/Updating charity-base DB] (#creatingupdating-charity-base-db)
-- [Scraping Supplementary Data] (#scraping-supplementary-data)
+- [Downloading the Register](#downloading-the-register)
+- [Converting to CSV](#converting-to-csv)
+- [Loading to MongoDB](#loading-to-mongodb)
+- [Creating/Updating charity-base DB](#creatingupdating-charity-base-db)
+- [Scraping Supplementary Data](#scraping-supplementary-data)
 
 ## Downloading the Register
-The script `download-register.js` will download the register of charities (~122MB) from the [Charity Commission](http://data.charitycommission.gov.uk/) (generally updated monthly).  It takes ~1 minute to download the register which should be a zipped directory of .bcp files (it's not necessary to manually unzip this - see [Converting to CSV] (#converting-to-csv)).
+The script `download-register.js` will download the register of charities (~122MB) from the [Charity Commission](http://data.charitycommission.gov.uk/) (generally updated monthly).  It takes ~1 minute to download the register which should be a zipped directory of .bcp files (it's not necessary to manually unzip this - see [Converting to CSV](#converting-to-csv)).
 The data download contains public sector information licensed under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
 
 Optional flags:
