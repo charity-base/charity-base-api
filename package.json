@@ -1,10 +1,10 @@
 {
-  "name": "charity-base",
+  "name": "charity-base-api",
   "version": "0.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tithebarn/charity-base.git"
+    "url": "https://github.com/tythe-org/charity-base-api.git"
   },
   "dependencies": {
     "adm-zip": "^0.4.7",

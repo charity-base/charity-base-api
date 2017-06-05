@@ -1,4 +1,4 @@
-# charity-base/data
+# charity-base-api/data
 This directory contains several scripts for constructing the CharityBase database on your own computer.
 
 - [Downloading the Register](#downloading-the-register)
@@ -47,7 +47,7 @@ $ node zip-to-csvs.js --in CharityExport-08-Mar-2017.zip --out oscr-register-csv
 ```
 
 ## Loading to MongoDB
-The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the regulator's data schema i.e. `cc-extract.js` or `oscr-extract.js` in `charity-base/models/`.
+The script `csvs-to-mongo.js` will load a directory of CSV files into MongoDB with one collection per file, sticking to the regulator's data schema i.e. `cc-extract.js` or `oscr-extract.js` in `charity-base-api/models/`.
 
 Optional flags:
 
@@ -65,7 +65,7 @@ $ node csvs-to-mongo.js --in oscr-register-csvs --dbName oscr-register --type os
 ```
 
 ## Creating/Updating charity-base DB
-The script `merge-extracts.js` will read the 15 collections in database 'cc-register' and upsert into a single-collection database, adopting the charity-base schema defined in `charity-base/models/charity.js`.  Makes use of the schema conversion defined in `utils/schema-conversion.js`.
+The script `merge-extracts.js` will read the 15 collections in database 'cc-register' and upsert into a single-collection database, adopting the charity-base schema defined in `charity-base-api/models/charity.js`.  Makes use of the schema conversion defined in `utils/schema-conversion.js`.
 
 **_What does upsert mean?_** The first time you run this script it will create the charity-base database from scratch.  Subsequent calls will update the existing records instead of inserting duplicates.  It will still insert any new charities if the cc-register database has been udpated since the last call.
 

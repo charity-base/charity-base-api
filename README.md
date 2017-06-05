@@ -1,6 +1,6 @@
-# charity-base
+# charity-base-api
 
-[CharityBase.uk](http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database brings together information published by the Charity Commission in their <a href="http://data.charitycommission.gov.uk/" target="_blank">data download</a> with additional fields shared on their charity search websites (<a href="http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx" target="_blank">original</a> and <a href="http://beta.charitycommission.gov.uk/" target="_blank">Beta</a>).
+[CharityBase.uk](http://charitybase.uk/) is an open source database + API which provides detailed information on the finances, activities and locations of 350,000 charities and subsidiary charities in England & Wales. The database combines data [published](http://data.charitycommission.gov.uk/) by the Charity Commission with supplementary information from their search websites ([original](http://apps.charitycommission.gov.uk/showcharity/registerofcharities/RegisterHomePage.aspx) and [Beta](http://beta.charitycommission.gov.uk/)), as well as other sources.
 
 ## API docs
 - [Endpoint](#endpoint)
@@ -54,7 +54,7 @@ GET /api/v0.2.0/charities/?limit=30&skip=60
 ```
 
 ### Filter Parameters
-The fields `charityNumber`, `subNumber`, `registered` and `mainCharity.income` (defined in the schema `charity-base/models/charity.js`) can be specified in the query string to filter results.  The package `api-query-params` is used to translate these query string parameters to a database query, supporting a wide range of [filter options](https://github.com/loris/api-query-params#supported-features).
+The fields `charityNumber`, `subNumber`, `registered` and `mainCharity.income` (defined in the schema `charity-base-api/models/charity.js`) can be specified in the query string to filter results.  The package `api-query-params` is used to translate these query string parameters to a database query, supporting a wide range of [filter options](https://github.com/loris/api-query-params#supported-features).
 
 For example:
 * Request registered, main (non-subsidiary) charities with no reported income:
@@ -81,7 +81,7 @@ GET /api/v0.2.0/charities/?registered=true&search=nhs+london
 ```
 
 ### Projection Parameters
-Returned charity objects always have the following properties: `charityNumber`, `subNumber`, `name` and `registered`.  All other fields defined in the schema `charity-base/models/charity.js` can be requested using the query parameter `fields`, which expects a comma-separated list of fields.
+Returned charity objects always have the following properties: `charityNumber`, `subNumber`, `name` and `registered`.  All other fields defined in the schema `charity-base-api/models/charity.js` can be requested using the query parameter `fields`, which expects a comma-separated list of fields.
 
 For example, to return the gross income, registration history and number of volunteers of each registered, main charity:
 ```bash
@@ -93,7 +93,7 @@ Note: if the `search` filter parameter is used, the `score` of the text-matching
 ### Sorting Parameters
 Unless the `search` parameter is used, results are by default returned in order of ascending `charityNumber` and then `subNumber`.  If `search` is used they are returned in order of descending `score` (i.e. most relevant first).
 
-This behaviour can be overridden using the query parameter `sort`, which expects a comma-separated list of fields.  It is recommended to only sort by fields which have an index defined in `charity-base/models/charity.js`.  Fields in the list may be prefixed with `-` to sort in descending order.  For example, to find charities in descending order of gross income (and to project the income):
+This behaviour can be overridden using the query parameter `sort`, which expects a comma-separated list of fields.  It is recommended to only sort by fields which have an index defined in `charity-base-api/models/charity.js`.  Fields in the list may be prefixed with `-` to sort in descending order.  For example, to find charities in descending order of gross income (and to project the income):
 ```bash
 GET /api/v0.2.0/charities/?sort=-mainCharity.income&fields=mainCharity.income
 ```

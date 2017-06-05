@@ -1,4 +1,4 @@
-# Running charity-base locally
+# Running charity-base-api locally
 The following gives instruction of how to build your own version of CharityBase.
 
 - [Prerequisites](#prerequisites)
@@ -18,20 +18,20 @@ Make sure you have installed all of the following prerequisites on your developm
 
 Once you've installed the prerequisites, you're just a few steps away from running your own version of CharityBase.
 
-First, download the code using Git, which normally comes installed on Mac and Linux.  On the command-line, navigate to the directory you want charity-base to live in and run:
+First, download the code using Git, which normally comes installed on Mac and Linux.  On the command-line, navigate to the directory you want charity-base-api to live in and run:
 ```bash
-$ git clone https://github.com/tithebarn/charity-base.git charity-base
+$ git clone https://github.com/tythe-org/charity-base-api.git charity-base-api
 ```
 If that doesn't work you might need to [download & install Git](https://git-scm.com/downloads).
 
 Now simply navigate into the newly created directory and install the dependencies listed in `package.json`:
 ```bash
-$ cd charity-base
+$ cd charity-base-api
 $ npm install
 ```
 
 ## Getting the data
-Take a look at the README.md in the data directory [charity-base/data](https://github.com/tithebarn/charity-base/tree/master/data) for help constructing the CharityBase database on your own computer.
+Take a look at the README.md in the data directory [charity-base-api/data](data) for help constructing the CharityBase database on your own computer.
 
 ## Listen for requests
 Once you've completed the above steps, run the node express server from the parent directory:
@@ -41,7 +41,7 @@ $ node server.js
 Now visit `http://localhost:3000` in your browser - you should see a welcome message.
 
 ## How to use
-See the main [README](https://github.com/tithebarn/charity-base) for API docs.
+See the main [README](README.md) for API docs.
 
 ## Advice for small machines
 These steps aren't essential but will help things run smoothly on computers without much memory.
