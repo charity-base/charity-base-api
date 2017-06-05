@@ -127,6 +127,7 @@ function createSchema (mongoose) {
       remCode : String
     }],
     trustees : [String],
+    // Scraped Fields:
     beta : {
       activities : String,
       people : {
@@ -134,7 +135,19 @@ function createSchema (mongoose) {
         employees : Number,
         volunteers : Number
       }
-    }
+    },
+    geo: {
+      // [lng, lat] coordinates of registered address:
+      address : {
+        type : {
+          type: String,
+          required: true,
+          enum: ['Point'],
+          default: 'Point',
+        },
+        coordinates: [Number],
+      }
+    },
     // redundant:
     // aob_defined : String,
     // nhs : Boolean,
@@ -156,6 +169,7 @@ function createSchema (mongoose) {
   charitySchema.index( { 'registered' : 1 } );
   charitySchema.index( { 'mainCharity.income': 1 } );
   charitySchema.index( { 'otherNames.name': 'text' } );
+  charitySchema.index( { 'geo.address': '2dsphere' } );
 
   return charitySchema;
 }
