@@ -1,14 +1,14 @@
 # charity-base/api
-- [Running] (#running)
-- [Endpoint] (#endpoint)
-- [Counting Results] (#counting-results)
-- [Pagination] (#pagination)
-- [Filter Parameters] (#filter-parameters)
-- [Projection Parameters] (#projection-parameters)
-- [Sorting Parameters] (#sorting-parameters)
+- [Running](#running)
+- [Endpoint](#endpoint)
+- [Counting Results](#counting-results)
+- [Pagination](#pagination)
+- [Filter Parameters](#filter-parameters)
+- [Projection Parameters](#projection-parameters)
+- [Sorting Parameters](#sorting-parameters)
 
 ## Running
-Once you've built the charity-base database - as described in [charity-base/data] (https://github.com/tithebarn/charity-base/tree/master/data) - running the API is easy. Assuming you're in the charity-base directory:
+Once you've built the charity-base database - as described in [charity-base/data](https://github.com/tithebarn/charity-base/tree/master/data) - running the API is easy. Assuming you're in the charity-base directory:
 ```bash
 $ cd api
 $ node server.js
@@ -57,7 +57,7 @@ GET /api/v0.2.0/charities/?limit=30&skip=60
 ```
 
 ## Filter Parameters
-The fields `charityNumber`, `subNumber`, `registered` and `mainCharity.income` (defined in the schema `charity-base/models/charity.js`) can be specified in the query string to filter results.  The package `api-query-params` is used to translate these query string parameters to a database query, supporting a wide range of [filter options] (https://github.com/loris/api-query-params#supported-features).
+The fields `charityNumber`, `subNumber`, `registered` and `mainCharity.income` (defined in the schema `charity-base/models/charity.js`) can be specified in the query string to filter results.  The package `api-query-params` is used to translate these query string parameters to a database query, supporting a wide range of [filter options](https://github.com/loris/api-query-params#supported-features).
 
 For example:
 * Request registered, main (non-subsidiary) charities with no reported income:
