@@ -43,6 +43,61 @@ textFormatting.parseNumber = function (numberString) {
   return number;
 }
 
+var padZero = function(s, n, str){
+  var diff = Math.max( n-String(s).length+1, 0 );
+  return Array(diff).join(str||'0')+s;
+}
+
+textFormatting.parseCharityNumber = function( ccnumber ) {
+  if (typeof(ccnumber) === 'number'){
+    ccnumber = (ccnumber).toString()
+  }
+  if (typeof(ccnumber) !== 'string') {
+    return null;
+  }
+  ccnumber = ccnumber.replace(/ /g, '').toUpperCase().replace('O', '0');
+  if( ccnumber[0] === 'S' ){
+    // Scottish Charity
+
+    // replace any non digits
+    ccnumber = ccnumber.replace(/\D/g, '');
+
+    // remove any leading zeroes
+    ccnumber = ccnumber.replace(/^0+/g, '');
+
+    // pad to 6 digits with 0
+    ccnumber = padZero(ccnumber, 6, '0');
+
+    // add 'SC' to start
+    ccnumber = 'SC' + ccnumber;
+
+    // stop at 8 chars
+    ccnumber = ccnumber.slice(0,8);
+
+  } else {
+    // England and Wales charity
+
+    // todo: split on '-' separator for subsidiary charities
+    // eg charity number could be '123456-1'
+    // discard remainder?
+
+    // replace any non zero
+    ccnumber = ccnumber.replace(/\D/g, '');
+
+    // remove any leading zeroes
+    ccnumber = ccnumber.replace(/^0+/g, '');
+
+    // max of 7 chars
+    ccnumber = ccnumber.slice(0,7);
+  }
+  if( ccnumber===''){
+    return null;
+  }
+
+  return ccnumber;
+
+}
+
 textFormatting.parseNegative = function (numberString) {
   var n = this.parseNumber(numberString);
   if (n==null) {
