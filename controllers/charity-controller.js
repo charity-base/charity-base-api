@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var aqp = require('api-query-params');
 var Charity = require('../models/charity')(mongoose);
-var { filteredObject, isAncestorProperty } = require('../helpers/index');
+var { filteredObject, isAncestorProperty } = require('../lib/index');
 
 var latestVersion = 'v0.2.0';
 
