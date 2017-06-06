@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var aqp = require('api-query-params');
 var Charity = require('../models/charity')(mongoose);
-const { filteredObject } = require('../lib/utils');
+const { filterObject } = require('../lib/utils');
 var { isAncestorProperty } = require('../lib/query-helpers');
 
 var latestVersion = 'v0.2.0';
@@ -15,10 +15,10 @@ function validateProjection (query) {
   var compulsoryFields = ['charityNumber', 'subNumber', 'registered', 'name'];
 
   // Remove exclusions since projection cannot have a mix of inclusion and exclusion:
-  query.projection = filteredObject(query.projection, (key, value) => value===1);
+  query.projection = filterObject(query.projection, (key, value) => value===1);
 
   // Remove projection if it or its (grand-)parent is in privateFields:
-  query.projection = filteredObject(query.projection, (key, value) => !privateFields.some(isAncestorProperty(key)));
+  query.projection = filterObject(query.projection, (key, value) => !privateFields.some(isAncestorProperty(key)));
 
   // Do not return ID
   query.projection._id = 0;

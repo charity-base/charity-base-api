@@ -18,5 +18,8 @@
     "mongoose": "^4.6.6",
     "request": "^2.78.0",
     "request-promise": "^4.1.1"
+  },
+  "devDependencies": {
+    "jest": "^20.0.4"
   }
 }
