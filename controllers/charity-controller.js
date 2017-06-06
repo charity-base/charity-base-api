@@ -4,36 +4,31 @@ var Charity = require('../models/charity')(mongoose);
 const { filterObject } = require('../lib/utils');
 const { isDescendantOfAny } = require('../lib/query-helpers');
 
-var latestVersion = 'v0.2.0';
-
+const LATEST_VERSION = 'v0.2.0';
+const COMPULSORY_FIELDS = ['charityNumber', 'subNumber', 'registered', 'name'];
+const PRIVATE_FIELDS = [];
 
 const isPublic = (requestedField, privateFields) => (
   !isDescendantOfAny(requestedField, privateFields)
 )
 
 function validateProjection (query) {
-
   query.projection = query.projection || {};
-
-  var privateFields = [];
-  var compulsoryFields = ['charityNumber', 'subNumber', 'registered', 'name'];
 
   // Remove exclusions since projection cannot have a mix of inclusion and exclusion:
   query.projection = filterObject(query.projection, (key, value) => value === 1);
 
-  // Remove projection if it or its (grand-)parent is in privateFields:
-  query.projection = filterObject(query.projection, (key, value) => isPublic(key, privateFields));
+  // Remove projection if it or its (grand-)parent is in PRIVATE_FIELDS:
+  query.projection = filterObject(query.projection, (key, value) => isPublic(key, PRIVATE_FIELDS));
 
   // Do not return ID
   query.projection._id = 0;
 
-  // Always return compulsoryFields
-  for (var i=0; i<compulsoryFields.length; i++) {
-    query.projection[compulsoryFields[i]] = 1;
+  // Always return COMPULSORY_FIELDS
+  for (let i = 0; i < COMPULSORY_FIELDS.length; i += 1) {
+    query.projection[COMPULSORY_FIELDS[i]] = 1;
   }
-
 }
-
 
 function addSearchQuery (query, searchTerm) {
 
@@ -57,7 +52,6 @@ function addSearchQuery (query, searchTerm) {
 
 }
 
-
 function addDefaultSort (query) {
   if (!query.sort) {
     query.sort = {
@@ -67,7 +61,6 @@ function addDefaultSort (query) {
   }
 }
 
-
 function validateLimit(query, defaultLimit, maxLimit) {
   if (query.limit > maxLimit) {
     query.limit = maxLimit;
@@ -76,17 +69,14 @@ function validateLimit(query, defaultLimit, maxLimit) {
   }
 }
 
-
 function validateSkip(query) {
   query.skip = query.skip > -1 ? query.skip : 0;
 }
 
-
 module.exports.getCharities = function (req, res) {
-
-  if (req.params.version!==latestVersion) {
+  if (req.params.version !== LATEST_VERSION) {
     return res.status(400).send({
-      message: `You requested version ${req.params.version} but only the latest version ${latestVersion} is supported`
+      message: `You requested version ${req.params.version} but only the latest version ${LATEST_VERSION} is supported`
     });
   }
 
@@ -135,12 +125,11 @@ module.exports.getCharities = function (req, res) {
         return res.status(400).send(err);
       }
       return res.send({
-        version : latestVersion,
+        version : LATEST_VERSION,
         totalMatches : count,
         query : query,
         charities : charities
       });
     });
   });
-
 }
