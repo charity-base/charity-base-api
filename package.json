@@ -7,17 +7,11 @@
     "url": "https://github.com/tythe-org/charity-base-api.git"
   },
   "dependencies": {
-    "adm-zip": "^0.4.7",
-    "api-query-params": "^4.3.0",
-    "case": "^1.4.2",
-    "cheerio": "^0.22.0",
-    "command-line-args": "^3.0.2",
+    "api-query-params": "^4.5.0",
     "cors": "^2.8.1",
     "express": "^4.14.0",
-    "fast-csv": "^2.3.0",
-    "mongoose": "^4.6.6",
-    "request": "^2.78.0",
-    "request-promise": "^4.1.1"
+    "https": "^1.0.0",
+    "mongoose": "^4.6.6"
   },
   "devDependencies": {
     "jest": "^20.0.4"

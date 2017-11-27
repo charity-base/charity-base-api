@@ -1,37 +1,38 @@
 var express = require('express'),
     app = express(),
     cors = require('cors'),
-    mongoose = require('mongoose'),
-    charityController = require('./controllers/charity-controller'),
-    config = require('./config/config')();
+    https = require('https'),
+    fs = require('fs'),
+    apiRouter = require('./routers'),
+    config = require('./config.json'),
+    redirectInsecure = require('./middlewares/redirectInsecure');
 
-mongoose.connect(config.mongo.address, { config: config.mongo.config });
-mongoose.Promise = global.Promise;
+const connectToDb = require('./helpers/connectToDb');
 
-var homeTemplate = `
-  <!DOCTYPE html>
-  <div>
-    Congratulations, you've made an API!
-  </div>
-  <div>
-    The main endpoint is
-    <a href="/api/v0.2.0/charities">/api/v0.2.0/charities</a>
-  </div>
-  <div>
-    Take a look at the
-    <a href="https://github.com/tythe-org/charity-base-api/blob/master/README.md">README</a>
-    for more information.
-  </div>
-`;
+connectToDb(config.dbUrl, {
+  useMongoClient: true,
+  autoIndex: true
+});
 
 app.use(cors());
 
-app.get('/', function(req, res) {
-  res.send(homeTemplate);
+app.use(redirectInsecure(config.domain, config.sslPort));
+
+app.use(express.static(config.staticFilesDirectory));
+
+app.use('/api/:version/', apiRouter(config));
+
+app.listen(config.port, function() {
+  console.log('Listening on port ' + config.port);
 });
 
-app.get('/api/:version/charities', charityController.getCharities);
-
-app.listen(config.listenPort, function() {
-  console.log('Listening on port ' + config.listenPort);
-});
+if (config.sslPort) {
+  const sslCreds = {
+    key: fs.readFileSync(config.keyFilename, 'utf8'),
+    cert: fs.readFileSync(config.certFilename, 'utf8'),
+    ca: fs.readFileSync(config.caFilename, 'utf8')
+  };
+  https.createServer(sslCreds, app).listen(config.sslPort, () => {
+    console.log(`Listening on port ${config.sslPort}`);
+  });
+}

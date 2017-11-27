@@ -12,6 +12,18 @@ const isPublic = (requestedField, privateFields) => (
   !isDescendantOfAny(requestedField, privateFields)
 )
 
+const bufferToBase64 = buffer => buffer.toString('base64')
+
+const parseCharity = bsonCharity => {
+  const jsonCharity = bsonCharity.toJSON();
+  const faviconBuffer = bsonCharity['favicon'];
+  return faviconBuffer ? (
+    Object.assign({}, jsonCharity, {favicon: bufferToBase64(faviconBuffer)})
+  ) : (
+    jsonCharity
+  )
+}
+
 function validateProjection (query) {
   query.projection = query.projection || {};
 
@@ -73,14 +85,9 @@ function validateSkip(query) {
   query.skip = query.skip > -1 ? query.skip : 0;
 }
 
-module.exports.getCharities = function (req, res) {
-  if (req.params.version !== LATEST_VERSION) {
-    return res.status(400).send({
-      message: `You requested version ${req.params.version} but only the latest version ${LATEST_VERSION} is supported`
-    });
-  }
+const getCharities = (req, res) => {
 
-  var query = aqp.default(req.query, {
+  var query = aqp(req.query, {
     // whitelist only allows filters on these fields (not including their children)
     whitelist: ['charityNumber', 'subNumber', 'registered', 'mainCharity.income']
   });
@@ -95,7 +102,6 @@ module.exports.getCharities = function (req, res) {
   validateLimit(query, defaultLimit=10, maxLimit=50);
 
   validateSkip(query);
-
 
   return Promise.resolve(
     req.query.hasOwnProperty('countResults')
@@ -124,12 +130,14 @@ module.exports.getCharities = function (req, res) {
       if (err) {
         return res.status(400).send(err);
       }
-      return res.send({
+      return res.json({
         version : LATEST_VERSION,
         totalMatches : count,
         query : query,
-        charities : charities
+        charities : charities.map(parseCharity),
       });
     });
   });
 }
+
+module.exports = getCharities;
