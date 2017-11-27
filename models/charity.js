@@ -1,4 +1,3 @@
-  
 function createSchema (mongoose) {
   var charitySchema = new mongoose.Schema({
     charityNumber : Number,
