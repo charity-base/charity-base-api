@@ -3,7 +3,7 @@ const getCharitiesRouter = require('./charities');
 const verifyValidVersion = require('../middlewares/verifyValidVersion');
 const persistRequest = require('../middlewares/persistRequest');
 
-const getApiRouter = ({ version }) => {
+const getApiRouter = version => {
   apiRouter.use(persistRequest());
 
   apiRouter.use(verifyValidVersion(version));
