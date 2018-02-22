@@ -1,11 +1,4 @@
 {
   "version" : "v0.2.0",
-  "port" : 3000,
-  "sslPort" : null,
-  "keyFilename" : "/path/to/ssl-creds/myserver.key",
-  "certFilename" : "/path/to/ssl-creds/certificate.crt",
-  "caFilename" : "/path/to/ssl-creds/GandiStandardSSLCA2.pem",
-  "staticFilesDirectory": "/path/to/client/build",
-  "domain" : "charitybase.uk",
   "dbUrl" : "mongodb://localhost:27017/charity-base"
 }
