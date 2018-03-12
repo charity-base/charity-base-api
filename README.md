@@ -5,7 +5,7 @@ CharityBase is an API which provides data on the activities, history, areas of o
 ## Endpoint
 The API has one endpoint:
 ```bash
-GET https://charitybase.uk/api/v0.2.0/charities
+GET https://charitybase.uk/api/v0.3.0/charities
 ```
 
 ## API docs
