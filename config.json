@@ -1,4 +1,4 @@
 {
-  "version" : "v0.2.0",
-  "dbUrl" : "mongodb://localhost:27017/charity-base"
+  "version" : "v0.3.0",
+  "dbUrl" : "mongodb://localhost:27017/charity-base-v3"
 }

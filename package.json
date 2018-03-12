@@ -1,13 +1,14 @@
 {
   "name": "charity-base-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/tythe-org/charity-base-api.git"
   },
   "dependencies": {
-    "api-query-params": "^4.5.0",
+    "api-query-params": "^4.5.1",
+    "bunyan": "^1.8.12",
     "cors": "^2.8.1",
     "express": "^4.14.0",
     "mongoose": "^4.6.6"
