@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const aqp = require('api-query-params')
-const Charity = require('../models/charity')(mongoose)
+const Charity = require('../models/charity')
 const { filterObject } = require('../lib/utils')
 const { isDescendantOfAny } = require('../lib/query-helpers')
 const log = require('../helpers/logger')
