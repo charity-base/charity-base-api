@@ -1,7 +1,6 @@
 const fs = require('fs')
 const log = require('../helpers/logger')
 const charitiesFileRouter = require('express').Router()
-const aqp = require('api-query-params')
 const Charity = require('../models/charity')
 
 const DOWNLOADS_DIR = './downloads'
@@ -14,9 +13,11 @@ const getDownloadCharitiesRouter = () => {
 
   charitiesFileRouter.get('/', (req, res, next) => {
 
+    const { filter } = res.locals.query
+
     const query = {
       url: req.url,
-      filter: aqp(req.query).filter,
+      filter,
     }
     
     const fileName = `${req.url.replace(/\//g, '') || 'all'}.txt`
@@ -42,7 +43,7 @@ const getDownloadCharitiesRouter = () => {
           return res.sendStatus(400)
         }
         const writeStream = fs.createWriteStream(filePath, writeStreamOptions)
-        const mongooseCursor = Charity.find(query.filter).limit(1000).cursor({ transform: x => `${JSON.stringify(x)}\n` })
+        const mongooseCursor = Charity.find(filter).limit(1000).cursor({ transform: x => `${JSON.stringify(x)}\n` })
 
         mongooseCursor.pipe(writeStream).on('finish', () => {
           log.info("Write stream finished")

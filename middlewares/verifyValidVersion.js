@@ -4,7 +4,7 @@ const verifyValidVersion = version => (req, res, next) => {
       message: `You requested version ${req.params.version} but only the latest version ${version} is supported.`
     });
   }
-  return next();
+  return next()
 }
 
-module.exports = verifyValidVersion;
+module.exports = verifyValidVersion
