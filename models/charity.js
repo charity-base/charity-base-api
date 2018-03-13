@@ -1,5 +1,6 @@
+const mongoose = require('mongoose')
 
-const createSchema = mongoose => {
+const createSchema = () => {
   const charitySchema = new mongoose.Schema({
     'regulator': { type : String, enum : ['GB-CHC', 'GB-SC', 'GB-NIC'] },
     'ids': {
@@ -64,24 +65,18 @@ const createSchema = mongoose => {
   }, {
     collection : 'charitiesMar10',
     strict : true,
-    timestamps : true
+    timestamps : true,
   })
 
-  charitySchema.index( { 'ids.charityId' : 1 }, { unique : true } );
-  charitySchema.index( { 'ids.GB-CHC' : 1 }, { unique : true } );
-  charitySchema.index( { 'income.latest.total': 1 } );
-  charitySchema.index( { '$**': 'text' } );
-  // charitySchema.index( { 'geo.address': '2dsphere' } );
+  charitySchema.index( { 'ids.charityId' : 1 }, { unique : true } )
+  charitySchema.index( { 'ids.GB-CHC' : 1 }, { unique : true } )
+  charitySchema.index( { 'income.latest.total': 1 } )
+  charitySchema.index( { '$**': 'text' } )
+  // charitySchema.index( { 'geo.address': '2dsphere' } )
 
-  return charitySchema;
+  return charitySchema
 }
 
+const Charity = mongoose.model('Charity', createSchema())
 
-const getModel = (mongoose, connection) => {
-  var modelCreator = (typeof connection !== 'undefined') ? connection : mongoose;
-  var charitySchema = createSchema(mongoose);
-  var Charity = modelCreator.model('Charity', charitySchema);
-  return Charity
-}
-
-module.exports = getModel;
+module.exports = Charity
