@@ -4,7 +4,19 @@ const { filterObject } = require('../lib/utils')
 const { isDescendantOfAny } = require('../lib/query-helpers')
 
 const ALWAYS_PROJECTED = ['ids', 'name']
-const ALLOWED_FILTERS = ['ids.charityId', 'ids.GB-CHC', 'income.latest.total']
+const ALLOWED_FILTERS = [
+  'ids.GB-CHC',
+  'income.latest.total',
+  'isWelsh',
+  'isSchool',
+  'areasOfOperation.id',
+  'trustees.incorporated',
+  ...[...Array(400).keys()].map(x => `trustees.names.${x}`),
+  ...[...Array(400).keys()].map(x => `subsidiaries.${x}`),
+  'causes.id',
+  'beneficiaries.id',
+  'operations.id'
+]
 const PRIVATE_FIELDS = []
 
 const isPublic = (requestedField, privateFields) => (
@@ -70,14 +82,16 @@ function addSearchQuery (query, searchTerm) {
       score : { "$meta" : "textScore" }
     };
   }
-
 }
 
 function addDefaultSort (query) {
   if (!query.sort) {
     query.sort = {
-      'ids.GB-CHC' : 1,
+      'income.latest.total' : -1,
     }
+  }
+  if (!query.sort.hasOwnProperty('ids.GB-CHC')) {
+    query.sort['ids.GB-CHC'] = 1
   }
 }
 
@@ -93,11 +107,30 @@ function validateSkip(query) {
   query.skip = query.skip > -1 ? query.skip : 0;
 }
 
-const getQuery = (req, res, next) => {
+const addGeoQuery = (query, geoSearch) => {
+  if (!geoSearch) {
+    return
+  }
+
+  const [km, lat, lon] = geoSearch.split(',').map(Number)
+
+  query.filter['contact.geo.location'] = {
+    $near : {
+      $geometry : {
+        type : "Point",
+        coordinates : [ lon, lat ]
+      },
+      $maxDistance : km*1000
+    }
+  }
+}
+
+const getQuery = () => (req, res, next) => {
   const query = aqp(req.query, { whitelist: ALLOWED_FILTERS })
-  
+
   checkAllProjection(query)
   addSearchQuery(query, req.query.search)
+  addGeoQuery(query, req.query.addressWithin)
   addDefaultSort(query)
 
   validateProjection(query)

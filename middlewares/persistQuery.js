@@ -1,10 +1,8 @@
+const log = require('../helpers/logger')
 const mongoose = require('mongoose')
-
-const LATEST_VERSION = 'v0.3.0'
 
 const hitSchema = new mongoose.Schema({
   url: String,
-  countResults: Boolean,
   version: String,
   query: {
     filter: mongoose.Schema.Types.Mixed,
@@ -20,16 +18,15 @@ const hitSchema = new mongoose.Schema({
 const Hit = mongoose.model('Hit', hitSchema)
 
 const stripQuery = query => {
-  // Strips . and $ characters from a mongo query to allow persisting the query to a mongo doc.
+  // Strips . and $ characters from a mongo query (with the exception of decimal points) to allow persisting the query to a mongo doc.
   return JSON.parse(
-    JSON.stringify(query).replace(/\./g, '|').replace(/\$/g, '£')
+    JSON.stringify(query).replace(/\D\./g, x => x.replace('.', '|')).replace(/\$/g, '£')
   )
 }
 
-const persistRequest = (url, query, countResults, version) => {
+const persistRequest = (url, query, version) => {
   const hit = new Hit({
     url: url,
-    countResults,
     version,
     query: stripQuery(query),
   })
@@ -40,12 +37,9 @@ const persistRequest = (url, query, countResults, version) => {
   })
 }
 
-const persistQuery = (req, res, next) => {
+const persistQuery = version => (req, res, next) => {
   const { query } = res.locals
-  const countResults = req.query.hasOwnProperty('countResults')
-
-  persistRequest(req.url, query, countResults, LATEST_VERSION)
-
+  persistRequest(req.url, query, version)
   return next()
 }
 

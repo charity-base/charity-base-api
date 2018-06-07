@@ -1,6 +1,6 @@
 {
   "name": "charity-base-api",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -15,5 +15,10 @@
   },
   "devDependencies": {
     "jest": "^20.0.4"
+  },
+  "scripts": {
+    "test": "jest",
+    "slc-build": "slc build --npm",
+    "slc-deploy": "slc deploy -s $SERVICE http://charitybase.uk $BUILD"
   }
 }

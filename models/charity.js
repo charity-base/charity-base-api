@@ -17,6 +17,40 @@ const createSchema = () => {
       'phone': String,
       'postcode': String,
       'address': [String],
+      'geo': {
+        'postcode' : String,
+        'quality' : Number,
+        'eastings' : Number,
+        'northings' : Number,
+        'country' : String,
+        'nhs_ha' : String,
+        'longitude' : Number,
+        'latitude' : Number,
+        'european_electoral_region' : String,
+        'primary_care_trust' : String,
+        'region' : String,
+        'lsoa' : String,
+        'msoa' : String,
+        'incode' : String,
+        'outcode' : String,
+        'parliamentary_constituency' : String,
+        'admin_district' : String,
+        'parish' : String,
+        'admin_county' : String,
+        'admin_ward' : String,
+        'ccg' : String,
+        'nuts' : String,
+        'codes' : {
+          'admin_district' : String,
+          'admin_county' : String,
+          'admin_ward' : String,
+          'parish' : String,
+          'parliamentary_constituency' : String,
+          'ccg' : String,
+          'nuts' : String
+        },
+        'location' : { type: [Number], index: '2dsphere' }
+      }
     },
     'isWelsh': Boolean,
     'trustees': {
@@ -40,7 +74,7 @@ const createSchema = () => {
       }],
     },
     'fyend': String,
-    'companiesHouseNumber': Number,
+    'companiesHouseNumber': String,
     'areasOfOperation': [{
       'id' : String,
       'parentId' : String,
@@ -49,7 +83,7 @@ const createSchema = () => {
       'locationType' : String,
       'isWelsh' : Boolean,
     }],
-    'categories': [{
+    'causes': [{
       'id' : Number,
       'name' : String,
     }],
@@ -62,17 +96,34 @@ const createSchema = () => {
       'name' : String,
     }],
     'activities': String,
+    'subsidiaries': [{
+      'name': String,
+      'isRegistered': Boolean,
+      'governingDoc': String,
+      'areaOfBenefit': String,
+      'contact': {
+        'email': String,
+        'person': String,
+        'phone': String,
+        'postcode': String,
+        'address': [String],
+      },
+    }],
+    'alternativeNames': [String],
   }, {
-    collection : 'charitiesMar10',
+    collection : 'charities',
     strict : true,
     timestamps : true,
   })
 
   charitySchema.index( { 'ids.charityId' : 1 }, { unique : true } )
   charitySchema.index( { 'ids.GB-CHC' : 1 }, { unique : true } )
-  charitySchema.index( { 'income.latest.total': 1 } )
+  charitySchema.index( { 'areasOfOperation.id': 1 } )
+  charitySchema.index( { 'causes.id': 1 } )
+  charitySchema.index( { 'beneficiaries.id': 1 } )
+  charitySchema.index( { 'operations.id': 1 } )
+  charitySchema.index( { 'income.latest.total': -1, 'ids.GB-CHC' : 1 } )
   charitySchema.index( { '$**': 'text' } )
-  // charitySchema.index( { 'geo.address': '2dsphere' } )
 
   return charitySchema
 }
