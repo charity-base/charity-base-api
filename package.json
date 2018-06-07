@@ -7,10 +7,10 @@
     "url": "https://github.com/tythe-org/charity-base-api.git"
   },
   "dependencies": {
-    "api-query-params": "^4.5.1",
     "bunyan": "^1.8.12",
     "cors": "^2.8.1",
     "express": "^4.16.3",
+    "mongoosastic": "^4.4.1",
     "mongoose": "^4.6.6"
   },
   "devDependencies": {
