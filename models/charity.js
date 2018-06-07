@@ -1,70 +1,76 @@
 const mongoose = require('mongoose')
+const mongoosastic = require('mongoosastic')
 
 const createSchema = () => {
   const charitySchema = new mongoose.Schema({
-    'regulator': { type : String, enum : ['GB-CHC', 'GB-SC', 'GB-NIC'] },
+    '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
+    'regulator': { type : String, enum : ['GB-CHC', 'GB-SC', 'GB-NIC'], es_type: "text" },
     'ids': {
-      'charityId': String,
-      'GB-CHC': Number,
+      'charityId': { type: String, es_type: "text" },
+      'GB-CHC': { type: Number, es_type: "integer" },
     },
-    'name': String,
-    'isRegistered': Boolean,
-    'governingDoc': String,
-    'areaOfBenefit': String,
+    'name': { type: String, es_type: "text" },
+    'isRegistered': { type: Boolean, es_type: "boolean" },
+    'governingDoc': { type: String, es_type: "text" },
+    'areaOfBenefit': { type: String, es_type: "text" },
     'contact': {
-      'email': String,
-      'person': String,
-      'phone': String,
-      'postcode': String,
-      'address': [String],
+      'email': { type: String, es_type: "text" },
+      'person': { type: String, es_type: "text" },
+      'phone': { type: String, es_type: "text" },
+      'postcode': { type: String, es_type: "text" },
+      'address': { type: [String], es_type: "text" },
       'geo': {
-        'postcode' : String,
+        'postcode' : { type: String, es_type: "text" },
         'quality' : Number,
         'eastings' : Number,
         'northings' : Number,
-        'country' : String,
-        'nhs_ha' : String,
+        'country' : { type: String, es_type: "text" },
+        'nhs_ha' : { type: String, es_type: "text" },
         'longitude' : Number,
         'latitude' : Number,
-        'european_electoral_region' : String,
-        'primary_care_trust' : String,
-        'region' : String,
-        'lsoa' : String,
-        'msoa' : String,
-        'incode' : String,
-        'outcode' : String,
-        'parliamentary_constituency' : String,
-        'admin_district' : String,
-        'parish' : String,
-        'admin_county' : String,
-        'admin_ward' : String,
-        'ccg' : String,
-        'nuts' : String,
+        'european_electoral_region' : { type: String, es_type: "text" },
+        'primary_care_trust' : { type: String, es_type: "text" },
+        'region' : { type: String, es_type: "text" },
+        'lsoa' : { type: String, es_type: "text" },
+        'msoa' : { type: String, es_type: "text" },
+        'incode' : { type: String, es_type: "text" },
+        'outcode' : { type: String, es_type: "text" },
+        'parliamentary_constituency' : { type: String, es_type: "text" },
+        'admin_district' : { type: String, es_type: "text" },
+        'parish' : { type: String, es_type: "text" },
+        'admin_county' : { type: String, es_type: "text" },
+        'admin_ward' : { type: String, es_type: "text" },
+        'ccg' : { type: String, es_type: "text" },
+        'nuts' : { type: String, es_type: "text" },
         'codes' : {
-          'admin_district' : String,
-          'admin_county' : String,
-          'admin_ward' : String,
-          'parish' : String,
-          'parliamentary_constituency' : String,
-          'ccg' : String,
-          'nuts' : String
+          'admin_district' : { type: String, es_type: "text" },
+          'admin_county' : { type: String, es_type: "text" },
+          'admin_ward' : { type: String, es_type: "text" },
+          'parish' : { type: String, es_type: "text" },
+          'parliamentary_constituency' : { type: String, es_type: "text" },
+          'ccg' : { type: String, es_type: "text" },
+          'nuts' : { type: String, es_type: "text" }
         },
-        'location' : { type: [Number], index: '2dsphere' }
       }
     },
-    'isWelsh': Boolean,
-    'trustees': {
-      'incorporated': Boolean,
-      'names': [String],
+    geo_coords: {
+      type: String,
+      es_type: 'geo_point',
     },
-    'website': String,
-    'isSchool': Boolean,
+    'isWelsh': { type: Boolean, es_type: "boolean" },
+    'trustees': {
+      'incorporated': { type: Boolean, es_type: "boolean" },
+      'names': { type: [String], es_type: "text" },
+    },
+    'website': { type: String, es_type: "text" },
+    'isSchool': { type: Boolean, es_type: "boolean" },
     'income': {
       'latest': {
         'date': Date,
         'total': Number,
       },
       annual: [{
+        '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
         'financialYear' : {
           'begin' : Date,
           'end' : Date,
@@ -73,43 +79,48 @@ const createSchema = () => {
         'expend' : Number,
       }],
     },
-    'fyend': String,
-    'companiesHouseNumber': String,
+    'fyend': { type: String, es_type: "text" },
+    'companiesHouseNumber': { type: String, es_type: "text" },
     'areasOfOperation': [{
-      'id' : String,
-      'parentId' : String,
-      'name' : String,
-      'alternativeName' : String,
-      'locationType' : String,
-      'isWelsh' : Boolean,
+      '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
+      'id' : { type: String, es_type: 'text' },
+      'parentId' : { type: String, es_type: 'text' },
+      'name' : { type: String, es_type: 'text' },
+      'alternativeName' : { type: String, es_type: 'text' },
+      'locationType' : { type: String, es_type: 'text' },
+      'isWelsh' : { type: Boolean, es_type: 'boolean' },
     }],
     'causes': [{
+      '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
       'id' : Number,
-      'name' : String,
+      'name' : { type: String, es_type: "text" },
     }],
     'beneficiaries': [{
+      '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
       'id' : Number,
-      'name' : String,
+      'name' : { type: String, es_type: "text" },
     }],
     'operations': [{
+      '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
       'id' : Number,
-      'name' : String,
+      'name' : { type: String, es_type: "text" },
     }],
-    'activities': String,
+    'activities': { type: String, es_type: "text" },
     'subsidiaries': [{
-      'name': String,
-      'isRegistered': Boolean,
-      'governingDoc': String,
-      'areaOfBenefit': String,
+      '_id': { type: mongoose.Schema.Types.ObjectId, es_type: 'text' },
+      'name': { type: String, es_type: "text" },
+      'isRegistered': { type: Boolean, es_type: "boolean" },
+      'governingDoc': { type: String, es_type: "text" },
+      'areaOfBenefit': { type: String, es_type: "text" },
       'contact': {
-        'email': String,
-        'person': String,
-        'phone': String,
-        'postcode': String,
-        'address': [String],
+        'email': { type: String, es_type: "text" },
+        'person': { type: String, es_type: "text" },
+        'phone': { type: String, es_type: "text" },
+        'postcode': { type: String, es_type: "text" },
+        'address': [{ type: String, es_type: "text" }],
       },
     }],
-    'alternativeNames': [String],
+    'alternativeNames': [{ type: String, es_type: "text" }],
   }, {
     collection : 'charities',
     strict : true,
@@ -118,12 +129,7 @@ const createSchema = () => {
 
   charitySchema.index( { 'ids.charityId' : 1 }, { unique : true } )
   charitySchema.index( { 'ids.GB-CHC' : 1 }, { unique : true } )
-  charitySchema.index( { 'areasOfOperation.id': 1 } )
-  charitySchema.index( { 'causes.id': 1 } )
-  charitySchema.index( { 'beneficiaries.id': 1 } )
-  charitySchema.index( { 'operations.id': 1 } )
-  charitySchema.index( { 'income.latest.total': -1, 'ids.GB-CHC' : 1 } )
-  charitySchema.index( { '$**': 'text' } )
+  charitySchema.plugin(mongoosastic)
 
   return charitySchema
 }
