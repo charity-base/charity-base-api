@@ -10,7 +10,9 @@ log.info(`Starting process with NODE_ENV=${process.env.NODE_ENV}`)
 
 const listenPort = process.env.PORT || 4000
 
-connectToDb(config.dbUrl, {
+const { dbHost, dbPort, dbName } = config.mongo
+
+connectToDb(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
   useMongoClient: true,
   autoIndex: true
 }).then(() => {

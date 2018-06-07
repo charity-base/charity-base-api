@@ -1,4 +1,8 @@
 {
-  "version" : "v0.3.0",
-  "dbUrl" : "mongodb://localhost:27017/charity-base-v3"
+  "version" : "v1.0.0",
+  "mongo" : {
+    "dbHost" : "localhost",
+    "dbPort" : "27017",
+    "dbName" : "charity-base-v1_0_0-May18"
+  }
 }
