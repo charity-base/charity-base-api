@@ -8,7 +8,16 @@ const parseSearch = q => {
   return {
     multi_match: {
       query: search,
-      fields: [ 'name^3', 'alternativeNames^3', 'contact.email', 'trustees.names', 'areasOfOperation.name' ],
+      fields: [
+        'name^3',
+        'alternativeNames^3',
+        'contact.email',
+        'trustees.names',
+        'areasOfOperation.name',
+        'causes.name',
+        'beneficiaries.name',
+        'operations.name'
+      ],
       type: 'phrase_prefix',
       operator: 'and',
     }
