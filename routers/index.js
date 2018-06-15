@@ -3,7 +3,6 @@ const getCharitiesRouter = require('./charities')
 const getDownloadCharitiesRouter = require('./download-charities')
 const verifyValidVersion = require('../middlewares/verifyValidVersion')
 const parseElasticSearchQuery = require('../middlewares/parse-query')
-const parseQuery = require('../middlewares/parseQuery')
 const persistQuery = require('../middlewares/persistQuery')
 
 const getApiRouter = acceptedVersion => {
@@ -11,7 +10,6 @@ const getApiRouter = acceptedVersion => {
   apiRouter.use(verifyValidVersion(acceptedVersion))
 
   apiRouter.use(parseElasticSearchQuery())
-  // apiRouter.use(parseQuery())
   // apiRouter.use(persistQuery(acceptedVersion))
 
   apiRouter.use('/charities', getCharitiesRouter(acceptedVersion))
