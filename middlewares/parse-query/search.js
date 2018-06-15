@@ -7,7 +7,7 @@ const parseSearch = q => {
 
   return {
     simple_query_string : {
-      query: `${search.split(' ').join('~1 + ')}~1`,
+      query: `${search.split(' ').join('~1 + ')}~1`, // what about "quoted searches"?
       fields: [
         'name^3',
         'alternativeNames^3',
