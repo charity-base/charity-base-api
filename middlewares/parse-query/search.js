@@ -6,8 +6,8 @@ const parseSearch = q => {
   }
 
   return {
-    multi_match: {
-      query: search,
+    simple_query_string : {
+      query: `${search.split(' ').join('~1 + ')}~1`,
       fields: [
         'name^3',
         'alternativeNames^3',
@@ -18,8 +18,6 @@ const parseSearch = q => {
         'beneficiaries.name',
         'operations.name'
       ],
-      type: 'phrase_prefix',
-      operator: 'and',
     }
   }
 }
