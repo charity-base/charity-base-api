@@ -6,6 +6,7 @@ const DEFAULT_FIELDS = [
 ]
 
 const DEFAULT_SORT = [
+  '_score',
   'income.latest.total:desc',
   'ids.GB-CHC:asc',
 ]
@@ -16,7 +17,7 @@ const parseFields = q => {
 }
 
 const parseSort = q => {
-  return q['sort'] ? q['sort'] : DEFAULT_SORT
+  return q['sort'] ? [q['sort'], ...DEFAULT_SORT] : DEFAULT_SORT
 }
 
 const parseMeta = q => {
