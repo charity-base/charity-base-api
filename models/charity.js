@@ -121,6 +121,11 @@ const createSchema = () => {
       },
     }],
     'alternativeNames': [{ type: String, es_type: "text" }],
+    'people': {
+      'trustees': Number,
+      'employees': Number,
+      'volunteers': Number,
+    },
   }, {
     collection : 'charities',
     strict : true,
