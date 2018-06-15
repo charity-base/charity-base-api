@@ -11,6 +11,7 @@ const parseSearch = q => {
       fields: [
         'name^3',
         'alternativeNames^3',
+        'activities',
         'contact.email',
         'trustees.names',
         'areasOfOperation.name',
