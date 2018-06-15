@@ -6,24 +6,6 @@ const getCharityRouter = version => {
 
   charityRouter.get('/', (req, res, next) => {
 
-    const ccNumber = req.query['ids.GB-CHC']
-
-    if (ccNumber) {
-      return Charity
-      .find({ 'ids.GB-CHC': ccNumber })
-      // add select, sort, skip, limit?
-      .exec()
-      .then(charities => res.json({
-        version,
-        query: { 'ids.GB-CHC': ccNumber },
-        charities
-      }))
-      .catch(err => {
-        log.error(err)
-        return res.status(400).send(err)
-      })
-    }
-
     const { query, meta } = res.locals.elasticSearch
 
     return Charity

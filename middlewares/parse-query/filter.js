@@ -39,8 +39,14 @@ const parseOperations = query => {
   return ids.map(id => ({ "term": { "operations.id": id }}))
 }
 
+const parseId = query => {
+  const charityId = query['ids.GB-CHC']
+  return charityId ? [{ "term": { "ids.GB-CHC": charityId }}] : []
+}
+
 const parseFilter = query => {
 
+  const idFilters = parseId(query)
   const incomeFilters = parseIncomeRange(query)
   const geoFilters = parseAddressWithin(query)
   const areasOfOperationFilters = parseAreasOfOperation(query)
@@ -49,6 +55,7 @@ const parseFilter = query => {
   const operationsFilters = parseOperations(query)
 
   filter = [
+    ...idFilters,
     ...incomeFilters,
     ...geoFilters,
     ...areasOfOperationFilters,
