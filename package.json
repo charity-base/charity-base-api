@@ -9,8 +9,8 @@
   "dependencies": {
     "bunyan": "^1.8.12",
     "cors": "^2.8.1",
+    "elasticsearch": "^15.0.0",
     "express": "^4.16.3",
-    "mongoosastic": "^4.4.1",
     "mongoose": "^4.6.6"
   },
   "devDependencies": {
@@ -19,6 +19,8 @@
   "scripts": {
     "test": "jest",
     "slc-build": "slc build --npm",
+    "slc-create": "slc ctl -C http://charitybase.uk create $SERVICE",
+    "slc-env-set": "slc ctl -C http://charitybase.uk env-set $SERVICE NODE_ENV=$NODE_ENV PORT=$PORT",
     "slc-deploy": "slc deploy -s $SERVICE http://charitybase.uk $BUILD"
   }
 }
