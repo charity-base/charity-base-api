@@ -1,5 +1,3 @@
-const Charity = require('../../models/charity')
-const log = require('../../helpers/logger')
 const parseSearch = require('./search')
 const parseFilter = require('./filter')
 const parseMeta = require('./meta')
