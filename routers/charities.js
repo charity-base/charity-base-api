@@ -16,12 +16,12 @@ const getCharityRouter = version => {
       body: { query },
     })
 
-    return client.search(searchParams, (err, results) => {
+    return client.search(searchParams, (err, response) => {
       if (err) {
         log.error(err)
         return res.status(400).send({ message: err.message })
       }
-      res.json({ version, query: searchParams, charities: results.hits.hits.map(x => x._source) })
+      res.json({ version, query: searchParams, charities: response.hits.hits.map(x => x._source) })
     })
   })
 
