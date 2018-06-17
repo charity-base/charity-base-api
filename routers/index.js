@@ -14,7 +14,7 @@ const getApiRouter = acceptedVersion => {
 
   apiRouter.use('/charities', getCharitiesRouter(acceptedVersion))
   
-  // apiRouter.use('/download-charities', getDownloadCharitiesRouter())
+  apiRouter.use('/download-charities', getDownloadCharitiesRouter())
 
   return apiRouter
 }

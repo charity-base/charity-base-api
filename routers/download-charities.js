@@ -1,73 +1,80 @@
 const fs = require('fs')
-const log = require('../helpers/logger')
+const zlib = require('zlib')
+const elasticsearch = require('elasticsearch')
 const charitiesFileRouter = require('express').Router()
-const Charity = require('../models/charity')
+const log = require('../helpers/logger')
+const ElasticStream = require('../helpers/elasticStream')
 
 const DOWNLOADS_DIR = './downloads'
+
+const client = new elasticsearch.Client({
+  host: 'localhost:9200',
+})
+
 
 try {
   fs.mkdirSync(DOWNLOADS_DIR)
 } catch (e) {}
 
+
+const getFileName = queryParams => {
+  const { sort, limit, skip, ...filters } = queryParams
+  const filterNames = Object.keys(filters)
+  if (filterNames.length === 0) {
+    return 'all.jsonl.gz'
+  }
+  return `${filterNames.reduce((agg, x) => `${agg}_${x}=${filters[x]}`, '')}.jsonl.gz`
+}
+
+const handleError = err => {
+  log.error(err)
+  // Handle error, but keep in mind the response may be partially-sent
+  // so check res.headersSent
+  fs.unlink(filePath, e => {
+    if (e) {
+      return log.error(e)
+    }
+    log.info(`Successfully deleted ${filePath}`)
+  })
+}
+
 const getDownloadCharitiesRouter = () => {
 
   charitiesFileRouter.get('/', (req, res, next) => {
 
-    const { filter } = res.locals.query
+    const { query } = res.locals.elasticSearch
 
-    const query = {
-      url: req.url,
-      filter,
+    const searchParams = {
+      index: 'charitys',
+      size: 500,
+      body: { query },
+      scroll: '1m',
     }
     
-    const fileName = `${req.url.replace(/\//g, '') || 'all'}.txt`
+    const fileName = getFileName(req.query)
     const filePath = `${DOWNLOADS_DIR}/${fileName}`
-    res.locals.filePath = filePath
-    log.info(`File path: ${filePath}`)
-
-    const writeStreamOptions = {
-      flags: 'a'
-    }
 
     fs.stat(filePath, (err, stats) => {
-      if (!err && stats.isFile()) {
-        log.info(`File ${fileName} already exists`)
-        return next()
-      }
-
-      log.info(`Creating file ${fileName}`)
-      
-      fs.writeFile(filePath, `${JSON.stringify(query)}\n`, err => {
-        if (err) {
-          log.error(err)
-          return res.sendStatus(400)
-        }
-        const writeStream = fs.createWriteStream(filePath, writeStreamOptions)
-        const mongooseCursor = Charity.find(filter).limit(1000).cursor({ transform: x => `${JSON.stringify(x)}\n` })
-
-        mongooseCursor.pipe(writeStream).on('finish', () => {
-          log.info("Write stream finished")
-          next()
-        })
-      })
-
-    })
-  })
-
-  charitiesFileRouter.get('/', (req, res, next) => {
-    const { filePath } = res.locals
-    const sendFileOptions = {}
-
-    res.download(filePath, 'charity-base-download.txt', sendFileOptions, err => {
-      if (err) {
-        log.error(err)
-        // Handle error, but keep in mind the response may be partially-sent
-        // so check res.headersSent
+      // TODO: check file is not currently being writted
+      if (stats && stats.isFile()) {
+        return res.download(filePath, fileName)
       } else {
-        log.info(`Successfully sent file ${filePath}`)
-        // decrement a download credit, etc.
+        const eStream = new ElasticStream({ searchParams, client })
+        eStream.on('error', handleError)
+        const gzip = zlib.createGzip()
+        gzip.on('error', handleError)
+        const readableGzip = eStream.pipe(gzip)
+        readableGzip.on('error', handleError)
+
+        const out = fs.createWriteStream(filePath)
+        readableGzip.pipe(out)
+        log.info(`Writing to file: ${filePath}`)
+
+        res.attachment(fileName)
+        readableGzip.pipe(res)
       }
     })
+
   })
 
   return charitiesFileRouter
