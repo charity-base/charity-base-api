@@ -1,7 +1,7 @@
 const fs = require('fs')
 const zlib = require('zlib')
 const elasticsearch = require('elasticsearch')
-const charitiesFileRouter = require('express').Router()
+const downloadCharitiesRouter = require('express').Router()
 const log = require('../helpers/logger')
 const ElasticStream = require('../helpers/elasticStream')
 
@@ -40,7 +40,7 @@ const handleError = err => {
 
 const getDownloadCharitiesRouter = () => {
 
-  charitiesFileRouter.get('/', (req, res, next) => {
+  downloadCharitiesRouter.get('/', (req, res, next) => {
 
     const { query } = res.locals.elasticSearch
 
@@ -77,7 +77,7 @@ const getDownloadCharitiesRouter = () => {
 
   })
 
-  return charitiesFileRouter
+  return downloadCharitiesRouter
 }
 
 module.exports = getDownloadCharitiesRouter

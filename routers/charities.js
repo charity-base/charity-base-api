@@ -1,13 +1,13 @@
-const charityRouter = require('express').Router()
+const charitiesRouter = require('express').Router()
 const log = require('../helpers/logger')
 const elasticsearch = require('elasticsearch')
 const client = new elasticsearch.Client({
   host: 'localhost:9200',
 })
 
-const getCharityRouter = version => {
+const getCharitiesRouter = version => {
 
-  charityRouter.get('/', (req, res, next) => {
+  charitiesRouter.get('/', (req, res, next) => {
 
     const { query, meta } = res.locals.elasticSearch
 
@@ -25,7 +25,7 @@ const getCharityRouter = version => {
     })
   })
 
-  return charityRouter
+  return charitiesRouter
 }
 
-module.exports = getCharityRouter
+module.exports = getCharitiesRouter
