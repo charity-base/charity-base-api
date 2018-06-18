@@ -11,7 +11,7 @@ const getApiRouter = acceptedVersion => {
   apiRouter.use(verifyValidVersion(acceptedVersion))
 
   apiRouter.use(parseElasticSearchQuery())
-  // apiRouter.use(persistQuery(acceptedVersion))
+  apiRouter.use(persistQuery(acceptedVersion))
 
   apiRouter.use('/charities', getCharitiesRouter(acceptedVersion))
   apiRouter.use('/count-charities', getCountCharitiesRouter(acceptedVersion))
