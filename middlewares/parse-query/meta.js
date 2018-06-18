@@ -1,7 +1,7 @@
 const { extractValues, numberOrDefault } = require('./helpers')
 
 const DEFAULT_FIELDS = [
-  'ids.GB-CHC',
+  'ids',
   'name',
 ]
 
@@ -25,7 +25,7 @@ const parseMeta = q => {
   const meta = {
     _source: parseFields(q),
     sort: parseSort(q),
-    size: numberOrDefault(q.limit, 10),
+    size: Math.min(numberOrDefault(q.limit, 10), 50),
     from: numberOrDefault(q.skip, 0),
   }
 
