@@ -3,6 +3,6 @@
   "mongo" : {
     "dbHost" : "localhost",
     "dbPort" : "27017",
-    "dbName" : "charity-base-v1_0_0-May18"
+    "dbName" : "charity-base"
   }
 }

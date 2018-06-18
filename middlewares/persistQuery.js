@@ -4,13 +4,7 @@ const mongoose = require('mongoose')
 const hitSchema = new mongoose.Schema({
   url: String,
   version: String,
-  query: {
-    filter: mongoose.Schema.Types.Mixed,
-    projection: mongoose.Schema.Types.Mixed,
-    sort: mongoose.Schema.Types.Mixed,
-    limit: Number,
-    skip: Number,
-  },
+  query: { },
 }, {
   timestamps : true
 })
@@ -38,8 +32,8 @@ const persistRequest = (url, query, version) => {
 }
 
 const persistQuery = version => (req, res, next) => {
-  const { query } = res.locals
-  persistRequest(req.url, query, version)
+  const { elasticSearch } = res.locals
+  persistRequest(req.url, elasticSearch, version)
   return next()
 }
 
