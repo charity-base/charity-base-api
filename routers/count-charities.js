@@ -1,18 +1,20 @@
 const countCharitiesRouter = require('express').Router()
 const log = require('../helpers/logger')
 const elasticsearch = require('elasticsearch')
-const client = new elasticsearch.Client({
-  host: 'localhost:9200',
-})
 
-const getCountCharitiesRouter = version => {
+
+const getCountCharitiesRouter = elasticConfig => {
+
+  const client = new elasticsearch.Client({
+    host: elasticConfig.host,
+  })
 
   countCharitiesRouter.get('/', (req, res, next) => {
 
     const { query } = res.locals.elasticSearch
 
     const searchParams = {
-      index: 'charitys',
+      index: elasticConfig.index,
       body: { query },
     }
 
@@ -21,7 +23,11 @@ const getCountCharitiesRouter = version => {
         log.error(err)
         return res.status(400).send({ message: err.message })
       }
-      res.json({ version, query: searchParams, count: response.count })
+      res.json({
+        version: req.params.version,
+        query: searchParams,
+        count: response.count
+      })
     })
   })
 

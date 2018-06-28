@@ -7,10 +7,6 @@ const ElasticStream = require('../helpers/elasticStream')
 
 const DOWNLOADS_DIR = './downloads'
 
-const client = new elasticsearch.Client({
-  host: 'localhost:9200',
-})
-
 
 try {
   fs.mkdirSync(DOWNLOADS_DIR)
@@ -38,14 +34,18 @@ const handleError = err => {
   })
 }
 
-const getDownloadCharitiesRouter = () => {
+const getDownloadCharitiesRouter = elasticConfig => {
+
+  const client = new elasticsearch.Client({
+    host: elasticConfig.host,
+  })
 
   downloadCharitiesRouter.get('/', (req, res, next) => {
 
     const { query } = res.locals.elasticSearch
 
     const searchParams = {
-      index: 'charitys',
+      index: elasticConfig.index,
       size: 500,
       body: { query },
       scroll: '1m',
