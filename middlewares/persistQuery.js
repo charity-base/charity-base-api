@@ -31,9 +31,9 @@ const persistRequest = (url, query, version) => {
   })
 }
 
-const persistQuery = version => (req, res, next) => {
+const persistQuery = () => (req, res, next) => {
   const { elasticSearch } = res.locals
-  persistRequest(req.url, elasticSearch, version)
+  persistRequest(req.url, elasticSearch, req.params.version)
   return next()
 }
 

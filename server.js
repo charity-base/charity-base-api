@@ -17,7 +17,7 @@ connectToDb(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
   autoIndex: true
 }).then(() => {
   app.use(cors())
-  app.use('/api/:version/', apiRouter(config.version))
+  app.use('/api/:version/', apiRouter(config.version, config.elastic))
   app.listen(listenPort, () => {
     log.info(`Listening on port ${listenPort}`)
   })
