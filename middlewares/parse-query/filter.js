@@ -44,6 +44,11 @@ const parseId = query => {
   return charityId ? [{ "term": { "ids.GB-CHC": charityId }}] : []
 }
 
+const parseFunders = query => {
+  const funders = extractValues(query['funders'])
+  return funders.map(id => ({ "match_phrase": { "grants.fundingOrganization.id": id }}))
+}
+
 const parseFilter = query => {
 
   const idFilters = parseId(query)
@@ -53,6 +58,7 @@ const parseFilter = query => {
   const causesFilters = parseCauses(query)
   const beneficiariesFilters = parseBeneficiaries(query)
   const operationsFilters = parseOperations(query)
+  const funderFilters = parseFunders(query)
 
   filter = [
     ...idFilters,
@@ -62,6 +68,7 @@ const parseFilter = query => {
     ...causesFilters,
     ...beneficiariesFilters,
     ...operationsFilters,
+    ...funderFilters,
   ]
 
   return filter
