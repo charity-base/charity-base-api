@@ -17,7 +17,8 @@ const parseSearch = q => {
         'areasOfOperation.name',
         'causes.name',
         'beneficiaries.name',
-        'operations.name'
+        'operations.name',
+        'grants.description',
       ],
     }
   }
