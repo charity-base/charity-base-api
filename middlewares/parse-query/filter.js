@@ -49,26 +49,23 @@ const parseFunders = query => {
   return funders.map(id => ({ "match_phrase": { "grants.fundingOrganization.id": id }}))
 }
 
+const parseHasGrant = query => {
+  const hasGrant = extractValues(query['hasGrant'])
+  return hasGrant.length > 0 ? [{ "exists" : { "field" : "grants" } }] : []
+}
+
 const parseFilter = query => {
 
-  const idFilters = parseId(query)
-  const incomeFilters = parseIncomeRange(query)
-  const geoFilters = parseAddressWithin(query)
-  const areasOfOperationFilters = parseAreasOfOperation(query)
-  const causesFilters = parseCauses(query)
-  const beneficiariesFilters = parseBeneficiaries(query)
-  const operationsFilters = parseOperations(query)
-  const funderFilters = parseFunders(query)
-
   filter = [
-    ...idFilters,
-    ...incomeFilters,
-    ...geoFilters,
-    ...areasOfOperationFilters,
-    ...causesFilters,
-    ...beneficiariesFilters,
-    ...operationsFilters,
-    ...funderFilters,
+    ...parseId(query),
+    ...parseIncomeRange(query),
+    ...parseAddressWithin(query),
+    ...parseAreasOfOperation(query),
+    ...parseCauses(query),
+    ...parseBeneficiaries(query),
+    ...parseOperations(query),
+    ...parseFunders(query),
+    ...parseHasGrant(query),
   ]
 
   return filter
