@@ -54,6 +54,19 @@ const parseHasGrant = query => {
   return hasGrant.length > 0 ? [{ "exists" : { "field" : "grants" } }] : []
 }
 
+const parseGrantDateRange = query => {
+  const [min, max] = extractValuesGivenLength(query['grantDateRange'], 2)
+  const rangeQuery = {}
+  if (min && new Date(min)) {
+    rangeQuery.gte = min
+  }
+  if (max && new Date(max)) {
+    rangeQuery.lt = max
+  }
+  const isEmpty = Object.keys(rangeQuery).length === 0
+  return isEmpty ? [] : [{ range: { 'grants.awardDate' : rangeQuery } }]
+}
+
 const parseFilter = query => {
 
   filter = [
@@ -66,6 +79,7 @@ const parseFilter = query => {
     ...parseOperations(query),
     ...parseFunders(query),
     ...parseHasGrant(query),
+    ...parseGrantDateRange(query),
   ]
 
   return filter
