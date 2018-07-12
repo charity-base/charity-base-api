@@ -1,8 +1,21 @@
-const { extractValues } = require('./helpers')
+const { extractValues, extractValuesGivenLength } = require('./helpers')
 
 const parseFunders = query => {
   const funders = extractValues(query['funders'])
   return funders.map(id => ({ 'match_phrase': { 'grants.fundingOrganization.id': id }}))
+}
+
+const parseGrantDateRange = query => {
+  const [min, max] = extractValuesGivenLength(query['grantDateRange'], 2)
+  const rangeQuery = {}
+  if (min && new Date(min)) {
+    rangeQuery.gte = min
+  }
+  if (max && new Date(max)) {
+    rangeQuery.lt = max
+  }
+  const isEmpty = Object.keys(rangeQuery).length === 0
+  return isEmpty ? [] : [{ range: { 'grants.awardDate' : rangeQuery } }]
 }
 
 const getAggs = grantFilters => ({
@@ -17,6 +30,10 @@ const getAggs = grantFilters => ({
         'field': 'income.latest.total',
         'script': 'Math.log10(_value)',
         'interval': 0.5,
+        'extended_bounds' : {
+          'min' : 0,
+          'max' : 9,
+        }
      },
      'aggs':{
         'grants': {
@@ -27,7 +44,8 @@ const getAggs = grantFilters => ({
             'filtered_grants': {
               filter: {
                 bool: {
-                  should: grantFilters
+                  should: grantFilters.should,
+                  filter: grantFilters.filter,
                 }
               },
               aggs: {
@@ -53,7 +71,8 @@ const getAggs = grantFilters => ({
        'filtered_grants': {
          filter: {
            bool: {
-             should: grantFilters
+             should: grantFilters.should,
+             filter: grantFilters.filter,
            }
          },
          aggs: {
@@ -85,7 +104,11 @@ const getAggs = grantFilters => ({
 
 const getQuery = () => (req, res, next) => {
 
-  const grantFilters = parseFunders(req.query)
+  const grantFilters = {
+    should: parseFunders(req.query),
+    filter: parseGrantDateRange(req.query),
+  }
+
   res.locals.elasticSearchAggs = getAggs(grantFilters)
   return next()
 }
