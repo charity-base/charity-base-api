@@ -18,12 +18,63 @@ const parseGrantDateRange = query => {
   return isEmpty ? [] : [{ range: { 'grants.awardDate' : rangeQuery } }]
 }
 
-const getAggs = grantFilters => ({
-  'addressLocation': {
-    'geohash_grid': {
-      'field': 'geo_coords',
-      'precision': '20km'
+const normaliseLongitude = lon => {
+  if (lon > 180) {
+    return lon - 360
+  }
+  if (lon < -180) {
+    return lon + 360
+  }
+  return lon
+}
+
+const getGeoBoundingBox = query => {
+  const bounds = extractValuesGivenLength(query['geoBounds'], 4).map(Number)
+  const geoBounds = {
+    "geo_coords": {
+      "top_left": {
+        "lat": bounds[0] || 90,
+        "lon": normaliseLongitude(bounds[1]) || -180,
+      },
+      "bottom_right": {
+        "lat": bounds[2] || -90,
+        "lon": normaliseLongitude(bounds[3]) || 180,
+      }
     }
+  }
+  return geoBounds
+}
+
+const getDistanceMeasure = latDiff => {
+  const latDiffRadians = latDiff * Math.PI / 180
+  const d = Math.atan2(Math.sin(0.5*latDiffRadians), Math.cos(0.5*latDiffRadians))
+  return d
+}
+
+const gridPrecision = latDiff => {
+  const precision = Math.min(getDistanceMeasure(latDiff)*10000, 1500)
+  return `${precision}km`
+}
+
+
+const getAggs = (grantFilters, geoBounds) => ({
+  'addressLocation': {
+    filter: {
+      "geo_bounding_box": geoBounds,
+    },
+    aggs: {
+      grid: {
+        'geohash_grid': {
+          'field': 'geo_coords',
+          'precision': gridPrecision(geoBounds.geo_coords.top_left.lat - geoBounds.geo_coords.bottom_right.lat),
+        }
+      },
+      "map_zoom": {
+        "geo_bounds": {
+          "field": "geo_coords",
+        },
+      },
+    },
   },
   'size':{
      'histogram':{ 
@@ -109,7 +160,9 @@ const getQuery = () => (req, res, next) => {
     filter: parseGrantDateRange(req.query),
   }
 
-  res.locals.elasticSearchAggs = getAggs(grantFilters)
+  const geoBounds = getGeoBoundingBox(req.query)
+
+  res.locals.elasticSearchAggs = getAggs(grantFilters, geoBounds)
   return next()
 }
 
