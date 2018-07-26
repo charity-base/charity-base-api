@@ -14,4 +14,14 @@ const numberOrDefault = (x, fallback) => {
   return isNotNumberable ? fallback : Number(x)
 }
 
-module.exports = { extractValues, extractValuesGivenLength, numberOrDefault }
+const normaliseLongitude = lon => {
+  if (lon > 180) {
+    return lon - 360
+  }
+  if (lon < -180) {
+    return lon + 360
+  }
+  return lon
+}
+
+module.exports = { extractValues, extractValuesGivenLength, numberOrDefault, normaliseLongitude }
