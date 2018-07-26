@@ -63,7 +63,7 @@ const getFundersAggs = grantsFilter => ({
              terms: { field: 'grants.fundingOrganization.id', size : 80 },
              aggs: {
                'total_awarded': {
-                  'sum': { 
+                  'sum': {
                     'field' : 'grants.amountAwarded'
                   }
                 },
@@ -72,6 +72,37 @@ const getFundersAggs = grantsFilter => ({
          }
        },
     }
+  },
+})
+
+const getGrantIncomeAggs = grantsFilter => ({
+  grantSize: {
+    nested: { path: 'grants' },
+    aggs: {
+      'filtered_grants': {
+        filter: grantsFilter,
+        aggs: {
+          grantSize: {
+            'histogram': {
+              'field': 'grants.amountAwarded',
+              'script': 'Math.log10(_value)',
+              'interval': 0.5,
+              'extended_bounds' : {
+                'min' : 0,
+                'max' : 9,
+              },
+            },
+            aggs: {
+              'total_awarded': {
+                'sum': {
+                  'field' : 'grants.amountAwarded'
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
 })
 
@@ -87,23 +118,6 @@ const getIncomeAggs = grantsFilter => ({
       }
     },
     'aggs': {
-      'grants': {
-        'nested' : {
-          'path' : 'grants'
-        },
-        aggs: {
-          'filtered_grants': {
-            filter: grantsFilter,
-            aggs: {
-              'grants_sum': {
-                'sum': {
-                'field' : 'grants.amountAwarded'
-                }
-              },
-            }
-          },
-        }
-      },
       'total_income': {
         'sum': {
           'field' : 'income.latest.total'
@@ -138,6 +152,7 @@ const getGeoAggs = (geoBounds, geoPrecision) => ({
 const getAggs = (query, aggTypes, grantsFilter, geoBounds, geoPrecision) => ({
   ...(aggTypes.indexOf('geo') > -1 && getGeoAggs(geoBounds, geoPrecision)),
   ...(aggTypes.indexOf('income') > -1 && getIncomeAggs(grantsFilter)),
+  ...(aggTypes.indexOf('grantSize') > -1 && getGrantIncomeAggs(grantsFilter)),
   ...(aggTypes.indexOf('funders') > -1 && getFundersAggs(grantsFilter)),
   ...(aggTypes.indexOf('categories') > -1 && getCategoriesAggs()),
 })
@@ -152,7 +167,7 @@ const getQuery = () => (req, res, next) => {
     }
   }
 
-  const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'funders', 'categories']
+  const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantSize', 'funders', 'categories']
 
   const geoBounds = getGeoBoundingBox(req.query)
   const geoPrecision = getGeoPrecision(req.query)
