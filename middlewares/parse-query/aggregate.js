@@ -19,7 +19,7 @@ const parseGrantDateRange = query => {
 }
 
 const getGeoBoundingBox = query => {
-  const bounds = extractValuesGivenLength(query['geoBounds'], 4).map(Number)
+  const bounds = extractValuesGivenLength(query['aggGeoBounds'], 4).map(Number)
   const geoBounds = {
     'geo_coords': {
       'top_left': {
@@ -35,15 +35,9 @@ const getGeoBoundingBox = query => {
   return geoBounds
 }
 
-const getDistanceMeasure = latDiff => {
-  const latDiffRadians = latDiff * Math.PI / 180
-  const d = Math.atan2(Math.sin(0.5*latDiffRadians), Math.cos(0.5*latDiffRadians))
-  return d
-}
-
-const gridPrecision = latDiff => {
-  const precision = Math.min(getDistanceMeasure(latDiff)*10000, 1500)
-  return `${precision}km`
+const getGeoPrecision = query => {
+  const geoPrecision = query['aggGeoPrecision'] || 3
+  return geoPrecision
 }
 
 const getCategoriesAggs = () => ({
@@ -119,7 +113,7 @@ const getIncomeAggs = grantsFilter => ({
   }
 })
 
-const getGeoAggs = geoBounds => ({
+const getGeoAggs = (geoBounds, geoPrecision) => ({
   'addressLocation': {
     filter: {
       'geo_bounding_box': geoBounds,
@@ -128,7 +122,7 @@ const getGeoAggs = geoBounds => ({
       grid: {
         'geohash_grid': {
           'field': 'geo_coords',
-          'precision': gridPrecision(geoBounds.geo_coords.top_left.lat - geoBounds.geo_coords.bottom_right.lat),
+          'precision': geoPrecision,
         }
       },
       'map_zoom': {
@@ -141,8 +135,8 @@ const getGeoAggs = geoBounds => ({
 })
 
 
-const getAggs = (query, aggTypes, grantsFilter, geoBounds) => ({
-  ...(aggTypes.indexOf('geo') > -1 && getGeoAggs(geoBounds)),
+const getAggs = (query, aggTypes, grantsFilter, geoBounds, geoPrecision) => ({
+  ...(aggTypes.indexOf('geo') > -1 && getGeoAggs(geoBounds, geoPrecision)),
   ...(aggTypes.indexOf('income') > -1 && getIncomeAggs(grantsFilter)),
   ...(aggTypes.indexOf('funders') > -1 && getFundersAggs(grantsFilter)),
   ...(aggTypes.indexOf('categories') > -1 && getCategoriesAggs()),
@@ -161,8 +155,9 @@ const getQuery = () => (req, res, next) => {
   const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'funders', 'categories']
 
   const geoBounds = getGeoBoundingBox(req.query)
+  const geoPrecision = getGeoPrecision(req.query)
 
-  res.locals.elasticSearchAggs = getAggs(req.query, aggTypes, grantsFilter, geoBounds)
+  res.locals.elasticSearchAggs = getAggs(req.query, aggTypes, grantsFilter, geoBounds, geoPrecision)
   return next()
 }
 
