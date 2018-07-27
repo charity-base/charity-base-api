@@ -40,6 +40,10 @@ const getGeoPrecision = query => {
   return geoPrecision
 }
 
+const getGrantDateInterval = query => {
+  return query['aggGrantDateInterval'] || 'year'
+}
+
 const getCategoriesAggs = () => ({
   'causes' : {
     'terms' : { 'field' : 'causes.id', 'size' : 17 }
@@ -56,22 +60,40 @@ const getFundersAggs = grantsFilter => ({
   funders: {
     nested: { path: 'grants' },
     aggs: {
-       'filtered_grants': {
-         filter: grantsFilter,
-         aggs: {
-           funders: {
-             terms: { field: 'grants.fundingOrganization.id', size : 80 },
-             aggs: {
-               'total_awarded': {
-                  'sum': {
-                    'field' : 'grants.amountAwarded'
-                  }
+      filtered_grants: {
+        filter: grantsFilter,
+        aggs: {
+          funders: {
+            terms: { field: 'grants.fundingOrganization.id', size : 80 },
+            aggs: {
+              'total_awarded': {
+                'sum': {
+                  'field' : 'grants.amountAwarded'
                 },
-             },
-           }
-         }
-       },
-    }
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+})
+
+const getGrantTotalAggs = grantsFilter => ({
+  grantTotal: {
+    nested: { path: 'grants' },
+    aggs: {
+      filtered_grants: {
+        filter: grantsFilter,
+        aggs: {
+          'total_awarded': {
+            'sum': {
+              'field' : 'grants.amountAwarded'
+            },
+          },
+        },
+      },
+    },
   },
 })
 
@@ -79,7 +101,7 @@ const getGrantIncomeAggs = grantsFilter => ({
   grantSize: {
     nested: { path: 'grants' },
     aggs: {
-      'filtered_grants': {
+      filtered_grants: {
         filter: grantsFilter,
         aggs: {
           grantSize: {
@@ -106,7 +128,7 @@ const getGrantIncomeAggs = grantsFilter => ({
   },
 })
 
-const getGrantDateAggs = grantsFilter => ({
+const getGrantDateAggs = (grantsFilter, interval) => ({
   grantDate: {
     nested: { path: 'grants' },
     aggs: {
@@ -116,8 +138,8 @@ const getGrantDateAggs = grantsFilter => ({
           grantDate: {
             'date_histogram': {
               'field': 'grants.awardDate',
-              'interval': 'month',
-              'format' : 'yyyy-MM',
+              'format' : interval === 'month' ? 'MM/yyyy' : 'yyyy',
+              interval,
             },
             aggs: {
               'total_awarded': {
@@ -176,11 +198,12 @@ const getGeoAggs = (geoBounds, geoPrecision) => ({
 })
 
 
-const getAggs = (query, aggTypes, grantsFilter, geoBounds, geoPrecision) => ({
+const getAggs = (query, aggTypes, grantsFilter, geoBounds, geoPrecision, grantDateInterval) => ({
   ...(aggTypes.indexOf('geo') > -1 && getGeoAggs(geoBounds, geoPrecision)),
   ...(aggTypes.indexOf('income') > -1 && getIncomeAggs(grantsFilter)),
+  ...(aggTypes.indexOf('grantTotal') > -1 && getGrantTotalAggs(grantsFilter)),
   ...(aggTypes.indexOf('grantSize') > -1 && getGrantIncomeAggs(grantsFilter)),
-  ...(aggTypes.indexOf('grantDate') > -1 && getGrantDateAggs(grantsFilter)),
+  ...(aggTypes.indexOf('grantDate') > -1 && getGrantDateAggs(grantsFilter, grantDateInterval)),
   ...(aggTypes.indexOf('funders') > -1 && getFundersAggs(grantsFilter)),
   ...(aggTypes.indexOf('categories') > -1 && getCategoriesAggs()),
 })
@@ -195,12 +218,13 @@ const getQuery = () => (req, res, next) => {
     }
   }
 
-  const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantSize', 'grantDate', 'funders', 'categories']
+  const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantTotal', 'grantSize', 'grantDate', 'funders', 'categories']
 
   const geoBounds = getGeoBoundingBox(req.query)
   const geoPrecision = getGeoPrecision(req.query)
+  const grantDateInterval = getGrantDateInterval(req.query)
 
-  res.locals.elasticSearchAggs = getAggs(req.query, aggTypes, grantsFilter, geoBounds, geoPrecision)
+  res.locals.elasticSearchAggs = getAggs(req.query, aggTypes, grantsFilter, geoBounds, geoPrecision, grantDateInterval)
   return next()
 }
 
