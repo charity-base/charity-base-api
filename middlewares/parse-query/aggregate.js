@@ -1,8 +1,14 @@
 const { extractValues, extractValuesGivenLength, normaliseLongitude } = require('./helpers')
 
 const parseFunders = query => {
-  const funders = extractValues(query['funders'])
-  return funders.map(id => ({ 'match_phrase': { 'grants.fundingOrganization.id': id }}))
+  const ids = extractValues(query['funders'])
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "match_phrase": { "grants.fundingOrganization.id": id }
+      }))
+    }
+  }]
 }
 
 const parseGrantDateRange = query => {
@@ -211,12 +217,12 @@ const getAggs = (query, aggTypes, grantsFilter, geoBounds, geoPrecision, grantDa
 
 const getQuery = () => (req, res, next) => {
 
-  const grantsFilter = {
-    bool: {
-      should: parseFunders(req.query),
-      filter: parseGrantDateRange(req.query),
-    }
-  }
+  const filter = [
+    ...parseFunders(req.query),
+    ...parseGrantDateRange(req.query),
+  ]
+
+  const grantsFilter = { bool: { filter } }
 
   const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantTotal', 'grantSize', 'grantDate', 'funders', 'categories']
 
