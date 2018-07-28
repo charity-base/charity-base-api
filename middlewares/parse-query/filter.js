@@ -41,22 +41,46 @@ const parseAddressWithin = query => {
 
 const parseAreasOfOperation = query => {
   const ids = extractValues(query['areasOfOperation.id'])
-  return ids.map(id => ({ "match_phrase": { "areasOfOperation.id": id }}))
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "match_phrase": { "areasOfOperation.id": id }
+      }))
+    }
+  }]
 }
 
 const parseCauses = query => {
   const ids = extractValues(query['causes.id'])
-  return ids.map(id => ({ "term": { "causes.id": id }}))
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "term": { "causes.id": id }
+      }))
+    }
+  }]
 }
 
 const parseBeneficiaries = query => {
   const ids = extractValues(query['beneficiaries.id'])
-  return ids.map(id => ({ "term": { "beneficiaries.id": id }}))
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "term": { "beneficiaries.id": id }
+      }))
+    }
+  }]
 }
 
 const parseOperations = query => {
   const ids = extractValues(query['operations.id'])
-  return ids.map(id => ({ "term": { "operations.id": id }}))
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "term": { "operations.id": id }
+      }))
+    }
+  }]
 }
 
 const parseId = query => {
@@ -65,8 +89,14 @@ const parseId = query => {
 }
 
 const parseFunders = query => {
-  const funders = extractValues(query['funders'])
-  return funders.map(id => ({ "match_phrase": { "grants.fundingOrganization.id": id }}))
+  const ids = extractValues(query['funders'])
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "match_phrase": { "grants.fundingOrganization.id": id }
+      }))
+    }
+  }]
 }
 
 const parseHasGrant = query => {
