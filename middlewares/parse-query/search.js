@@ -19,6 +19,7 @@ const parseSearch = q => {
         'beneficiaries.name',
         'operations.name',
         'grants.description',
+        'grants.fundingOrganization.name',
       ],
     }
   }
