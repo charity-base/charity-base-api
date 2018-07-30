@@ -84,8 +84,14 @@ const parseOperations = query => {
 }
 
 const parseId = query => {
-  const charityId = query['ids.GB-CHC']
-  return charityId ? [{ "term": { "ids.GB-CHC": charityId }}] : []
+  const ids = extractValues(query['ids.GB-CHC']).map(Number)
+  return [{
+    bool: {
+      should: ids.map(id => ({
+        "term": { "ids.GB-CHC": id }
+      }))
+    }
+  }]
 }
 
 const parseFunders = query => {
