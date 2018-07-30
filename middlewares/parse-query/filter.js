@@ -96,13 +96,13 @@ const parseId = query => {
 
 const parseFunders = query => {
   const ids = extractValues(query['funders'])
-  return [{
+  return ids.length > 0 ? [{
     bool: {
       should: ids.map(id => ({
         "match_phrase": { "grants.fundingOrganization.id": id }
       }))
     }
-  }]
+  }] : []
 }
 
 const parseHasGrant = query => {
@@ -125,6 +125,22 @@ const parseGrantDateRange = query => {
 
 const parseFilter = query => {
 
+  const grantsFilters = [
+    ...parseFunders(query),
+    ...parseGrantDateRange(query),
+  ]
+
+  const nestedFilters = grantsFilters.length > 0 ? [{
+    nested : {
+      path : 'grants',
+      query : {
+        bool : {
+          filter: grantsFilters
+        }
+      }
+    }
+  }] : []
+
   filter = [
     ...parseId(query),
     ...parseIncomeRange(query),
@@ -133,9 +149,8 @@ const parseFilter = query => {
     ...parseCauses(query),
     ...parseBeneficiaries(query),
     ...parseOperations(query),
-    ...parseFunders(query),
     ...parseHasGrant(query),
-    ...parseGrantDateRange(query),
+    ...nestedFilters,
   ]
 
   return filter

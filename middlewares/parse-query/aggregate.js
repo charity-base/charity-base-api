@@ -2,13 +2,13 @@ const { extractValues, extractValuesGivenLength, normaliseLongitude } = require(
 
 const parseFunders = query => {
   const ids = extractValues(query['funders'])
-  return [{
+  return ids.length > 0 ? [{
     bool: {
       should: ids.map(id => ({
         "match_phrase": { "grants.fundingOrganization.id": id }
       }))
     }
-  }]
+  }] : []
 }
 
 const parseGrantDateRange = query => {
