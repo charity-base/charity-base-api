@@ -134,6 +134,37 @@ const getGrantIncomeAggs = grantsFilter => ({
   },
 })
 
+const getGrantTopicAggs = grantsFilter => ({
+  grantTopics: {
+    nested: { path: 'grants' },
+    aggs: {
+      filtered_grants: {
+        filter: grantsFilter,
+        aggs: {
+          topics : {
+            nested: { path: 'grants.topicModelling.g_to_c_desc_20_extrastop' },
+            aggs: {
+              nestedTopics: {
+                terms : {
+                  field : 'grants.topicModelling.g_to_c_desc_20_extrastop.id',
+                  size : 20,
+                },
+                aggs: {
+                  score : {
+                    avg : {
+                      field : 'grants.topicModelling.g_to_c_desc_20_extrastop.score',
+                    },
+                  },
+                }
+              }
+            }
+          },
+        }
+      },
+    },
+  },
+})
+
 const getGrantDateAggs = (grantsFilter, interval) => ({
   grantDate: {
     nested: { path: 'grants' },
@@ -209,6 +240,7 @@ const getAggs = (query, aggTypes, grantsFilter, geoBounds, geoPrecision, grantDa
   ...(aggTypes.indexOf('income') > -1 && getIncomeAggs(grantsFilter)),
   ...(aggTypes.indexOf('grantTotal') > -1 && getGrantTotalAggs(grantsFilter)),
   ...(aggTypes.indexOf('grantSize') > -1 && getGrantIncomeAggs(grantsFilter)),
+  ...(aggTypes.indexOf('grantTopics') > -1 && getGrantTopicAggs(grantsFilter)),
   ...(aggTypes.indexOf('grantDate') > -1 && getGrantDateAggs(grantsFilter, grantDateInterval)),
   ...(aggTypes.indexOf('funders') > -1 && getFundersAggs(grantsFilter)),
   ...(aggTypes.indexOf('categories') > -1 && getCategoriesAggs()),
@@ -224,7 +256,7 @@ const getQuery = () => (req, res, next) => {
 
   const grantsFilter = { bool: { filter } }
 
-  const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantTotal', 'grantSize', 'grantDate', 'funders', 'categories']
+  const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantTotal', 'grantSize', 'grantTopics', 'grantDate', 'funders', 'categories']
 
   const geoBounds = getGeoBoundingBox(req.query)
   const geoPrecision = getGeoPrecision(req.query)
