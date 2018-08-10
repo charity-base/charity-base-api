@@ -30,7 +30,7 @@ try {
 
 const getFileName = (queryParams, fileType) => {
   const fileExtension = fileType === 'JSON' ? 'jsonl' : 'csv'
-  const { sort, limit, skip, ...filters } = queryParams
+  const { sort, limit, skip, frozen, view, ...filters } = queryParams
   const filterNames = Object.keys(filters)
   if (filterNames.length === 0) {
     return `all.${fileExtension}.gz`
