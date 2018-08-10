@@ -7,19 +7,35 @@ const ElasticStream = require('../helpers/elasticStream')
 
 const DOWNLOADS_DIR = './downloads'
 
+const parserJSON = x => `${JSON.stringify(x._source)}\n`
+
+const parserCSV = x => {
+  const fields = [
+    x._source.ids['GB-CHC'],
+    x._source.name,
+    x._source.contact.postcode,
+    x._source.income.latest.total,
+    x._source.grants.length,
+    x._source.website,
+  ]
+  const cleanFields = fields.map(col => String(col).replace(/"/g, ''))
+  return `"${cleanFields.join(`","`)}"\n`
+}
+
 
 try {
   fs.mkdirSync(DOWNLOADS_DIR)
 } catch (e) {}
 
 
-const getFileName = queryParams => {
+const getFileName = (queryParams, fileType) => {
+  const fileExtension = fileType === 'JSON' ? 'jsonl' : 'csv'
   const { sort, limit, skip, ...filters } = queryParams
   const filterNames = Object.keys(filters)
   if (filterNames.length === 0) {
-    return 'all.jsonl.gz'
+    return `all.${fileExtension}.gz`
   }
-  return `${filterNames.reduce((agg, x) => `${agg}_${x}=${filters[x]}`, '')}.jsonl.gz`
+  return `${filterNames.reduce((agg, x) => `${agg}_${x}=${filters[x]}`, '')}.${fileExtension}.gz`
 }
 
 const handleError = err => {
@@ -40,7 +56,7 @@ const getDownloadCharitiesRouter = elasticConfig => {
     host: elasticConfig.host,
   })
 
-  downloadCharitiesRouter.get('/', (req, res, next) => {
+  downloadCharitiesRouter.post('/', (req, res, next) => {
 
     const { query } = res.locals.elasticSearch
 
@@ -50,8 +66,10 @@ const getDownloadCharitiesRouter = elasticConfig => {
       body: { query },
       scroll: '1m',
     }
+
+    const { fileType } = req.body
     
-    const fileName = getFileName(req.query)
+    const fileName = getFileName(req.query, fileType)
     const filePath = `${DOWNLOADS_DIR}/${fileName}`
 
     fs.stat(filePath, (err, stats) => {
@@ -59,7 +77,8 @@ const getDownloadCharitiesRouter = elasticConfig => {
       if (stats && stats.isFile()) {
         return res.download(filePath, fileName)
       } else {
-        const eStream = new ElasticStream({ searchParams, client })
+        const parser = fileType === 'JSON' ? parserJSON : parserCSV
+        const eStream = new ElasticStream({ searchParams, client, parser })
         eStream.on('error', handleError)
         const gzip = zlib.createGzip()
         gzip.on('error', handleError)
