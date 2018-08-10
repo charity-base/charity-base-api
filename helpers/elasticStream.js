@@ -1,10 +1,13 @@
 const { Readable } = require('stream')
 
+const defaultParser = x => `${JSON.stringify(x._source)}\n`
+
 class ElasticStream extends Readable {
   constructor(opt) {
     super(opt)
     this._client = opt.client
     this._searchParams = opt.searchParams
+    this._parser = opt.parser || defaultParser
     this._count = 0
     this._responseQueue = []
     this._startedReading = false
@@ -25,7 +28,7 @@ class ElasticStream extends Readable {
 
       this._count += response.hits.hits.length
 
-      const data = response.hits.hits.reduce((agg, x) => `${agg}${JSON.stringify(x)}\n`, '')
+      const data = response.hits.hits.map(this._parser).join('')
       this.push(data)
 
       if (response.hits.total === this._count) {
