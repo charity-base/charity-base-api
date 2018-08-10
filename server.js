@@ -1,5 +1,5 @@
 const express = require('express')
-const app = express()
+const bodyParser = require('body-parser')
 const cors = require('cors')
 const apiRouter = require('./routers')
 const config = require('./config.json')
@@ -16,6 +16,9 @@ connectToDb(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
   useMongoClient: true,
   autoIndex: true
 }).then(() => {
+  const app = express()
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: true }))
   app.use(cors())
   app.use('/api/:version/', apiRouter(config.version, config.elastic))
   app.listen(listenPort, () => {
