@@ -1,24 +1,19 @@
 const charitiesRouter = require('express').Router()
 const log = require('../helpers/logger')
-const elasticsearch = require('elasticsearch')
 
 
-const getCharitiesRouter = elasticConfig => {
-
-  const client = new elasticsearch.Client({
-    host: elasticConfig.host,
-  })
+const getCharitiesRouter = (esClient, esIndex) => {
 
   charitiesRouter.get('/', (req, res, next) => {
 
     const { query, meta } = res.locals.elasticSearch
 
     const searchParams = Object.assign({}, meta, {
-      index: elasticConfig.index,
+      index: esIndex,
       body: { query },
     })
 
-    return client.search(searchParams, (err, response) => {
+    return esClient.search(searchParams, (err, response) => {
       if (err) {
         log.error(err)
         return res.status(400).send({ message: err.message })

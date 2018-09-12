@@ -1,27 +1,11 @@
 const fs = require('fs')
 const zlib = require('zlib')
-const elasticsearch = require('elasticsearch')
 const downloadCharitiesRouter = require('express').Router()
-const log = require('../helpers/logger')
-const ElasticStream = require('../helpers/elasticStream')
+const log = require('../../helpers/logger')
+const ElasticStream = require('../../helpers/elasticStream')
+const { parserCSV, parserJSON } = require('./parser')
 
 const DOWNLOADS_DIR = './downloads'
-
-const parserJSON = x => `${JSON.stringify(x._source)}\n`
-
-const parserCSV = x => {
-  const fields = [
-    x._source.ids['GB-CHC'],
-    x._source.name,
-    x._source.contact.postcode,
-    x._source.income.latest.total,
-    x._source.grants.length,
-    x._source.website,
-  ]
-  const cleanFields = fields.map(col => String(col).replace(/"/g, ''))
-  return `"${cleanFields.join(`","`)}"\n`
-}
-
 
 try {
   fs.mkdirSync(DOWNLOADS_DIR)
@@ -50,18 +34,14 @@ const handleError = err => {
   })
 }
 
-const getDownloadCharitiesRouter = elasticConfig => {
-
-  const client = new elasticsearch.Client({
-    host: elasticConfig.host,
-  })
+const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
   downloadCharitiesRouter.post('/', (req, res, next) => {
 
     const { query } = res.locals.elasticSearch
 
     const searchParams = {
-      index: elasticConfig.index,
+      index: esIndex,
       size: 500,
       body: { query },
       scroll: '1m',
@@ -78,7 +58,7 @@ const getDownloadCharitiesRouter = elasticConfig => {
         return res.download(filePath, fileName)
       } else {
         const parser = fileType === 'JSON' ? parserJSON : parserCSV
-        const eStream = new ElasticStream({ searchParams, client, parser })
+        const eStream = new ElasticStream({ searchParams, client: esClient, parser })
         eStream.on('error', handleError)
         const gzip = zlib.createGzip()
         gzip.on('error', handleError)
