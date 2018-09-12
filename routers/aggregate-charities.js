@@ -1,20 +1,16 @@
 const aggregateCharitiesRouter = require('express').Router()
 const parseElasticSearchAggs = require('../middlewares/parse-query/aggregate')
 const log = require('../helpers/logger')
-const elasticsearch = require('elasticsearch')
 
-const getAggregateCharitiesRouter = elasticConfig => {
 
-  const client = new elasticsearch.Client({
-    host: elasticConfig.host,
-  })
+const getAggregateCharitiesRouter = (esClient, esIndex) => {
 
   aggregateCharitiesRouter.use(parseElasticSearchAggs())
 
   aggregateCharitiesRouter.get('/', (req, res, next) => {
 
     const searchParams = {
-      index: elasticConfig.index,
+      index: esIndex,
       size: 0,
       body: {
         query: res.locals.elasticSearch.query,
@@ -22,7 +18,7 @@ const getAggregateCharitiesRouter = elasticConfig => {
       },
     }
 
-    return client.search(searchParams, (err, response) => {
+    return esClient.search(searchParams, (err, response) => {
       if (err) {
         log.error(err)
         return res.status(400).send({ message: err.message })
