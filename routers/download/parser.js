@@ -1,17 +1,26 @@
+const { getDescendantProp } = require('./helpers')
 
-const parserJSON = x => `${JSON.stringify(x._source)}\n`
-
-const parserCSV = x => {
-  const fields = [
-    x._source.ids['GB-CHC'],
-    x._source.name,
-    x._source.contact.postcode,
-    x._source.income.latest.total,
-    x._source.grants.length,
-    x._source.website,
-  ]
-  const cleanFields = fields.map(col => String(col).replace(/"/g, ''))
-  return `"${cleanFields.join(`","`)}"\n`
+const getJSONParser = () => esObj => {
+  return `${JSON.stringify(esObj._source)}\n`
 }
 
-module.exports = { parserCSV, parserJSON }
+const getCSVParser = fieldPaths => esObj => {
+  if (!fieldPaths || fieldPaths.length === 0) return `\n`
+  const values = fieldPaths.map(getDescendantProp(esObj._source))
+  const stringValues = values.map(x => typeof x === 'string' ? x : JSON.stringify(x))
+  const cleanValues = stringValues.map(x => x.replace(/"/g, `""`))
+  return `"${cleanValues.join(`","`)}"\n`
+}
+
+const getParser = (fileType, fieldPaths) => {
+  switch (fileType) {
+    case 'JSON':
+      return getJSONParser()
+    case 'CSV':
+      return getCSVParser(fieldPaths)
+    default:
+      return getCSVParser(fieldPaths)
+  }
+}
+
+module.exports = getParser

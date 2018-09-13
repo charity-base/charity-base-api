@@ -3,24 +3,14 @@ const zlib = require('zlib')
 const downloadCharitiesRouter = require('express').Router()
 const log = require('../../helpers/logger')
 const ElasticStream = require('../../helpers/elasticStream')
-const { parserCSV, parserJSON } = require('./parser')
+const { getAllowedCSVFieldPaths, getFileName } = require('./helpers')
+const getParser = require('./parser')
 
 const DOWNLOADS_DIR = './downloads'
 
 try {
   fs.mkdirSync(DOWNLOADS_DIR)
 } catch (e) {}
-
-
-const getFileName = (queryParams, fileType) => {
-  const fileExtension = fileType === 'JSON' ? 'jsonl' : 'csv'
-  const { sort, limit, skip, frozen, view, ...filters } = queryParams
-  const filterNames = Object.keys(filters)
-  if (filterNames.length === 0) {
-    return `all.${fileExtension}.gz`
-  }
-  return `${filterNames.reduce((agg, x) => `${agg}_${x}=${filters[x]}`, '')}.${fileExtension}.gz`
-}
 
 const handleError = err => {
   log.error(err)
@@ -38,17 +28,20 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
   downloadCharitiesRouter.post('/', (req, res, next) => {
 
-    const { query } = res.locals.elasticSearch
+    const { fileType } = req.body
+    const { query, meta } = res.locals.elasticSearch
 
     const searchParams = {
       index: esIndex,
       size: 500,
       body: { query },
       scroll: '1m',
+      _source: meta._source,
+      sort: meta.sort,
     }
 
-    const { fileType } = req.body
-    
+    const csvFields = fileType === 'CSV' && getAllowedCSVFieldPaths(meta._source)
+
     const fileName = getFileName(req.query, fileType)
     const filePath = `${DOWNLOADS_DIR}/${fileName}`
 
@@ -57,11 +50,19 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
       if (stats && stats.isFile()) {
         return res.download(filePath, fileName)
       } else {
-        const parser = fileType === 'JSON' ? parserJSON : parserCSV
-        const eStream = new ElasticStream({ searchParams, client: esClient, parser })
+        const eStream = new ElasticStream({
+          searchParams,
+          client: esClient,
+          parser: getParser(fileType, csvFields),
+        })
         eStream.on('error', handleError)
+
         const gzip = zlib.createGzip()
+        if (fileType === 'CSV') {
+          gzip.write(`${csvFields.join(',')}\n`)
+        }
         gzip.on('error', handleError)
+        
         const readableGzip = eStream.pipe(gzip)
         readableGzip.on('error', handleError)
 
