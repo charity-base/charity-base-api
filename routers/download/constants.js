@@ -1,5 +1,6 @@
 const ALLOWED_CSV_FIELD_PATHS = [
   'ids.GB-CHC',
+  'ids.charityId',
   'name',
   'contact.email',
   'contact.person',
