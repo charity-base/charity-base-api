@@ -8,5 +8,10 @@
     "dbHost" : "localhost",
     "dbPort" : "27017",
     "dbName" : "charity-base"
+  },
+  "jwt" : {
+    "secret": "my-secret-example",
+    "audience": "https://charitybase.uk/api",
+    "issuer": "https://charity-base.eu.auth0.com/"
   }
 }

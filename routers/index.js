@@ -1,4 +1,5 @@
 const elasticsearch = require('elasticsearch')
+const jwt = require('express-jwt')
 const apiRouter = require('express').Router({mergeParams: true})
 const getCharitiesRouter = require('./charities')
 const getCountCharitiesRouter = require('./count-charities')
@@ -13,10 +14,12 @@ const getElasticClient = host => {
   return esClient
 }
 
-const getApiRouter = (acceptedVersion, elasticConfig) => {
+const getApiRouter = (acceptedVersion, elasticConfig, jwtConfig) => {
 
   const esClient = getElasticClient(elasticConfig.host)
   const esIndex = elasticConfig.index
+
+  const jwtCheck = jwt(jwtConfig)
 
   apiRouter.use(verifyValidVersion(acceptedVersion))
 
@@ -25,6 +28,7 @@ const getApiRouter = (acceptedVersion, elasticConfig) => {
 
   apiRouter.use('/charities', getCharitiesRouter(esClient, esIndex))
   apiRouter.use('/count-charities', getCountCharitiesRouter(esClient, esIndex))
+  apiRouter.use('/download-charities', jwtCheck)
   apiRouter.use('/download-charities', getDownloadCharitiesRouter(esClient, esIndex))
   apiRouter.use('/aggregate-charities', getAggregateCharitiesRouter(esClient, esIndex))
 

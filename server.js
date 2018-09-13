@@ -20,7 +20,7 @@ connectToDb(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(cors())
-  app.use('/api/:version/', apiRouter(config.version, config.elastic))
+  app.use('/api/:version/', apiRouter(config.version, config.elastic, config.jwt))
   app.listen(listenPort, () => {
     log.info(`Listening on port ${listenPort}`)
   })
