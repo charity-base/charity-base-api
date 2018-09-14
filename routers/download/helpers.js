@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const { ALLOWED_CSV_FIELD_PATHS } = require('./constants')
 
 const getAllowedCSVFieldPaths = fieldPaths => {
@@ -14,7 +15,9 @@ const getFileName = (queryParams, fileType) => {
   if (filterNames.length === 0) {
     return `all.${fileExtension}.gz`
   }
-  return `${filterNames.reduce((agg, x) => `${agg}_${x}=${other[x]}`, '')}.${fileExtension}.gz`
+  const fileName = `${filterNames.reduce((agg, x) => `${agg}_${x}=${other[x]}`, '')}`
+  const hexFileName = crypto.createHmac('sha256', 'my-secret').update(fileName).digest('hex')
+  return `${hexFileName}.${fileExtension}.gz`
 }
 
 const getDescendantProp = obj => path => (
