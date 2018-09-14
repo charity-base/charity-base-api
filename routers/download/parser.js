@@ -7,7 +7,10 @@ const getJSONParser = () => esObj => {
 const getCSVParser = fieldPaths => esObj => {
   if (!fieldPaths || fieldPaths.length === 0) return `\n`
   const values = fieldPaths.map(getDescendantProp(esObj._source))
-  const stringValues = values.map(x => typeof x === 'string' ? x : JSON.stringify(x))
+  const stringValues = values.map(x => {
+    const xString = typeof x === 'string' ? x : JSON.stringify(x)
+    return xString ? xString : ''
+  })
   const cleanValues = stringValues.map(x => x.replace(/"/g, `""`))
   return `"${cleanValues.join(`","`)}"\n`
 }
