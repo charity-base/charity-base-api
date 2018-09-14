@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const hitSchema = new mongoose.Schema({
   url: String,
   version: String,
+  user: { },
   query: { },
 }, {
   timestamps : true
@@ -18,10 +19,11 @@ const stripQuery = query => {
   )
 }
 
-const persistRequest = (url, query, version) => {
+const persistRequest = (url, version, user, query, ) => {
   const hit = new Hit({
-    url: url,
+    url,
     version,
+    user,
     query: stripQuery(query),
   })
 
@@ -33,7 +35,7 @@ const persistRequest = (url, query, version) => {
 
 const persistQuery = () => (req, res, next) => {
   const { elasticSearch } = res.locals
-  persistRequest(req.url, elasticSearch, req.params.version)
+  persistRequest(req.url, req.params.version, req.user, elasticSearch)
   return next()
 }
 

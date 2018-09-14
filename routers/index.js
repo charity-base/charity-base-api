@@ -19,17 +19,17 @@ const getApiRouter = (acceptedVersion, elasticConfig, jwtConfig) => {
   const esClient = getElasticClient(elasticConfig.host)
   const esIndex = elasticConfig.index
 
-  const jwtCheck = jwt(jwtConfig)
+  const jwtOptionalCheck = jwt({ ...jwtConfig, credentialsRequired: false })
+  const jwtEnforcedCheck = jwt({ ...jwtConfig, credentialsRequired: true })
 
+  apiRouter.use(jwtOptionalCheck)
   apiRouter.use(verifyValidVersion(acceptedVersion))
-
   apiRouter.use(parseElasticSearchQuery())
   apiRouter.use(persistQuery())
 
   apiRouter.use('/charities', getCharitiesRouter(esClient, esIndex))
   apiRouter.use('/count-charities', getCountCharitiesRouter(esClient, esIndex))
-  apiRouter.use('/download-charities', jwtCheck)
-  apiRouter.use('/download-charities', getDownloadCharitiesRouter(esClient, esIndex))
+  apiRouter.use('/download-charities', jwtEnforcedCheck, getDownloadCharitiesRouter(esClient, esIndex))
   apiRouter.use('/aggregate-charities', getAggregateCharitiesRouter(esClient, esIndex))
 
   return apiRouter

@@ -9,7 +9,7 @@ const getAllowedCSVFieldPaths = fieldPaths => {
 
 const getFileName = (queryParams, fileType) => {
   const fileExtension = fileType === 'JSON' ? 'jsonl' : 'csv'
-  const { limit, skip, frozen, view, ...other } = queryParams
+  const { limit, skip, frozen, view, download, ...other } = queryParams
   const filterNames = Object.keys(other)
   if (filterNames.length === 0) {
     return `all.${fileExtension}.gz`
