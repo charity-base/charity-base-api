@@ -27,7 +27,7 @@ const parseGrantDateRange = query => {
 const getGeoBoundingBox = query => {
   const bounds = extractValuesGivenLength(query['aggGeoBounds'], 4).map(Number)
   const geoBounds = {
-    'geo_coords': {
+    'contact.geoCoords': {
       'top_left': {
         'lat': bounds[0] || 90,
         'lon': normaliseLongitude(bounds[1]) || -180,
@@ -155,11 +155,11 @@ const getGrantTopicAggs = grantsFilter => ({
                       field : 'grants.topicModelling.g_to_c_desc_20_extrastop.score',
                     },
                   },
-                }
-              }
-            }
+                },
+              },
+            },
           },
-        }
+        },
       },
     },
   },
@@ -221,13 +221,13 @@ const getGeoAggs = (geoBounds, geoPrecision) => ({
     aggs: {
       grid: {
         'geohash_grid': {
-          'field': 'geo_coords',
+          'field': 'contact.geoCoords',
           'precision': geoPrecision,
         }
       },
       'map_zoom': {
         'geo_bounds': {
-          'field': 'geo_coords',
+          'field': 'contact.geoCoords',
         },
       },
     },
