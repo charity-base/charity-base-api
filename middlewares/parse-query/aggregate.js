@@ -142,17 +142,17 @@ const getGrantTopicAggs = grantsFilter => ({
         filter: grantsFilter,
         aggs: {
           topics : {
-            nested: { path: 'grants.topicModelling.g_to_c_desc_20_extrastop' },
+            nested: { path: 'grants.topicModelling.topics' },
             aggs: {
               nestedTopics: {
                 terms : {
-                  field : 'grants.topicModelling.g_to_c_desc_20_extrastop.id',
-                  size : 20,
+                  field : 'grants.topicModelling.topics.id',
+                  size : 15,
                 },
                 aggs: {
                   score : {
                     avg : {
-                      field : 'grants.topicModelling.g_to_c_desc_20_extrastop.score',
+                      field : 'grants.topicModelling.topics.score',
                     },
                   },
                 },
