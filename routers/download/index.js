@@ -12,7 +12,7 @@ try {
   fs.mkdirSync(DOWNLOADS_DIR)
 } catch (e) {}
 
-const handleError = err => {
+const handleError = filePath => err => {
   log.error(err)
   // Handle error, but keep in mind the response may be partially-sent
   // so check res.headersSent
@@ -23,6 +23,15 @@ const handleError = err => {
     log.info(`Successfully deleted ${filePath}`)
   })
 }
+
+const fsStat = filePath => new Promise((resolve, reject) => {
+  fs.stat(filePath, (err, stats) => {
+    if (err && err.code !== 'ENOENT') {
+      return reject(err)
+    }
+    return resolve(stats)
+  })
+})
 
 const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
@@ -45,8 +54,8 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
     const fileName = getFileName(req.query, fileType)
     const filePath = `${DOWNLOADS_DIR}/${fileName}`
 
-    fs.stat(filePath, (err, stats) => {
-      // Don't worry about err, this will happen if file doesn't exist
+    fsStat(filePath)
+    .then(stats => {
       // TODO: check file is not currently being writted
       if (stats && stats.isFile()) {
         return res.download(filePath, fileName)
@@ -56,16 +65,16 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
           client: esClient,
           parser: getParser(fileType, csvFields),
         })
-        eStream.on('error', handleError)
+        eStream.on('error', handleError(filePath))
 
         const gzip = zlib.createGzip()
         if (fileType === 'CSV') {
           gzip.write(csvHeader(csvFields))
         }
-        gzip.on('error', handleError)
-        
+        gzip.on('error', handleError(filePath))
+
         const readableGzip = eStream.pipe(gzip)
-        readableGzip.on('error', handleError)
+        readableGzip.on('error', handleError(filePath))
 
         const out = fs.createWriteStream(filePath)
         readableGzip.pipe(out)
@@ -74,6 +83,9 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
         res.attachment(fileName)
         readableGzip.pipe(res)
       }
+    })
+    .catch(err => {
+      return res.status(400).send({ message: err.message })
     })
 
   })

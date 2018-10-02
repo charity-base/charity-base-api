@@ -24,24 +24,30 @@ class ElasticStream extends Readable {
     this._startedReading = true
 
     while (this._responseQueue.length) {
-      const response = this._responseQueue.shift()
+      try {
+        const response = this._responseQueue.shift()
 
-      this._count += response.hits.hits.length
+        this._count += response.hits.hits.length
 
-      const data = response.hits.hits.map(this._parser).join('')
-      this.push(data)
+        const data = response.hits.hits.map(this._parser).join('')
 
-      if (response.hits.total === this._count) {
-        this.push(null)
-        break
+        this.push(data)
+
+        if (response.hits.total === this._count) {
+          this.push(null)
+          break
+        }
+
+        this._responseQueue.push(
+          await this._client.scroll({
+            scrollId: response._scroll_id,
+            scroll: this._searchParams.scroll,
+          }).catch(e => this.emit('error', e))
+        )
       }
-
-      this._responseQueue.push(
-        await this._client.scroll({
-          scrollId: response._scroll_id,
-          scroll: this._searchParams.scroll,
-        }).catch(e => this.emit('error', e))
-      )
+      catch(e) {
+        this.emit('error', e)
+      }
     }
   }
 }
