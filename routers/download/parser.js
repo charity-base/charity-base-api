@@ -14,7 +14,32 @@ const getAnnualIncomeObj = (annuals, year) => {
   }
 }
 
+const getLatestRegDate = registrations => {
+  const regObj = registrations.find(
+    ({ removed }) => !removed
+  )
+  const regDate = regObj ? (
+    new Date(regObj.registered)
+  ) : null
+  return regDate ? (
+    `${regDate.getFullYear()}-${('0' + (regDate.getMonth() + 1)).slice(-2)}-${('0' + regDate.getDate()).slice(-2)}`
+  ) : null
+}
+
+const valuesWithRegDate = (fields, values) => {
+  const i = fields.indexOf('registration')
+  if (i === -1) {
+    return values
+  }
+  return [
+    ...values.slice(0, i),
+    getLatestRegDate(values[i]),
+    ...values.slice(i + 1),
+  ]
+}
+
 const valuesWithIncome = (fields, values) => {
+  // Warning: this function returns longer array than input (if income requested)
   const i = fields.indexOf('income.annual')
   if (i === -1) {
     return values
@@ -32,11 +57,10 @@ const valuesWithIncome = (fields, values) => {
 
 const getCSVParser = fieldPaths => esObj => {
   if (!fieldPaths || fieldPaths.length === 0) return `\n`
-  const values = fieldPaths.map(getDescendantProp(esObj._source))
-  const stringValues = valuesWithIncome(
-    fieldPaths,
-    values
-  ).map(x => {
+  let values = fieldPaths.map(getDescendantProp(esObj._source))
+  values = valuesWithRegDate(fieldPaths, values)
+  values = valuesWithIncome(fieldPaths, values) // warning: length might have changed!
+  const stringValues = values.map(x => {
     if (x === null || x === undefined) {
       return ''
     }

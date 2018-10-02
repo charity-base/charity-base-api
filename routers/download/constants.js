@@ -20,6 +20,7 @@ const ALLOWED_CSV_FIELD_PATHS = [
   'beneficiaries',
   'operations',
   'objectives',
+  'registration',
 ]
 
 const FY_END_YEARS = [
