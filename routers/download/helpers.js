@@ -1,5 +1,5 @@
 const crypto = require('crypto')
-const { ALLOWED_CSV_FIELD_PATHS } = require('./constants')
+const { ALLOWED_CSV_FIELD_PATHS, FY_END_YEARS } = require('./constants')
 
 const getAllowedCSVFieldPaths = fieldPaths => {
   const allowed = fieldPaths.reduce((agg, x) => (
@@ -10,7 +10,7 @@ const getAllowedCSVFieldPaths = fieldPaths => {
 
 const getFileName = (queryParams, fileType) => {
   const fileExtension = fileType === 'JSON' ? 'jsonl' : 'csv'
-  const { limit, skip, frozen, view, download, ...other } = queryParams
+  const { limit, skip, view, download, ...other } = queryParams
   const filterNames = Object.keys(other)
   if (filterNames.length === 0) {
     return `all.${fileExtension}.gz`
@@ -24,4 +24,22 @@ const getDescendantProp = obj => path => (
   path.split('.').reduce((acc, part) => acc ? acc[part] : '', obj)
 )
 
-module.exports = { getAllowedCSVFieldPaths, getDescendantProp, getFileName }
+const csvHeader = fields => {
+  const i = fields.indexOf('income.annual')
+  const extendedFields = i === -1 ? (
+    fields
+  ) : ([
+    ...fields.slice(0, i),
+    ...FY_END_YEARS.map(year => `income.${year}`),
+    ...FY_END_YEARS.map(year => `expend.${year}`),
+    ...fields.slice(i + 1),
+  ])
+  return `${extendedFields.join(',')}\n`
+}
+
+module.exports = {
+  getAllowedCSVFieldPaths,
+  getDescendantProp,
+  getFileName,
+  csvHeader,
+}

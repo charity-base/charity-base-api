@@ -13,11 +13,28 @@ const ALLOWED_CSV_FIELD_PATHS = [
   'people.trustees',
   'activities',
   'website',
-  'income.latest.total',
+  'income.annual',
   'areaOfBenefit',
   'causes',
   'beneficiaries',
   'operations',
 ]
 
-module.exports = { ALLOWED_CSV_FIELD_PATHS }
+const FY_END_YEARS = [
+  2008,
+  2009,
+  2010,
+  2011,
+  2012,
+  2013,
+  2014,
+  2015,
+  2016,
+  2017,
+  2018,
+]
+
+module.exports = {
+  ALLOWED_CSV_FIELD_PATHS,
+  FY_END_YEARS,
+}
