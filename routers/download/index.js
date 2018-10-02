@@ -3,7 +3,7 @@ const zlib = require('zlib')
 const downloadCharitiesRouter = require('express').Router()
 const log = require('../../helpers/logger')
 const ElasticStream = require('../../helpers/elasticStream')
-const { getAllowedCSVFieldPaths, getFileName } = require('./helpers')
+const { getAllowedCSVFieldPaths, getFileName, csvHeader } = require('./helpers')
 const getParser = require('./parser')
 
 const DOWNLOADS_DIR = './downloads'
@@ -46,6 +46,7 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
     const filePath = `${DOWNLOADS_DIR}/${fileName}`
 
     fs.stat(filePath, (err, stats) => {
+      // Don't worry about err, this will happen if file doesn't exist
       // TODO: check file is not currently being writted
       if (stats && stats.isFile()) {
         return res.download(filePath, fileName)
@@ -59,7 +60,7 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
         const gzip = zlib.createGzip()
         if (fileType === 'CSV') {
-          gzip.write(`${csvFields.join(',')}\n`)
+          gzip.write(csvHeader(csvFields))
         }
         gzip.on('error', handleError)
         
