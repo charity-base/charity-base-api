@@ -2,12 +2,13 @@ const ALLOWED_CSV_FIELD_PATHS = [
   'ids.GB-CHC',
   'ids.charityId',
   'name',
-  'contact.email',
-  'contact.person',
-  'contact.postcode',
   'contact.address',
-  'contact.geo.longitude',
+  'contact.email',
   'contact.geo.latitude',
+  'contact.geo.longitude',
+  'contact.person',
+  'contact.phone',
+  'contact.postcode',
   'people.volunteers',
   'people.employees',
   'people.trustees',
@@ -18,6 +19,7 @@ const ALLOWED_CSV_FIELD_PATHS = [
   'causes',
   'beneficiaries',
   'operations',
+  'objectives',
 ]
 
 const FY_END_YEARS = [
