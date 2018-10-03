@@ -1,13 +1,13 @@
 {
-  "version" : "v3.0.0",
+  "version" : "v3.1.0",
   "elastic" : {
     "host": "localhost:9200",
-    "index": "charity-base"
+    "index": "charity-base-v284-sep-2018"
   },
   "mongo" : {
     "dbHost" : "localhost",
     "dbPort" : "27017",
-    "dbName" : "charity-base"
+    "dbName" : "charity-base-api"
   },
   "jwt" : {
     "secret": "my-secret-example",
