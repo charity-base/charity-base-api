@@ -4,7 +4,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tythe-org/charity-base-api.git"
+    "url": "https://github.com/charity-base/charity-base-api.git"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
