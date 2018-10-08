@@ -1,6 +1,6 @@
 const aggregateCharitiesRouter = require('express').Router()
-const parseElasticSearchAggs = require('../middlewares/parse-query/aggregate')
-const log = require('../helpers/logger')
+const parseElasticSearchAggs = require('../../../middlewares/parse-query/aggregate')
+const log = require('../../../helpers/logger')
 
 
 const getAggregateCharitiesRouter = (esClient, esIndex) => {
