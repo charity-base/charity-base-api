@@ -1,11 +1,9 @@
 const charitiesRouter = require('express').Router()
-const log = require('../helpers/logger')
-
+const log = require('../../../helpers/logger')
 
 const getCharitiesRouter = (esClient, esIndex) => {
 
   charitiesRouter.get('/', (req, res, next) => {
-
     const { query, meta } = res.locals.elasticSearch
 
     const searchParams = Object.assign({}, meta, {

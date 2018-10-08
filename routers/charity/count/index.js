@@ -1,5 +1,5 @@
 const countCharitiesRouter = require('express').Router()
-const log = require('../helpers/logger')
+const log = require('../../../helpers/logger')
 
 
 const getCountCharitiesRouter = (esClient, esIndex) => {

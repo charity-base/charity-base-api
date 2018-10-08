@@ -1,8 +1,8 @@
 const fs = require('fs')
 const zlib = require('zlib')
 const downloadCharitiesRouter = require('express').Router()
-const log = require('../../helpers/logger')
-const ElasticStream = require('../../helpers/elasticStream')
+const log = require('../../../helpers/logger')
+const ElasticStream = require('../../../helpers/elasticStream')
 const { getAllowedCSVFieldPaths, getFileName, csvHeader } = require('./helpers')
 const getParser = require('./parser')
 
