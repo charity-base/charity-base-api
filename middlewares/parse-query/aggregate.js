@@ -1,4 +1,4 @@
-const { extractValues, extractValuesGivenLength, normaliseLongitude } = require('./helpers')
+const { extractValues, extractValuesGivenLength, getGeoBoundingBox } = require('./helpers')
 
 const parseFunders = query => {
   const ids = extractValues(query['funders'])
@@ -22,23 +22,6 @@ const parseGrantDateRange = query => {
   }
   const isEmpty = Object.keys(rangeQuery).length === 0
   return isEmpty ? [] : [{ range: { 'grants.awardDate' : rangeQuery } }]
-}
-
-const getGeoBoundingBox = query => {
-  const bounds = extractValuesGivenLength(query['aggGeoBounds'], 4).map(Number)
-  const geoBounds = {
-    'contact.geoCoords': {
-      'top_left': {
-        'lat': bounds[0] || 90,
-        'lon': normaliseLongitude(bounds[1]) || -180,
-      },
-      'bottom_right': {
-        'lat': bounds[2] || -90,
-        'lon': normaliseLongitude(bounds[3]) || 180,
-      }
-    }
-  }
-  return geoBounds
 }
 
 const getGeoPrecision = query => {
@@ -216,7 +199,9 @@ const getIncomeAggs = grantsFilter => ({
 const getGeoAggs = (geoBounds, geoPrecision) => ({
   'addressLocation': {
     filter: {
-      'geo_bounding_box': geoBounds,
+      'geo_bounding_box': {
+        'contact.geoCoords': geoBounds,
+      },
     },
     aggs: {
       grid: {
@@ -258,7 +243,7 @@ const getQuery = () => (req, res, next) => {
 
   const aggTypes = req.query.aggTypes ? extractValues(req.query.aggTypes) : ['geo', 'income', 'grantTotal', 'grantSize', 'grantTopics', 'grantDate', 'funders', 'categories']
 
-  const geoBounds = getGeoBoundingBox(req.query)
+  const geoBounds = getGeoBoundingBox(req.query['aggGeoBounds'])
   const geoPrecision = getGeoPrecision(req.query)
   const grantDateInterval = getGrantDateInterval(req.query)
 
