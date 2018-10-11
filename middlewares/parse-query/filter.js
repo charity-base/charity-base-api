@@ -1,4 +1,4 @@
-const { extractValues, extractValuesGivenLength, normaliseLongitude } = require('./helpers')
+const { extractValues, extractValuesGivenLength, getGeoBoundingBox } = require('./helpers')
 
 const parseIncomeRange = query => {
   const [min, max] = extractValuesGivenLength(query['incomeRange'], 2)
@@ -14,29 +14,12 @@ const parseIncomeRange = query => {
 }
 
 const parseAddressWithin = query => {
-  const [distance, lat, lon] = extractValuesGivenLength(query['addressWithin'], 3)
-  const geoCoords = `${lat},${lon}`
-  if (distance) {
-    return [{ geo_distance : { distance, 'contact.geoCoords': geoCoords } }]
-  }
-  const [minLat, minLon, maxLat, maxLon] = extractValuesGivenLength(query['addressWithin'], 4).map(Number)
-  if (!isNaN(minLat)) {
-    return [{
-      geo_bounding_box : {
-        'contact.geoCoords': {
-          top_left: {
-            lat: minLat || 90,
-            lon: normaliseLongitude(minLon) || -180,
-          },
-          bottom_right: {
-            lat: maxLat || -90,
-            lon: normaliseLongitude(maxLon) || 180,
-          }
-        }
-      }
-    }]
-  }
-  return []
+  const geoBounds = getGeoBoundingBox(query['addressWithin'])
+  return [{
+    'geo_bounding_box' : {
+      'contact.geoCoords': geoBounds,
+    },
+  }]
 }
 
 const parseAreasOfOperation = query => {
