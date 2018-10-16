@@ -3,9 +3,7 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
 const connectToDb = (address, config) => {
-  return new Promise((resolve, reject) => {
-    mongoose.connect(address, config).then(resolve, reject)
-  })
+  return mongoose.connect(address, config)
 }
 
 module.exports = connectToDb
