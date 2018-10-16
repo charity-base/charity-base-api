@@ -13,8 +13,9 @@ const listenPort = process.env.PORT || 4000
 const { dbHost, dbPort, dbName } = config.mongo
 
 connectToDb(`mongodb://${dbHost}:${dbPort}/${dbName}`, {
-  useMongoClient: true,
-  autoIndex: true
+  useCreateIndex: true,
+  useNewUrlParser: true,
+  autoIndex: true,
 }).then(() => {
   const app = express()
   app.use(bodyParser.json())
