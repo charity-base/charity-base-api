@@ -1,5 +1,5 @@
 {
-  "version" : "v4.0.0",
+  "version" : "v4.0.1",
   "elastic" : {
     "host": "localhost:9200",
     "index": "charity-base-v284-sep-2018"
