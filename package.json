@@ -1,6 +1,6 @@
 {
   "name": "charity-base-api",
-  "version": "4.0.1",
+  "version": "4.2.0",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -19,11 +19,19 @@
   "devDependencies": {
     "jest": "^20.0.4"
   },
+  "config": {
+    "service": "charity-base-api-4.2.0",
+    "build": "../charity-base-api-4.2.0.tgz",
+    "node_env": "production",
+    "port": 8451
+  },
   "scripts": {
+    "start": "node server.js | ./node_modules/bunyan/bin/bunyan",
     "test": "jest",
-    "slc-build": "slc build --npm",
-    "slc-create": "slc ctl -C http://charitybase.uk create $SERVICE",
-    "slc-env-set": "slc ctl -C http://charitybase.uk env-set $SERVICE NODE_ENV=$NODE_ENV PORT=$PORT",
-    "slc-deploy": "slc deploy -s $SERVICE http://charitybase.uk $BUILD"
+    "build-slc": "slc build --npm",
+    "create-service": "slc ctl -C http://charitybase.uk create $npm_package_config_service",
+    "configure-service": "slc ctl -C http://charitybase.uk env-set $npm_package_config_service NODE_ENV=$npm_package_config_node_env PORT=$npm_package_config_port",
+    "predeploy": "npm run create-service && npm run configure-service",
+    "deploy": "slc deploy -s $npm_package_config_service http://charitybase.uk $npm_package_config_build"
   }
 }
