@@ -1,8 +1,8 @@
 {
-  "version" : "v4.0.1",
+  "version" : "v4.2.0",
   "elastic" : {
     "host": "localhost:9200",
-    "index": "charity-base-v284-sep-2018"
+    "index": "charity-base-v284-nov-2018"
   },
   "mongo" : {
     "dbHost" : "localhost",
