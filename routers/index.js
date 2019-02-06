@@ -3,8 +3,7 @@ const apiRouter = require('express').Router({mergeParams: true})
 const charityRouter = require('./charity')
 const apiKeyRouter = require('./api-key')
 const { getScopes, checkScopes, verifyValidVersion, parseQuery, persistQuery } = require('../middlewares')
-const esClient = require('../elastic-client')
-
+const { esClient } = require('../connection')
 
 const getApiRouter = (acceptedVersion, elasticConfig, jwtConfig) => {
 
