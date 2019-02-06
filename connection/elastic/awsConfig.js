@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk')
-const config = require('../config')
+const config = require('../../config')
 
 const accessKeyId = process.env.CHARITY_BASE_ES_AWS_ACCESS_KEY_ID
 const secretAccessKey = process.env.CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY
