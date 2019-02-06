@@ -1,18 +1,13 @@
-const elasticsearch = require('elasticsearch')
 const jwt = require('express-jwt')
 const apiRouter = require('express').Router({mergeParams: true})
 const charityRouter = require('./charity')
 const apiKeyRouter = require('./api-key')
 const { getScopes, checkScopes, verifyValidVersion, parseQuery, persistQuery } = require('../middlewares')
+const esClient = require('../elastic-client')
 
-const getElasticClient = host => {
-  const esClient = new elasticsearch.Client({ host })
-  return esClient
-}
 
 const getApiRouter = (acceptedVersion, elasticConfig, jwtConfig) => {
 
-  const esClient = getElasticClient(elasticConfig.host)
   const esIndex = elasticConfig.index
 
   const jwtOptionalCheck = jwt({ ...jwtConfig, credentialsRequired: false })
