@@ -17,7 +17,8 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "jest": "^20.0.4"
+    "jest": "^20.0.4",
+    "nodemon": "^1.18.9"
   },
   "config": {
     "service": "charity-base-api-4.2.0",
@@ -27,6 +28,7 @@
   },
   "scripts": {
     "start": "node server.js | ./node_modules/bunyan/bin/bunyan",
+    "dev": "node server.js | ./node_modules/bunyan/bin/bunyan",
     "test": "jest",
     "build-slc": "slc build --npm",
     "create-service": "slc ctl -C http://charitybase.uk create $npm_package_config_service",
