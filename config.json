@@ -6,9 +6,8 @@
     "index": "charity-base-v284-nov-2018"
   },
   "mongo" : {
-    "dbHost" : "localhost",
-    "dbPort" : "27017",
-    "dbName" : "charity-base-api"
+    "host": "my-mongo-atlas-host.mongodb.net",
+    "dbName": "charity-base-api"
   },
   "jwt" : {
     "secret": "my-secret-example",
