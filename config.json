@@ -1,7 +1,8 @@
 {
   "version" : "v4.2.0",
   "elastic" : {
-    "host": "localhost:9200",
+    "host": "https://my-elastic-search-domain.eu-west-2.es.amazonaws.com",
+    "region": "eu-west-2",
     "index": "charity-base-v284-nov-2018"
   },
   "mongo" : {
