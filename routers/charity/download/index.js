@@ -1,37 +1,14 @@
-const fs = require('fs')
 const zlib = require('zlib')
 const downloadCharitiesRouter = require('express').Router()
 const log = require('../../../helpers/logger')
 const ElasticStream = require('../../../helpers/elasticStream')
 const { getAllowedCSVFieldPaths, getFileName, csvHeader } = require('./helpers')
 const getParser = require('./parser')
+const { s3 } = require('../../../connection')
 
-const DOWNLOADS_DIR = './downloads'
-
-try {
-  fs.mkdirSync(DOWNLOADS_DIR)
-} catch (e) {}
-
-const handleError = filePath => err => {
-  log.error(err)
-  // Handle error, but keep in mind the response may be partially-sent
-  // so check res.headersSent
-  fs.unlink(filePath, e => {
-    if (e) {
-      return log.error(e)
-    }
-    log.info(`Successfully deleted ${filePath}`)
-  })
-}
-
-const fsStat = filePath => new Promise((resolve, reject) => {
-  fs.stat(filePath, (err, stats) => {
-    if (err && err.code !== 'ENOENT') {
-      return reject(err)
-    }
-    return resolve(stats)
-  })
-})
+const bucket = 'charity-base-uk-downloads'
+const folder = 'downloads'
+const linkExpiresSeconds = 15*60
 
 const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
@@ -52,40 +29,113 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
     const csvFields = fileType === 'CSV' && getAllowedCSVFieldPaths(meta._source)
 
     const fileName = getFileName(req.query, fileType)
-    const filePath = `${DOWNLOADS_DIR}/${fileName}`
 
-    fsStat(filePath)
-    .then(stats => {
-      // TODO: check file is not currently being writted
-      if (stats && stats.isFile()) {
-        return res.download(filePath, fileName)
-      } else {
+    const s3Key = `${folder}/${fileName}`
+    const s3KeyComplete = `${folder}/complete_${fileName}`
+
+    let complete = false
+
+    const getFileUrl = () => new Promise((resolve, reject) => {
+      log.info('checking if upload exists')
+      s3.waitFor('objectExists', {
+        Bucket: bucket,
+        Key: s3KeyComplete,
+        $waiter: { maxAttempts: 0 },
+      })
+      .promise()
+      .then(data => {
+        log.info('complete upload exists, returning url')
+        const url = s3
+        .getSignedUrl('getObject', {
+          Bucket: bucket,
+          Key: s3KeyComplete,
+          Expires: linkExpiresSeconds,
+        })
+        log.info(url)
+        complete = true
+        return resolve(url)
+      })
+      .catch(err => {
+        if (complete) return
+        // TODO: check error type.  it could be something else e.g. s3 auth error
+        log.info('no upload found, so lets do it.')
+
         const eStream = new ElasticStream({
           searchParams,
           client: esClient,
           parser: getParser(fileType, csvFields),
         })
-        eStream.on('error', handleError(filePath))
+        // eStream.on('error', handleError(filePath))
 
         const gzip = zlib.createGzip()
         if (fileType === 'CSV') {
           gzip.write(csvHeader(csvFields))
         }
-        gzip.on('error', handleError(filePath))
+        // gzip.on('error', handleError(filePath))
 
         const readableGzip = eStream.pipe(gzip)
-        readableGzip.on('error', handleError(filePath))
 
-        const out = fs.createWriteStream(filePath)
-        readableGzip.pipe(out)
-        log.info(`Writing to file: ${filePath}`)
+        const uploadPromise = s3
+        .upload({
+          Bucket: bucket,
+          Key: s3Key,
+          Body: readableGzip,
+        })
+        .promise()
 
-        res.attachment(fileName)
-        readableGzip.pipe(res)
-      }
+        return uploadPromise
+      })
+      .then(data => {
+        if (complete) return
+        log.info('successfully uploaded to s3. lets copy to new file with _complete appended to name.')
+        // Note: copyObject requires permission: s3:GetObject, s3:PutObject, s3:GetObjectTagging, s3:PutObjectTagging
+        return s3.copyObject({
+          Bucket: bucket,
+          CopySource: `${bucket}/${s3Key}`,
+          Key: s3KeyComplete,
+        })
+        .promise()
+      })
+      .then(data => {
+        if (complete) return
+        log.info('file copied. now lets delete the original, but not too bothered if it fails')
+        s3
+        .deleteObject({
+          Bucket: bucket,
+          Key: s3Key,
+        })
+        .promise()
+
+        return
+      })
+      .then(() => {
+        if (complete) return
+        log.info('returning url of newly uploaded file')
+        const url = s3
+        .getSignedUrl('getObject', {
+          Bucket: bucket,
+          Key: s3KeyComplete,
+          Expires: linkExpiresSeconds,
+        })
+        log.info(url)
+        complete = true
+        return resolve(url)
+      })
+      .catch(err => {
+        if (complete) return
+        log.info('oops something went wrong')
+        log.error(err, err.stack)
+        complete = true
+        return reject({ message: err.message })
+      })
+    })
+
+    getFileUrl()
+    .then(url => {
+      res.json({ url })
     })
     .catch(err => {
-      return res.status(400).send({ message: err.message })
+      res.status(400).json({ message: err.message })
     })
 
   })
