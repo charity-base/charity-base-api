@@ -9,8 +9,8 @@ const getApiRouter = (acceptedVersion, elasticConfig, jwtConfig) => {
 
   const esIndex = elasticConfig.index
 
-  const jwtOptionalCheck = jwt({ ...jwtConfig, credentialsRequired: false })
-  const jwtEnforcedCheck = jwt({ ...jwtConfig, credentialsRequired: true })
+  const jwtOptionalCheck = jwt({ ...jwtConfig, secret: process.env.CHARITY_BASE_AUTH0_JWT_SECRET, credentialsRequired: false })
+  const jwtEnforcedCheck = jwt({ ...jwtConfig, secret: process.env.CHARITY_BASE_AUTH0_JWT_SECRET, credentialsRequired: true })
 
   apiRouter.use(getScopes())
   apiRouter.use(jwtOptionalCheck)
