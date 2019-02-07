@@ -4,17 +4,24 @@ const charityRouter = require('./charity')
 const apiKeyRouter = require('./api-key')
 const { getScopes, checkScopes, verifyValidVersion, parseQuery, persistQuery } = require('../middlewares')
 const { esClient } = require('../connection')
+const config = require('../config.json')
 
-const getApiRouter = (acceptedVersion, elasticConfig, jwtConfig) => {
+const esIndex = config.elastic.index
 
-  const esIndex = elasticConfig.index
+const jwtConfig = {
+  audience: config.jwt.audience,
+  issuer: config.jwt.issuer,
+  secret: process.env.CHARITY_BASE_AUTH0_JWT_SECRET,
+}
 
-  const jwtOptionalCheck = jwt({ ...jwtConfig, secret: process.env.CHARITY_BASE_AUTH0_JWT_SECRET, credentialsRequired: false })
-  const jwtEnforcedCheck = jwt({ ...jwtConfig, secret: process.env.CHARITY_BASE_AUTH0_JWT_SECRET, credentialsRequired: true })
+const jwtOptionalCheck = jwt({ ...jwtConfig, credentialsRequired: false })
+const jwtEnforcedCheck = jwt({ ...jwtConfig, credentialsRequired: true })
+
+const getApiRouter = () => {
 
   apiRouter.use(getScopes())
   apiRouter.use(jwtOptionalCheck)
-  apiRouter.use(verifyValidVersion(acceptedVersion))
+  apiRouter.use(verifyValidVersion(config.version))
   apiRouter.use(parseQuery())
   apiRouter.use(persistQuery())
 
