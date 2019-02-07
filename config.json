@@ -10,7 +10,6 @@
     "dbName": "charity-base-api"
   },
   "jwt" : {
-    "secret": "my-secret-example",
     "audience": "https://charitybase.uk/api",
     "issuer": "https://charity-base.eu.auth0.com/"
   }
