@@ -1,10 +1,8 @@
+.env
+
 git_ignore
-sftp-config.json
 
 .DS_Store
-
-# Downloaded files
-downloads
 
 # Logs
 logs
