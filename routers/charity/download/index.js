@@ -12,9 +12,10 @@ const bucket = 'charity-base-uk-downloads'
 const folder = 'downloads'
 const linkExpiresSeconds = 15*60
 
-// const EventEmitter = require('events')
-// EventEmitter.defaultMaxListeners = 20
-const numSlices = 30
+const EventEmitter = require('events')
+EventEmitter.defaultMaxListeners = 20
+const numSlices = process.env.NODE_ENV === 'production' ? 5 : 5
+const chunkSize = process.env.NODE_ENV === 'production' ? 10000 : 10000
 
 const BASE_URL = process.env.NODE_ENV === 'production' ? config.prodBaseUrl : 'http://localhost:4000'
 
@@ -40,6 +41,13 @@ const getStreamUrl = req => {
   return `${BASE_URL}${streamUrlList.join('/')}`
 }
 
+const getSignedUrlAsync = params => new Promise((resolve, reject) => {
+  s3.getSignedUrl('getObject', params, (err, url) => {
+    if (err) return reject(err)
+    return resolve(url)
+  })
+})
+
 const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
   downloadCharitiesRouter.post('/upload-slice', async function(req, res, next) {
@@ -51,28 +59,29 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
     })
 
     // TODO: zip before sending
-    const gzip = zlib.createGzip()
-    if (fileType === 'CSV') {
-      gzip.write(csvHeader(csvFields))
-    }
+    // const gzip = zlib.createGzip()
+    // if (fileType === 'CSV') {
+    //   gzip.write(csvHeader(csvFields))
+    // }
 
-    // res.attachment('tempfile')
+    res.attachment('tempfile')
+    myStream.pipe(res)
     // myStream.pipe(gzip).pipe(res)
 
-    try {
-      const upload = await s3.upload({
-        Body: myStream.pipe(gzip),
-        Bucket: bucket,
-        Key: key,
-      }).promise()
-      log.info(`succesfully uploaded key ${key}`)
-      log.info(Object.keys(upload))
-      return res.status(201).json({ ...upload })
-    } catch (e) {
-      log.info(`failed to upload key ${key}`)
-      log.error(e)
-      return res.sendStatus(400)
-    }
+    // try {
+    //   const upload = await s3.upload({
+    //     Body: myStream.pipe(gzip),
+    //     Bucket: bucket,
+    //     Key: key,
+    //   }).promise()
+    //   log.info(`succesfully uploaded key ${key}`)
+    //   log.info(Object.keys(upload))
+    //   return res.status(201).json({ ...upload })
+    // } catch (e) {
+    //   log.info(`failed to upload key ${key}`)
+    //   log.error(e)
+    //   return res.sendStatus(400)
+    // }
 
   })
 
@@ -83,7 +92,7 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
     const searchParams = sliceId => ({
       index: esIndex,
-      size: 8000,
+      size: chunkSize,
       body: {
         query,
         "slice": {
@@ -91,6 +100,9 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
           "id": sliceId,
           "max": numSlices,
         },
+        "sort": [
+          "_doc"
+        ],
       },
       scroll: '1m',
       _source: meta._source,
@@ -101,6 +113,7 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
 
     const fileName = getFileName(req.query, fileType)
 
+    const s3Key = `${folder}/${fileName}`
     const s3SliceKey = sliceId => `${folder}/slice_${sliceId}_${fileName}`
     const s3CompleteQueryKey = `${folder}/complete_query_${fileName}`
 
@@ -153,7 +166,7 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
       })
       .then(async function() {
         if (complete) return
-        log.info('uploading slices')
+        log.info('fetching slice streams')
 
         // let uploadId
         // try {
@@ -180,9 +193,11 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
         // ))
 
         // log.info('successfully created multipart upload. uploading slices.')
+        let combinedStream = new PassThrough()
+        let waitingStreams = numSlices
         let slicedUploads
         try {
-          slicedUploads = await Promise.all([...new Array(numSlices)].map((x, sliceId) => (
+          [...new Array(numSlices)].map((x, sliceId) => (
             fetch(getStreamUrl(req), {
               method: 'POST',
               body: JSON.stringify({
@@ -198,70 +213,62 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
             })
             .then(res => {
               log.info(`received status ${res.status} from sliceId ${sliceId}`)
-              if (res.status !== 201) return Promise.reject({ message: 'Part of upload failed' })
-              return res
+              if (res.status !== 200) return Promise.reject({ message: 'Part of scrolling failed' })
+              const stream = res.body
+              combinedStream = stream.pipe(combinedStream, { end: false })
+              stream.once('end', () => {
+                log.info(`stream ${sliceId} ended`)
+                --waitingStreams === 0 && combinedStream.emit('end') // end combined stream once all streams ended
+              })
+              // return res.body
             })
-            .then(res => res.json())
-          )))
-        } catch (e) {
-          return Promise.reject(e)
-        }
-
-        log.info('succesfully uploaded slices. uploading query info to complete file.')
-
-        try {
-          const upload = await s3.putObject({
-            Bucket: bucket,
-            Key: s3CompleteQueryKey,
-            Body: JSON.stringify({
-              query,
-              meta,
-              fileType,
-              s3Objects: slicedUploads,
-            }),
-          }).promise()
-          log.info('upload complete file')
-        } catch (e) {
-          log.info('failed to upload complete file')
-          return Promise.reject(e)
-        }
-
-        log.info('successfully uploaded complete file. returning urls')
-        try {
-
-          const urls = slicedUploads.map((x, i) => (
-            s3.getSignedUrl('getObject', {
-              Bucket: bucket,
-              Key: x.Key,
-              Expires: linkExpiresSeconds,
-            })
+            // do we need to catch & throw here?
+            // .then(res => res.json())
           ))
-          log.info('signed urls')
-          complete = true
-          return resolve(urls)
-
-
-          // const completeUpload = await s3.completeMultipartUpload({
-          //   Bucket: bucket,
-          //   Key: s3KeyComplete,
-          //   UploadId: uploadId,
-          //   MultipartUpload: {
-          //     Parts: slicedUploads,
-          //   },
-          //   // RequestPayer: 'requester'
-          // }).promise()
-          // log.info('completeUpload')
-          // log.info(completeUpload)
         } catch (e) {
-          log.info('failed to sign urls')
-          // s3.abortMultipartUpload({
-          //   Bucket: bucket,
-          //   Key: s3KeyComplete,
-          //   UploadId: uploadId
-          // }).promise()
           return Promise.reject(e)
         }
 
+        log.info('combining streams.')
+
+        // const combinedStream = mergeStreams(slicedUploads)
+
+        const gzip = zlib.createGzip()
+        if (fileType === 'CSV') {
+          gzip.write(csvHeader(csvFields))
+        }
+        // gzip.on('error', handleError(filePath))
+
+        log.info('uploading to s3.')
+
+        try {
+          const upload = await s3.upload({
+            Body: combinedStream.pipe(gzip),
+            Bucket: bucket,
+            Key: s3Key,
+          }).promise()
+          log.info(`succesfully uploaded`)
+        } catch (e) {
+          log.info(`failed to upload key`)
+          return Promise.reject(e)
+        }
+
+
+        log.info('creating shareable url.')
+
+        try {
+          const url = await getSignedUrlAsync({
+            Bucket: bucket,
+            Key: 'dummy-file-123', //s3Key,
+            Expires: linkExpiresSeconds,
+          })
+          log.info(url)
+          complete = true
+          return resolve(url)
+        } catch (e) {
+          log.info('failed to sign url')
+          return Promise.reject(e)
+        }
 
 
         // const eStream = mergeStreams(slicedStreams)
@@ -338,8 +345,8 @@ const getDownloadCharitiesRouter = (esClient, esIndex) => {
     })
 
     getFileUrl()
-    .then(urls => {
-      res.json({ urls })
+    .then(url => {
+      res.json({ url })
     })
     .catch(err => {
       res.status(400).json({ message: err.message })
