@@ -1,5 +1,6 @@
 {
   "version" : "v4.2.0",
+  "prodBaseUrl" : "https://charity-base-api.now.sh",
   "elastic" : {
     "host": "https://my-elastic-search-domain.eu-west-2.es.amazonaws.com",
     "region": "eu-west-2",
