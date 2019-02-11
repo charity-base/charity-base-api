@@ -1,7 +1,6 @@
 {
   "version": 2,
   "name": "charity-base-api",
-  "alias": "https://charity-base-api.now.sh",
   "env": {
     "CHARITY_BASE_ES_AWS_ACCESS_KEY_ID": "@charity-base-es-aws-access-key-id",
     "CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY": "@charity-base-es-aws-secret-access-key",
