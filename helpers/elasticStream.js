@@ -29,7 +29,7 @@ class ElasticStream extends Readable {
 
         this._count += response.hits.hits.length
 
-        const data = response.hits.hits.map(this._parser).join('')
+        const data = response.hits.hits.reduce((agg, x) => agg + this._parser(x), '')
 
         this.push(data)
 
