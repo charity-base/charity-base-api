@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "charity-base-api",
+  "name": "charity-base-api-v4",
   "env": {
     "CHARITY_BASE_ES_AWS_ACCESS_KEY_ID": "@charity-base-es-aws-access-key-id",
     "CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY": "@charity-base-es-aws-secret-access-key",
@@ -14,6 +14,6 @@
     { "src": "server.js", "use": "@now/node-server" }
   ],
   "routes": [
-    { "src": "/api/(.*)", "dest": "/server.js" }
+    { "src": "/api/v4(.*)", "dest": "/server.js" }
   ]
 }
