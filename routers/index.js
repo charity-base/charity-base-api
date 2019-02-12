@@ -2,7 +2,7 @@ const jwt = require('express-jwt')
 const apiRouter = require('express').Router({mergeParams: true})
 const charityRouter = require('./charity')
 const apiKeyRouter = require('./api-key')
-const { getScopes, checkScopes, verifyValidVersion, parseQuery, persistQuery } = require('../middlewares')
+const { getScopes, checkScopes, parseQuery, persistQuery } = require('../middlewares')
 const { esClient } = require('../connection')
 const config = require('../config.json')
 
@@ -21,7 +21,6 @@ const getApiRouter = () => {
 
   apiRouter.use(getScopes())
   apiRouter.use(jwtOptionalCheck)
-  apiRouter.use(verifyValidVersion(config.version))
   apiRouter.use(parseQuery())
   apiRouter.use(persistQuery())
 
