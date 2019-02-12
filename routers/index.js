@@ -40,12 +40,12 @@ const getApiRouter = () => {
     checkScopes('basic'),
     charityRouter.count(esClient, esIndex),
   )
-  apiRouter.use(
-    '/download-charities',
-    checkScopes('download'),
-    jwtEnforcedCheck,
-    charityRouter.download(esClient, esIndex),
-  )
+  // apiRouter.use(
+  //   '/download-charities',
+  //   checkScopes('download'),
+  //   jwtEnforcedCheck,
+  //   charityRouter.download(esClient, esIndex),
+  // )
   apiRouter.use(
     '/aggregate-charities',
     checkScopes('aggregate'),
