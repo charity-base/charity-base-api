@@ -1,21 +1,56 @@
+const jwt = require('express-jwt')
 const apiRouter = require('express').Router({mergeParams: true})
-const getCharitiesRouter = require('./charities')
-const getCountCharitiesRouter = require('./count-charities')
-const getDownloadCharitiesRouter = require('./download-charities')
-const verifyValidVersion = require('../middlewares/verifyValidVersion')
-const parseElasticSearchQuery = require('../middlewares/parse-query')
-const persistQuery = require('../middlewares/persistQuery')
+const charityRouter = require('./charity')
+const apiKeyRouter = require('./api-key')
+const { getScopes, checkScopes, parseQuery, persistQuery } = require('../middlewares')
+const { esClient } = require('../connection')
+const config = require('../config.json')
 
-const getApiRouter = (acceptedVersion, elasticConfig) => {
+const esIndex = config.elastic.index
 
-  apiRouter.use(verifyValidVersion(acceptedVersion))
+const jwtConfig = {
+  audience: config.jwt.audience,
+  issuer: config.jwt.issuer,
+  secret: process.env.CHARITY_BASE_AUTH0_JWT_SECRET,
+}
 
-  apiRouter.use(parseElasticSearchQuery())
+const jwtOptionalCheck = jwt({ ...jwtConfig, credentialsRequired: false })
+const jwtEnforcedCheck = jwt({ ...jwtConfig, credentialsRequired: true })
+
+const getApiRouter = () => {
+
+  apiRouter.use(getScopes())
+  apiRouter.use(jwtOptionalCheck)
+  apiRouter.use(parseQuery())
   apiRouter.use(persistQuery())
 
-  apiRouter.use('/charities', getCharitiesRouter(elasticConfig))
-  apiRouter.use('/count-charities', getCountCharitiesRouter(elasticConfig))
-  apiRouter.use('/download-charities', getDownloadCharitiesRouter(elasticConfig))
+  apiRouter.use(
+    '/api-key',
+    checkScopes('admin'),
+    jwtEnforcedCheck,
+    apiKeyRouter(),
+  )
+  apiRouter.use(
+    '/charities',
+    checkScopes('basic'),
+    charityRouter.list(esClient, esIndex),
+  )
+  apiRouter.use(
+    '/count-charities',
+    checkScopes('basic'),
+    charityRouter.count(esClient, esIndex),
+  )
+  // apiRouter.use(
+  //   '/download-charities',
+  //   checkScopes('download'),
+  //   jwtEnforcedCheck,
+  //   charityRouter.download(esClient, esIndex),
+  // )
+  apiRouter.use(
+    '/aggregate-charities',
+    checkScopes('aggregate'),
+    charityRouter.aggregate(esClient, esIndex),
+  )
 
   return apiRouter
 }

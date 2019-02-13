@@ -13,7 +13,8 @@ const DEFAULT_SORT = [
 
 const parseFields = q => {
   const fields = extractValues(q['fields'])
-  return fields.length ? fields : DEFAULT_FIELDS
+  const unique = new Set([...DEFAULT_FIELDS, ...fields])
+  return [...unique]
 }
 
 const parseSort = q => {

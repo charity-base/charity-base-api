@@ -1,15 +1,5 @@
 const log = require('../helpers/logger')
-const mongoose = require('mongoose')
-
-const hitSchema = new mongoose.Schema({
-  url: String,
-  version: String,
-  query: { },
-}, {
-  timestamps : true
-})
-
-const Hit = mongoose.model('Hit', hitSchema)
+const { Hit } = require('../models')
 
 const stripQuery = query => {
   // Strips . and $ characters from a mongo query (with the exception of decimal points) to allow persisting the query to a mongo doc.
@@ -18,10 +8,11 @@ const stripQuery = query => {
   )
 }
 
-const persistRequest = (url, query, version) => {
+const persistRequest = (url, version, user, query, ) => {
   const hit = new Hit({
-    url: url,
+    url,
     version,
+    user,
     query: stripQuery(query),
   })
 
@@ -33,7 +24,7 @@ const persistRequest = (url, query, version) => {
 
 const persistQuery = () => (req, res, next) => {
   const { elasticSearch } = res.locals
-  persistRequest(req.url, elasticSearch, req.params.version)
+  persistRequest(req.url, req.params.version, req.user, elasticSearch)
   return next()
 }
 

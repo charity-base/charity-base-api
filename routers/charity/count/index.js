@@ -1,24 +1,19 @@
 const countCharitiesRouter = require('express').Router()
-const log = require('../helpers/logger')
-const elasticsearch = require('elasticsearch')
+const log = require('../../../helpers/logger')
 
 
-const getCountCharitiesRouter = elasticConfig => {
-
-  const client = new elasticsearch.Client({
-    host: elasticConfig.host,
-  })
+const getCountCharitiesRouter = (esClient, esIndex) => {
 
   countCharitiesRouter.get('/', (req, res, next) => {
 
     const { query } = res.locals.elasticSearch
 
     const searchParams = {
-      index: elasticConfig.index,
+      index: esIndex,
       body: { query },
     }
 
-    return client.count(searchParams, (err, response) => {
+    return esClient.count(searchParams, (err, response) => {
       if (err) {
         log.error(err)
         return res.status(400).send({ message: err.message })

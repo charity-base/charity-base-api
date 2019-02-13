@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "name": "charity-base-api-v4",
+  "env": {
+    "CHARITY_BASE_ES_AWS_ACCESS_KEY_ID": "@charity-base-es-aws-access-key-id",
+    "CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY": "@charity-base-es-aws-secret-access-key",
+    "CHARITY_BASE_S3_DOWNLOADS_ACCESS_KEY_ID": "@charity-base-s3-downloads-access-key-id",
+    "CHARITY_BASE_S3_DOWNLOADS_SECRET_ACCESS_KEY": "@charity-base-s3-downloads-secret-access-key",
+    "CHARITY_BASE_MONGO_ATLAS_USER": "@charity-base-mongo-atlas-user",
+    "CHARITY_BASE_MONGO_ATLAS_PASSWORD": "@charity-base-mongo-atlas-password",
+    "CHARITY_BASE_AUTH0_JWT_SECRET": "@charity-base-auth0-jwt-secret"
+  },
+  "builds": [
+    { "src": "server.js", "use": "@now/node-server" }
+  ],
+  "routes": [
+    { "src": "/api/v4(.*)", "dest": "/server.js" }
+  ]
+}

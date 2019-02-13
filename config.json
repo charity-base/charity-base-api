@@ -1,12 +1,19 @@
 {
-  "version" : "v2.0.0",
+  "prodBaseUrl" : "https://charity-base-api-staging.now.sh",
   "elastic" : {
-    "host": "localhost:9200",
-    "index": "charity-base"
+    "host": "https://my-elastic-search-domain.eu-west-2.es.amazonaws.com",
+    "region": "eu-west-2",
+    "index": "charity-base-v284-nov-2018"
   },
   "mongo" : {
-    "dbHost" : "localhost",
-    "dbPort" : "27017",
-    "dbName" : "charity-base"
+    "host": "my-mongo-atlas-host.mongodb.net",
+    "dbName": "charity-base-api"
+  },
+  "jwt" : {
+    "audience": "https://charitybase.uk/api",
+    "issuer": "https://charity-base.eu.auth0.com/"
+  },
+  "s3" : {
+    "region": "eu-west-2"
   }
 }
