@@ -1,33 +1,27 @@
-# charity-base-api
+# CharityBase REST API v4
 
-For documentation on how to use the API, see [CharityBase Docs](https://charity-base.github.io/charity-base-docs/).
+For documentation on how to use the API, see [CharityBase v4 Docs](https://charitybase.uk/docs/v4/).
 
 JavaScript users can download the official client library here: [npmjs.com/package/charity-base](https://www.npmjs.com/package/charity-base).
 
 There's also a [third party Python client library](https://github.com/drkane/charity-base-client-python).
 
-If you're here to develop the API (rather than use the API) keep on reading.
+### Endpoint
 
-## Development
-
-```bash
-npm start
+```
+https://charitybase.uk/api/v4/
 ```
 
-## Production Deployment
-
-* Delete local logs and downloads
-* Update index name in `config.json`
-* Update version in `config.json` and `package.json`
-* Update deployment config variables in `package.json`
+### Development
 
 ```bash
-npm run build-slc
-npm run deploy
+yarn dev
 ```
 
-After deploying a new version you may wish to:
+### Deployment
 
-* Update port forwarding on the server e.g. with nginx
-* Update the API version in client libraries e.g. [charity-base-client-js](https://github.com/charity-base/charity-base-client-js)
-* Update the API version in applications e.g. [charity-base-web](https://github.com/charity-base/charity-base-web)
+```
+yarn deploy:production
+```
+
+Note: this requires [Now](https://zeit.co/now) which can be installed globally with npm: `npm i -g now`
