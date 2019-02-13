@@ -27,7 +27,7 @@
     "start": "node server.js | ./node_modules/bunyan/bin/bunyan",
     "dev": "nodemon server.js | ./node_modules/bunyan/bin/bunyan",
     "test": "jest",
-    "deploy-production": "now && now alias https://charity-base-api-v4.now.sh",
-    "deploy-staging": "now && now alias https://charity-base-api-v4-staging.now.sh"
+    "deploy:production": "now && now alias https://charity-base-api-v4.now.sh",
+    "deploy:staging": "now && now alias https://charity-base-api-v4-staging.now.sh"
   }
 }
