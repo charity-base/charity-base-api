@@ -1,10 +1,10 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const apiRouter = require('./routers')
 const log = require('./helpers/logger')
 const { mongooseConnection } = require('./connection')
-
 
 log.info(`Starting process with NODE_ENV=${process.env.NODE_ENV}`)
 
