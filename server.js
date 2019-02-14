@@ -60,7 +60,7 @@ app.use(async function(req, res, next) {
 app.use('/api/graphql', graphqlHTTP({
   schema,
   rootValue: controllers,
-  graphiql: true,
+  graphiql: false,
 }))
 app.listen(listenPort, () => {
   log.info(`Listening on port ${listenPort}`)
