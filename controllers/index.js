@@ -1,5 +1,5 @@
-const getCharitiesGB = require('./getCharitiesGB')
+const CHC = require('./CHC')
 
 module.exports = {
-  getCharitiesGB
+  CHC,
 }

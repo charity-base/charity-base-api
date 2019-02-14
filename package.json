@@ -15,6 +15,7 @@
     "express-graphql": "^0.7.1",
     "express-jwt": "^5.3.1",
     "graphql": "^14.1.1",
+    "graphql-fields": "^2.0.1",
     "http-aws-es": "^6.0.0",
     "mongoose": "^5.3.4",
     "node-fetch": "^2.3.0",
