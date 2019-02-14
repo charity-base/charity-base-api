@@ -17,7 +17,7 @@ async function countCharities(esQuery) {
     const response = await esClient.count(searchParams)
     return response.count
   } catch(e) {
-    throw Error(e.message)
+    throw e
   }
 }
 

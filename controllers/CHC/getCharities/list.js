@@ -41,7 +41,7 @@ async function listCharities(
       }), {})
     ))
   } catch(e) {
-    throw Error(e.message)
+    throw e
   }
 }
 
