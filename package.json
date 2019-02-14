@@ -29,6 +29,7 @@
     "start": "node server.js | ./node_modules/bunyan/bin/bunyan",
     "dev": "nodemon server.js | ./node_modules/bunyan/bin/bunyan",
     "test": "jest",
-    "deploy-staging": "now && now alias https://charity-base-api-staging.now.sh"
+    "deploy:production": "now && now alias https://charity-base-api-graphql.now.sh",
+    "deploy:staging": "now && now alias https://charity-base-api-graphql-staging.now.sh"
   }
 }
