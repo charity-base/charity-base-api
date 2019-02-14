@@ -1,6 +1,10 @@
-const { buildSchema } = require('graphql')
+const { makeExecutableSchema } = require('graphql-tools')
+const directiveResolvers = require('./directives')
 
-const schema = buildSchema(`
+const typeDefs = `
+  directive @isAuthenticated on QUERY | FIELD_DEFINITION
+  directive @hasScopes(scopes: [String]) on QUERY | FIELD_DEFINITION
+
   input FilterCHC {
     search: String
   }
@@ -38,15 +42,17 @@ const schema = buildSchema(`
     """
     Query charities registered in England & Wales
     """
-    getCharities(filters: FilterCHC!): FilteredCharitiesCHC
+    getCharities(filters: FilterCHC!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
   }
 
   type Query {
     """
     Charity Commission of England & Wales
     """
-    CHC: QueryCHC
+    CHC: QueryCHC @isAuthenticated
   }
-`)
+`
+
+const schema = makeExecutableSchema({ typeDefs, directiveResolvers })
 
 module.exports = schema

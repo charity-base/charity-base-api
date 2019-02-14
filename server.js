@@ -25,7 +25,7 @@ app.use(cors())
 // extract apikey from authorization header:
 app.use((req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(401).json({ message: 'No authorization header received' })
+    return next()
   }
   const authHeaders = req.headers.authorization.split(',').reduce((agg, x) => {
     const [authType, authValue] = x.trim().split(' ')
@@ -35,8 +35,6 @@ app.use((req, res, next) => {
     }
   }, {})
   req.apiKeyValue = authHeaders.apikey
-  // req.authToken = authHeaders.bearer
-  // TODO: check valid jwt & attach to req (or reject request)
   next()
 })
 
@@ -44,23 +42,18 @@ app.use((req, res, next) => {
 // todo: separate this into a separate auth api
 app.use(async function(req, res, next) {
   const { apiKeyValue } = req
-
   if (!apiKeyValue) {
-    return res.status(401).send({ message: 'You must provide an API key in the authorization header.  See https://charitybase.uk/api-portal for more information.' })
+    return next()
   }
-
   try {
     const client = await Client.findOne({ 'apiKeys.value': apiKeyValue })
-    log.info('client')
-    log.info(client)
-    if (!client) throw new Error(`The provided API key is not valid: '${apiKeyValue}'`)
+    if (!client) return next()
     const apiKeyObj = client.apiKeys.find(x => x.value === apiKeyValue)
+    req.apiKeyValid = true
     req.apiScopes = apiKeyObj.scopes
   } catch(err) {
     log.error(err)
-    return res.status(400).send({ message: err.message })
   }
-
   next()
 })
 
