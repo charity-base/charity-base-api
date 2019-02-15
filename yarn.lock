@@ -1313,6 +1313,10 @@ graphql-fields@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/graphql-fields/-/graphql-fields-2.0.1.tgz#7cfccb8daf8fa27f10296f75cfb4eb016092685b"
 
+graphql-input-number@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/graphql-input-number/-/graphql-input-number-0.0.10.tgz#509b1c1fb5baeef8ab516a7c82c40dcebb8f8358"
+
 graphql-tools@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.4.tgz#ca08a63454221fdde825fe45fbd315eb2a6d566b"
