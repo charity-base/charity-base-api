@@ -5,8 +5,7 @@ const cors = require('cors')
 // const apiRouter = require('./routers')
 const log = require('./helpers/logger')
 const { mongooseConnection } = require('./connection')
-const controllers = require('./controllers')
-const schema = require('./graphql-schema')
+const schema = require('./graphql')
 const { Client } = require('./models')
 
 log.info(`Starting process with NODE_ENV=${process.env.NODE_ENV}`)
@@ -59,7 +58,6 @@ app.use(async function(req, res, next) {
 
 app.use('/api/graphql', graphqlHTTP({
   schema,
-  rootValue: controllers,
   graphiql: false,
 }))
 app.listen(listenPort, () => {

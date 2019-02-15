@@ -1,5 +1,5 @@
-const { esClient } = require('../../../connection')
-const config = require('../../../config.json')
+const { esClient } = require('../../../../connection')
+const config = require('../../../../config.json')
 
 const esIndex = config.elastic.index
 
