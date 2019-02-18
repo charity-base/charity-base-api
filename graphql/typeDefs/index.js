@@ -14,7 +14,7 @@ const typeDefs = `
     # notSome: [String]
   }
 
-  input FilterCHC {
+  input FilterCHCInput {
     id: [String]
     search: String
     areas: ListFilterInput
@@ -22,6 +22,22 @@ const typeDefs = `
     causes: ListFilterInput
     beneficiaries: ListFilterInput
     operations: ListFilterInput
+  }
+
+  type IncomeLatestCHC {
+    "End date of latest financial year"
+    date: String
+    "Latest gross income GBP"
+    total: Int
+  }
+
+  type IncomeCHC {
+    latest: IncomeLatestCHC
+  }
+
+  type IdName {
+    id: String
+    name: String
   }
 
   """
@@ -37,6 +53,11 @@ const typeDefs = `
     Short description of the charity's activities
     """
     activities: String
+    income: IncomeCHC
+    areas: [IdName]
+    causes: [IdName]
+    beneficiaries: [IdName]
+    operations: [IdName]
   }
   
   """
@@ -57,7 +78,7 @@ const typeDefs = `
     """
     Query charities registered in England & Wales
     """
-    getCharities(filters: FilterCHC!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
+    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
   }
 
   type Query {
