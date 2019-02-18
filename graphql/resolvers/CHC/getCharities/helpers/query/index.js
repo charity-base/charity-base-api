@@ -1,6 +1,14 @@
+const getAreasFilters = require('./areas')
+const getCausesFilters = require('./causes')
+const getBeneficiariesFilters = require('./beneficiaries')
+const getOperationsFilters = require('./operations')
+
 const getElasticQuery = ({
   search,
   areas,
+  causes,
+  beneficiaries,
+  operations,
 }) => {
   const must = search ? ({
     simple_query_string : {
@@ -23,13 +31,12 @@ const getElasticQuery = ({
     match_all: {}
   })
 
-  const filter = areas && areas.some ? [{
-    bool: {
-      should: areas.some.map(id => ({
-        "match_phrase": { "areasOfOperation.id": id }
-      }))
-    }
-  }] : undefined
+  const filter = [
+    ...getAreasFilters(areas),
+    ...getCausesFilters(causes),
+    ...getBeneficiariesFilters(beneficiaries),
+    ...getOperationsFilters(operations),
+  ]
 
   return {
     bool: {

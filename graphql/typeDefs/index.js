@@ -17,6 +17,9 @@ const typeDefs = `
   input FilterCHC {
     search: String
     areas: ListFilterInput
+    causes: ListFilterInput
+    beneficiaries: ListFilterInput
+    operations: ListFilterInput
   }
 
   """

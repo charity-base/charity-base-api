@@ -1,4 +1,4 @@
-const getElasticQuery = require('./elastic')
+const getElasticQuery = require('./query')
 
 module.exports = {
   getElasticQuery,
