@@ -15,6 +15,7 @@ const typeDefs = `
   }
 
   input FilterCHC {
+    id: [String]
     search: String
     areas: ListFilterInput
     funders: ListFilterInput
