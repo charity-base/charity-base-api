@@ -4,8 +4,19 @@ const typeDefs = `
 
   scalar PageLimit
 
+  input ListFilterInput {
+    # every: [String]
+    """
+    Matches one or more of the provided values.
+    """
+    some: [String]
+    # notEvery: [String]
+    # notSome: [String]
+  }
+
   input FilterCHC {
     search: String
+    areas: ListFilterInput
   }
 
   """
