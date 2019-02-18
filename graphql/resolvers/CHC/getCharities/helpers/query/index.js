@@ -1,3 +1,4 @@
+const getIdFilters = require('./id')
 const getAreasFilters = require('./areas')
 const getFundersFilters = require('./funders')
 const getCausesFilters = require('./causes')
@@ -5,6 +6,7 @@ const getBeneficiariesFilters = require('./beneficiaries')
 const getOperationsFilters = require('./operations')
 
 const getElasticQuery = ({
+  id,
   search,
   areas,
   funders,
@@ -34,6 +36,7 @@ const getElasticQuery = ({
   })
 
   const filter = [
+    ...getIdFilters(id),
     ...getAreasFilters(areas),
     ...getFundersFilters(funders),
     ...getCausesFilters(causes),
