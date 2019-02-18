@@ -1,12 +1,18 @@
 const graphqlFields = require('graphql-fields')
 const countCharities = require('./count')
 const listCharities = require('./list')
+const aggregateCharities = require('./aggregate')
 const { getElasticQuery } = require('./helpers')
 
 class FilteredCharitiesCHC {
   constructor(filters) {
     this.filters = filters
     this.esQuery = getElasticQuery(filters)
+  }
+  count() {
+    return countCharities(
+      this.esQuery,
+    )
   }
   list({ limit, skip, sort }, _, info) {
     const requestedFields = Object.keys(graphqlFields(info))
@@ -16,8 +22,8 @@ class FilteredCharitiesCHC {
       requestedFields
     )
   }
-  count() {
-    return countCharities(
+  aggregate() {
+    return aggregateCharities(
       this.esQuery,
     )
   }

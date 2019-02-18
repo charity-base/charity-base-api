@@ -28,7 +28,7 @@ const typeDefs = `
     "End date of latest financial year"
     date: String
     "Latest gross income GBP"
-    total: Int
+    total: Float
   }
 
   type IncomeCHC {
@@ -59,6 +59,21 @@ const typeDefs = `
     beneficiaries: [IdName]
     operations: [IdName]
   }
+
+  type AggregationBucket {
+    id: String
+    name: String
+    count: Int
+    sumIncome: Float
+  }
+
+  type Aggregation {
+    buckets: [AggregationBucket]
+  }
+
+  type AggregationTypesCHC {
+    income: Aggregation
+  }
   
   """
   Various formats to represent filtered charities
@@ -72,6 +87,10 @@ const typeDefs = `
     List of charities matching query
     """
     list(limit: PageLimit, skip: Int, sort: String): [CharityCHC]
+    """
+    Aggregations of charities matching query
+    """
+    aggregate: AggregationTypesCHC
   }
 
   type QueryCHC {
