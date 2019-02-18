@@ -15,7 +15,7 @@ const typeDefs = `
   }
 
   input FilterCHCInput {
-    id: [String]
+    id: [ID]
     search: String
     areas: ListFilterInput
     funders: ListFilterInput
@@ -36,7 +36,7 @@ const typeDefs = `
   }
 
   type IdName {
-    id: String
+    id: ID
     name: String
   }
 
@@ -44,7 +44,7 @@ const typeDefs = `
   Charity registered in England & Wales
   """
   type CharityCHC {
-    id: String
+    id: ID
     """
     Registered name of the charity
     """
@@ -61,7 +61,7 @@ const typeDefs = `
   }
 
   type AggregationBucket {
-    id: String
+    id: ID
     name: String
     count: Int
     sumIncome: Float
