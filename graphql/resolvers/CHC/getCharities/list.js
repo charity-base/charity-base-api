@@ -8,6 +8,11 @@ const fieldMap = {
   'id': 'ids.GB-CHC',
   'name': 'name',
   'activities': 'activities',
+  'income': 'income',
+  'areas': 'areasOfOperation',
+  'causes': 'causes',
+  'beneficiaries': 'beneficiaries',
+  'operations': 'operations',
 }
 
 // allow getting nested field from object with dot notation e.g. getNestedField({ a: { b: 'hello' } }, 'a.b')
@@ -26,10 +31,10 @@ async function listCharities(
     body: {
       query: esQuery,
     },
-    _source: requestedFields.map(x => fieldMap[x]),
+    _source: requestedFields.map(x => fieldMap[x]), // This could be further optimised by just fetching requested sub fields
     sort: [],
     size: limit || 10,
-    from: skip || 0, // todo: remove possibility of overwritting zero
+    from: skip || 0,
   }
 
   try {
