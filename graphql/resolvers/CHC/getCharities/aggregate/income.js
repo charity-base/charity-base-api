@@ -36,7 +36,7 @@ async function aggByIncome(esQuery) {
   try {
     const response = await esClient.search(searchParams)
     const buckets = response.aggregations.agg_by_income.buckets.map(x => ({
-      id: x.key,
+      id: `${x.key}`,
       name: `Min. £${Math.round(Math.pow(10, x.key))}`,
       count: x.doc_count,
       sumIncome: x.total_income.value,
