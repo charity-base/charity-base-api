@@ -1,13 +1,8 @@
-const getFundersFilters = funders => {
-  if (!funders) return []
-  if (!funders.some || !funders.some.length) return []
-  return [{
-    bool: {
-      should: funders.some.map(id => ({
-        "match_phrase": { "grants.fundingOrganization.id": id }
-      }))
-    }
-  }]
-}
+const getFiltersOnStringList = require('./getFiltersOnStringList')
+
+const getFundersFilters = funders => getFiltersOnStringList(
+  'grants.fundingOrganization.id',
+  funders,
+)
 
 module.exports = getFundersFilters

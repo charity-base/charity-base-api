@@ -4,13 +4,13 @@ const getIdFilters = id => {
   if (idInts.length === 0) {
     // all values provided were of invalid form, return none
     return [{
-      "match_none": {}
+      match_none: {}
     }]
   }
   return [{
     bool: {
       should: idInts.map(id => ({
-        "term": { "ids.GB-CHC": id }
+        term: { "ids.GB-CHC": id }
       }))
     }
   }]

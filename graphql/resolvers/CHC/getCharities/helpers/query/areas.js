@@ -1,13 +1,8 @@
-const getAreasFilters = areas => {
-  if (!areas) return []
-  if (!areas.some || !areas.some.length) return []
-  return [{
-    bool: {
-      should: areas.some.map(id => ({
-        "match_phrase": { "areasOfOperation.id": id }
-      }))
-    }
-  }]
-}
+const getFiltersOnStringList = require('./getFiltersOnStringList')
+
+const getAreasFilters = areas => getFiltersOnStringList(
+  'areasOfOperation.id',
+  areas,
+)
 
 module.exports = getAreasFilters
