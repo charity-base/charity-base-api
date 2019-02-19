@@ -4,10 +4,16 @@ const typeDefs = `
 
   scalar PageLimit
 
+  """
+  This input type allows filtering on a field which itself contains a list of values.
+  """
   input ListFilterInput {
-    # every: [String]
     """
-    Matches one or more of the provided values.
+    Require that the field contains all of the provided values (logical AND).
+    """
+    every: [String]
+    """
+    Require that the field contains one or more of the provided values (logical OR).
     """
     some: [String]
     # notEvery: [String]
