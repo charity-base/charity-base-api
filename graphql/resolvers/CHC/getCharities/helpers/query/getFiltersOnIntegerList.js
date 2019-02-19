@@ -2,18 +2,47 @@
 // listFilterInput corresponds to type ListFilterInput defined in GraphQL typeDefs.
 const getFiltersOnIntegerList = (field, listFilterInput) => {
   if (!listFilterInput) return []
-  if (!listFilterInput.some || !listFilterInput.some.length) return []
-  const someInts = listFilterInput.some.map(x => parseInt(x)).filter(x => !isNaN(x))
-  const someFilters = someInts.length > 0 ? [{
-    bool: {
-      should: someInts.map(value => ({
-        term: { [field]: value }
-      }))
+
+  const filters = []
+  const { some, every } = listFilterInput
+
+  if (some && some.length > 0) {
+    const someInts = some.map(x => parseInt(x)).filter(x => !isNaN(x))
+
+    if (someInts.length === 0) {
+      return [{
+        match_none: {}
+      }]
+    } else {
+      filters.push({
+        bool: {
+          should: someInts.map(value => ({
+            term: { [field]: value }
+          }))
+        }
+      })
     }
-  }] : [{
-    match_none: {}
-  }]
-  return someFilters
+  }
+
+  if (every && every.length > 0) {
+    const everyInts = every.map(x => parseInt(x)).filter(x => !isNaN(x))
+
+    if (everyInts.length === 0) {
+      return [{
+        match_none: {}
+      }]
+    } else {
+      filters.push({
+        bool: {
+          must: everyInts.map(value => ({
+            term: { [field]: value }
+          }))
+        }
+      })
+    }
+  }
+
+  return filters
 }
 
 module.exports = getFiltersOnIntegerList

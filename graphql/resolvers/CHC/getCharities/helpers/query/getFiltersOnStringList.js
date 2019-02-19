@@ -2,15 +2,33 @@
 // listFilterInput corresponds to type ListFilterInput defined in GraphQL typeDefs.
 const getFiltersOnStringList = (field, listFilterInput) => {
   if (!listFilterInput) return []
-  if (!listFilterInput.some || !listFilterInput.some.length) return []
-  const someFilters = [{
-    bool: {
-      should: listFilterInput.some.map(value => ({
-        match_phrase: { [field]: value }
-      }))
-    }
-  }]
-  return someFilters
+
+  const filters = []
+  const { some, every } = listFilterInput
+
+  // Logical OR query:
+  if (some && some.length > 0) {
+    filters.push({
+      bool: {
+        should: some.map(value => ({
+          match_phrase: { [field]: value }
+        }))
+      }
+    })
+  }
+
+  // Logical AND query:
+  if (every && every.length > 0) {
+    filters.push({
+      bool: {
+        must: every.map(value => ({
+          match_phrase: { [field]: value }
+        }))
+      }
+    })
+  }
+
+  return filters
 }
 
 module.exports = getFiltersOnStringList
