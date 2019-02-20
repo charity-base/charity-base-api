@@ -16,8 +16,10 @@ const typeDefs = `
     Require that the field contains one or more of the provided values (logical OR).
     """
     some: [String]
-    # notEvery: [String]
-    # notSome: [String]
+    """
+    Require that the field contains none of the provided values (logical AND NOT).
+    """
+    notSome: [String]
   }
 
   input FilterCHCInput {
