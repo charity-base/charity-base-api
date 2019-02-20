@@ -34,7 +34,7 @@ const typeDefs = `
     length: IntegerRangeInput
   }
 
-  input GrantFilterInput {
+  input GrantsFilterInput {
     funders: ListFilterInput
   }
 
@@ -42,11 +42,10 @@ const typeDefs = `
     id: [ID]
     search: String
     areas: ListFilterInput
-    funders: ListFilterInput
     causes: ListFilterInput
     beneficiaries: ListFilterInput
     operations: ListFilterInput
-    grants: GrantFilterInput
+    grants: GrantsFilterInput
   }
 
   type IncomeLatestCHC {
