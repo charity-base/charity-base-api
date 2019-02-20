@@ -4,6 +4,14 @@ const typeDefs = `
 
   scalar PageLimit
 
+  input IntegerRangeInput {
+    equals: Int
+    lessThanInclusive: Int
+    lessThanExclusive: Int
+    moreThanInclusive: Int
+    moreThanExclusive: Int
+  }
+
   """
   This input type allows filtering on a field which itself contains a list of values.
   """
@@ -20,6 +28,10 @@ const typeDefs = `
     Require that the field contains none of the provided values (logical AND NOT).
     """
     notSome: [String]
+    """
+    Apply conditions to the length of the array field.
+    """
+    length: IntegerRangeInput
   }
 
   input FilterCHCInput {
