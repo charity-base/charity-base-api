@@ -22,9 +22,11 @@ class FilteredCharitiesCHC {
       requestedFields
     )
   }
-  aggregate() {
+  aggregate(args, _, info) {
+    const requestedFields = Object.keys(graphqlFields(info))
     return aggregateCharities(
       this.esQuery,
+      requestedFields,
     )
   }
 }
