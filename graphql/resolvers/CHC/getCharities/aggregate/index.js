@@ -1,11 +1,17 @@
 const { esClient } = require('../../../../../connection')
 const config = require('../../../../../config.json')
 const aggIncome = require('./income')
+const aggCauses = require('./causes')
+const aggBeneficiaries = require('./beneficiaries')
+const aggOperations = require('./operations')
 
 const esIndex = config.elastic.index
 
 const fieldMap = {
   income: aggIncome,
+  causes: aggCauses,
+  beneficiaries: aggBeneficiaries,
+  operations: aggOperations,
 }
 
 async function aggregateCharities(esQuery, aggTypes) {

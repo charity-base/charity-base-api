@@ -108,6 +108,9 @@ const typeDefs = `
 
   type AggregationTypesCHC {
     income: Aggregation
+    causes: Aggregation
+    beneficiaries: Aggregation
+    operations: Aggregation
   }
   
   """
