@@ -34,6 +34,10 @@ const typeDefs = `
     length: IntegerRangeInput
   }
 
+  input GrantFilterInput {
+    funders: ListFilterInput
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -42,6 +46,7 @@ const typeDefs = `
     causes: ListFilterInput
     beneficiaries: ListFilterInput
     operations: ListFilterInput
+    grants: GrantFilterInput
   }
 
   type IncomeLatestCHC {
@@ -58,6 +63,16 @@ const typeDefs = `
   type IdName {
     id: ID
     name: String
+  }
+
+  type Grant {
+    id: ID
+    title: String
+    description: String
+    fundingOrganization: [IdName]
+    amountAwarded: Float
+    currency: String
+    awardDate: String
   }
 
   """
@@ -78,6 +93,7 @@ const typeDefs = `
     causes: [IdName]
     beneficiaries: [IdName]
     operations: [IdName]
+    grants: [Grant]
   }
 
   type AggregationBucket {

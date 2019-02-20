@@ -9,6 +9,7 @@ const fieldMap = {
   'name': 'name',
   'activities': 'activities',
   'income': 'income',
+  'grants': 'grants',
   'areas': 'areasOfOperation',
   'causes': 'causes',
   'beneficiaries': 'beneficiaries',
