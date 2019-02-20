@@ -1,4 +1,3 @@
-
 const aggQuery = {
   histogram: {
     field: 'income.latest.total',
