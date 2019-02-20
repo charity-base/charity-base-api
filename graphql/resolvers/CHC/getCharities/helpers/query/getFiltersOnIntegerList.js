@@ -4,7 +4,7 @@ const getFiltersOnIntegerList = (field, listFilterInput) => {
   if (!listFilterInput) return []
 
   const filters = []
-  const { some, every, notSome } = listFilterInput
+  const { some, every, notSome, length } = listFilterInput
 
   if (some && some.length > 0) {
     const someInts = some.map(x => parseInt(x)).filter(x => !isNaN(x))
@@ -52,6 +52,68 @@ const getFiltersOnIntegerList = (field, listFilterInput) => {
       })
     }
   }
+
+
+  if (length && !isNaN(length.equals)) {
+    filters.push({
+      script: {
+        script: {
+          source: `doc['${field}'].values.length === params.value`,
+          lang: 'painless',
+          params: { value: length.equals },
+        }
+      }
+    })
+  }
+
+  if (length && !isNaN(length.lessThanInclusive)) {
+    filters.push({
+      script: {
+        script: {
+          source: `doc['${field}'].values.length <= params.value`,
+          lang: 'painless',
+          params: { value: length.lessThanInclusive },
+        }
+      }
+    })
+  }
+
+  if (length && !isNaN(length.lessThanExclusive)) {
+    filters.push({
+      script: {
+        script: {
+          source: `doc['${field}'].values.length < params.value`,
+          lang: 'painless',
+          params: { value: length.lessThanExclusive },
+        }
+      }
+    })
+  }
+
+  if (length && !isNaN(length.moreThanInclusive)) {
+    filters.push({
+      script: {
+        script: {
+          source: `doc['${field}'].values.length >= params.value`,
+          lang: 'painless',
+          params: { value: length.moreThanInclusive },
+        }
+      }
+    })
+  }
+
+  if (length && !isNaN(length.moreThanExclusive)) {
+    filters.push({
+      script: {
+        script: {
+          source: `doc['${field}'].values.length > params.value`,
+          lang: 'painless',
+          params: { value: length.moreThanExclusive },
+        }
+      }
+    })
+  }
+
 
   return filters
 }
