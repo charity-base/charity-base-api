@@ -14,15 +14,12 @@
     "elasticsearch": "^15.0.0",
     "express": "^4.16.3",
     "express-graphql": "^0.7.1",
-    "express-jwt": "^5.3.1",
     "graphql": "^14.1.1",
     "graphql-fields": "^2.0.1",
     "graphql-input-number": "^0.0.10",
     "graphql-tools": "^4.0.4",
     "http-aws-es": "^6.0.0",
-    "mongoose": "^5.3.4",
-    "node-fetch": "^2.3.0",
-    "uuid": "^3.3.2"
+    "mongoose": "^5.3.4"
   },
   "devDependencies": {
     "jest": "^20.0.4",
