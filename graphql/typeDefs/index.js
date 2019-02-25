@@ -38,6 +38,17 @@ const typeDefs = `
     funders: ListFilterInput
   }
 
+  input GeoBoundingBox {
+    top: Float!
+    left: Float!
+    bottom: Float!
+    right: Float!
+  }
+
+  input GeoFilterInput {
+    boundingBox: GeoBoundingBox
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -46,6 +57,7 @@ const typeDefs = `
     beneficiaries: ListFilterInput
     operations: ListFilterInput
     grants: GrantsFilterInput
+    geo: GeoFilterInput
   }
 
   type IncomeLatestCHC {

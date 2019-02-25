@@ -4,6 +4,7 @@ const getGrantsFilters = require('./grants')
 const getCausesFilters = require('./causes')
 const getBeneficiariesFilters = require('./beneficiaries')
 const getOperationsFilters = require('./operations')
+const getGeoFilters = require('./geo')
 
 const getElasticQuery = ({
   id,
@@ -13,6 +14,7 @@ const getElasticQuery = ({
   causes,
   beneficiaries,
   operations,
+  geo,
 }) => {
   const must = search ? ({
     simple_query_string : {
@@ -42,6 +44,7 @@ const getElasticQuery = ({
     ...getCausesFilters(causes),
     ...getBeneficiariesFilters(beneficiaries),
     ...getOperationsFilters(operations),
+    ...getGeoFilters(geo),
   ]
 
   return {
