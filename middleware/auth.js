@@ -1,4 +1,4 @@
-const log = require('../helpers/logger')
+const { log } = require('../helpers')
 const { Client } = require('../models')
 
 // Extract API key from header & attach to req (along with validity & scopes)
