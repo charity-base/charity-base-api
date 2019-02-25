@@ -1,4 +1,4 @@
-const aggQuery = {
+const aggQuery = () => ({
   histogram: {
     field: 'income.latest.total',
     script: 'Math.log10(_value)',
@@ -15,7 +15,7 @@ const aggQuery = {
       },
     },
   },
-}
+})
 
 const parseResponse = aggregation => {
   const buckets = aggregation.buckets.map(x => ({

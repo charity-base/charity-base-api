@@ -25,7 +25,7 @@ async function aggregateCharities(esQuery, aggTypes) {
         query: esQuery,
         aggs: Object.keys(aggTypes).reduce((agg, x) => ({
           ...agg,
-          [x]: fieldMap[x].aggQuery,
+          [x]: fieldMap[x].aggQuery(aggTypes[x].__arguments),
         }), {})
       },
     }
