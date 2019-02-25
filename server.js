@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const graphqlHTTP = require('express-graphql')
 const cors = require('cors')
-const log = require('./helpers/logger')
+const { log, logRequest } = require('./helpers')
 const { mongooseConnection } = require('./connection')
 const schema = require('./graphql')
 const middleware = require('./middleware')
@@ -20,9 +20,12 @@ const app = express()
 
 app.use(cors())
 app.use(middleware.auth)
-app.use('/api/graphql', graphqlHTTP({
-  schema,
-  graphiql: false,
+app.use('/api/graphql', graphqlHTTP((req, res, graphQLParams) => {
+  logRequest(req, res, graphQLParams)
+  return {
+    schema,
+    graphiql: false,
+  }
 }))
 app.listen(listenPort, () => {
   log.info(`Listening on port ${listenPort}`)
