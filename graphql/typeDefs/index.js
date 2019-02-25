@@ -236,6 +236,7 @@ const typeDefs = `
     causes: Aggregation
     beneficiaries: Aggregation
     operations: Aggregation
+    areas: Aggregation
   }
   
   """
