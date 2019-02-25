@@ -188,6 +188,14 @@ const typeDefs = `
     codes: GeoCodes
   }
 
+  type ContactCHC {
+    address: [String]
+    email: String
+    person: String
+    phone: String
+    postcode: String
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -208,6 +216,7 @@ const typeDefs = `
     operations: [IdName]
     grants: [Grant]
     geo: Geo
+    contact: ContactCHC
   }
 
   type AggregationBucket {
