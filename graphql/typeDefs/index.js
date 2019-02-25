@@ -4,10 +4,17 @@ const typeDefs = `
 
   scalar PageLimit
 
+  """
+  Unit of distance.  Allowed values are \`mi\` (miles), \`yd\` (yards), \`km\` (kilometres) or \`m\` (metres).
+  """
   enum DistanceUnit {
+    """miles"""
     mi
+    """yards"""
     yd
+    """kilometres"""
     km
+    """metres"""
     m
   }
 
@@ -46,16 +53,32 @@ const typeDefs = `
   }
 
   input GeoBoundingBoxInput {
+    """
+    Latitude defining the box's top boundary.
+    """
     top: Float!
+    """
+    Longitude defining the box's left boundary.
+    """
     left: Float!
+    """
+    Latitude defining the box's bottom boundary.
+    """
     bottom: Float!
+    """
+    Longitude defining the box's right boundary.
+    """
     right: Float!
   }
 
   input GeoBoundingCircleInput {
+    """Radius of circle."""
     radius: Int!
+    """Unit of circle radius. Default: \`mi\`."""
     unit: DistanceUnit
+    """Latitude of circle centre."""
     latitude: Float!
+    """Longitude of circle centre."""
     longitude: Float!
   }
 
