@@ -35,7 +35,7 @@ async function listCharities(
     body: {
       query: esQuery,
     },
-    _source: requestedFields.map(x => fieldMap[x]), // This could be further optimised by just fetching requested sub fields
+    _source: Object.keys(requestedFields).map(x => fieldMap[x]), // This could be further optimised by just fetching requested sub fields
     sort: [],
     size: limit || 10,
     from: skip || 0,
