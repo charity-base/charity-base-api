@@ -1,6 +1,7 @@
 const typeDefs = `
   directive @isAuthenticated on QUERY | FIELD_DEFINITION
   directive @hasScopes(scopes: [String]) on QUERY | FIELD_DEFINITION
+  directive @deprecated(reason: String = "No longer supported") on FIELD_DEFINITION | INPUT_FIELD_DEFINITION
 
   scalar PageLimit
 
@@ -18,12 +19,28 @@ const typeDefs = `
     m
   }
 
-  input IntegerRangeInput {
-    equals: Int
-    lessThanInclusive: Int
-    lessThanExclusive: Int
-    moreThanInclusive: Int
-    moreThanExclusive: Int
+  input NumericRangeInput {
+    """
+    Greater than or equal to.
+    """
+    gte: Float
+    """
+    Greater than.
+    """
+    gt: Float
+    """
+    Less than or equal to.
+    """
+    lte: Float
+    """
+    Less than.
+    """
+    lt: Float
+    equals: Int @deprecated(reason: "Use \`lt\` and \`gt\` combined.")
+    lessThanInclusive: Int @deprecated(reason: "Use \`lte\`.")
+    lessThanExclusive: Int @deprecated(reason: "Use \`lt\`.")
+    moreThanInclusive: Int @deprecated(reason: "Use \`gte\`.")
+    moreThanExclusive: Int @deprecated(reason: "Use \`gt\`.")
   }
 
   """
@@ -45,7 +62,7 @@ const typeDefs = `
     """
     Apply conditions to the length of the array field.
     """
-    length: IntegerRangeInput
+    length: NumericRangeInput
   }
 
   input GrantsFilterInput {
