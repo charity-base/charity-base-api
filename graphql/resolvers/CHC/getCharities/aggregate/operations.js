@@ -1,9 +1,9 @@
-const aggQuery = {
+const aggQuery = () => ({
   terms: {
     field: 'operations.id',
     size: 10,
   },
-}
+})
 
 const parseResponse = aggregation => {
   const buckets = aggregation.buckets.map(x => ({
