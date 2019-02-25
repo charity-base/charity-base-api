@@ -104,6 +104,14 @@ const typeDefs = `
     boundingCircle: GeoBoundingCircleInput
   }
 
+  input LatestIncomeInput {
+    total: NumericRangeInput
+  }
+
+  input IncomeFilterInput {
+    latest: LatestIncomeInput
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -113,6 +121,7 @@ const typeDefs = `
     operations: ListFilterInput
     grants: GrantsFilterInput
     geo: GeoFilterInput
+    income: IncomeFilterInput
   }
 
   type IncomeLatestCHC {
