@@ -4,6 +4,13 @@ const typeDefs = `
 
   scalar PageLimit
 
+  enum DistanceUnit {
+    mi
+    yd
+    km
+    m
+  }
+
   input IntegerRangeInput {
     equals: Int
     lessThanInclusive: Int
@@ -38,15 +45,23 @@ const typeDefs = `
     funders: ListFilterInput
   }
 
-  input GeoBoundingBox {
+  input GeoBoundingBoxInput {
     top: Float!
     left: Float!
     bottom: Float!
     right: Float!
   }
 
+  input GeoBoundingCircleInput {
+    radius: Int!
+    unit: DistanceUnit
+    latitude: Float!
+    longitude: Float!
+  }
+
   input GeoFilterInput {
-    boundingBox: GeoBoundingBox
+    boundingBox: GeoBoundingBoxInput
+    boundingCircle: GeoBoundingCircleInput
   }
 
   input FilterCHCInput {
