@@ -217,6 +217,7 @@ const typeDefs = `
     grants: [Grant]
     geo: Geo
     contact: ContactCHC
+    website: String
   }
 
   type AggregationBucket {

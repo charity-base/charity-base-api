@@ -16,6 +16,7 @@ const fieldMap = {
   'operations': 'operations',
   'geo': 'contact.geo',
   'contact': 'contact',
+  'website': 'website',
 }
 
 // allow getting nested field from object with dot notation e.g. getNestedField({ a: { b: 'hello' } }, 'a.b')
