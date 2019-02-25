@@ -23,14 +23,14 @@ async function aggregateCharities(esQuery, aggTypes) {
       size: 0,
       body: {
         query: esQuery,
-        aggs: aggTypes.reduce((agg, x) => ({
+        aggs: Object.keys(aggTypes).reduce((agg, x) => ({
           ...agg,
           [x]: fieldMap[x].aggQuery,
         }), {})
       },
     }
     const response = await esClient.search(searchParams)
-    return aggTypes.reduce((agg, x) => ({
+    return Object.keys(aggTypes).reduce((agg, x) => ({
       ...agg,
       [x]: fieldMap[x].parseResponse(response.aggregations[x]),
     }), {})

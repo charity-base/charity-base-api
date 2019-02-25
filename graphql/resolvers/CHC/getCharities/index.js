@@ -15,7 +15,7 @@ class FilteredCharitiesCHC {
     )
   }
   list({ limit, skip, sort }, _, info) {
-    const requestedFields = Object.keys(graphqlFields(info))
+    const requestedFields = graphqlFields(info)
     return listCharities(
       { limit, skip, sort },
       this.esQuery,
@@ -23,7 +23,7 @@ class FilteredCharitiesCHC {
     )
   }
   aggregate(args, _, info) {
-    const requestedFields = Object.keys(graphqlFields(info))
+    const requestedFields = graphqlFields(info, {}, { processArguments: true })
     return aggregateCharities(
       this.esQuery,
       requestedFields,
