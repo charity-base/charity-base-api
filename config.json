@@ -1,5 +1,4 @@
 {
-  "prodBaseUrl" : "https://charity-base-api-staging.now.sh",
   "elastic" : {
     "host": "https://my-elastic-search-domain.eu-west-2.es.amazonaws.com",
     "region": "eu-west-2",
