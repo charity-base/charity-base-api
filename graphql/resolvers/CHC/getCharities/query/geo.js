@@ -1,5 +1,4 @@
 const GEO_FIELD = 'contact.geoCoords'
-const DEFAULT_DISTANCE_UNIT = 'mi'
 
 const getGeoFilters = geo => {
   if (!geo) return []
@@ -17,7 +16,7 @@ const getGeoFilters = geo => {
   if (geo.boundingCircle) {
     filters.push({
       geo_distance: {
-        distance: `${geo.boundingCircle.radius}${geo.boundingCircle.unit || DEFAULT_DISTANCE_UNIT}`,
+        distance: `${geo.boundingCircle.radius}${geo.boundingCircle.unit}`,
         [GEO_FIELD]: {
           lat: geo.boundingCircle.latitude,
           lon: geo.boundingCircle.longitude,

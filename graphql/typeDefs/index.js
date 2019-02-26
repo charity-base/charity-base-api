@@ -91,8 +91,8 @@ const typeDefs = `
   input GeoBoundingCircleInput {
     """Radius of circle."""
     radius: Int!
-    """Unit of circle radius. Default: \`mi\`."""
-    unit: DistanceUnit
+    """Unit of circle radius."""
+    unit: DistanceUnit = mi
     """Latitude of circle centre."""
     latitude: Float!
     """Longitude of circle centre."""
