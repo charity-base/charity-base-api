@@ -1,8 +1,8 @@
 const graphqlFields = require('graphql-fields')
+const getElasticQuery = require('./query')
 const countCharities = require('./count')
 const listCharities = require('./list')
 const aggregateCharities = require('./aggregate')
-const { getElasticQuery } = require('./helpers')
 
 class FilteredCharitiesCHC {
   constructor(filters) {

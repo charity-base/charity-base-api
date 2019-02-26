@@ -1,28 +1,9 @@
-const { esClient } = require('../../../../connection')
-const config = require('../../../../config.json')
+const { esClient } = require('../../../../../connection')
+const config = require('../../../../../config.json')
+const fieldMap = require('./graphQLToElasticFields.json')
+const getNestedField = require('./getNestedField')
 
 const esIndex = config.elastic.index
-
-// map from GraphQL fields to Elasticsearch fields
-const fieldMap = {
-  'id': 'ids.GB-CHC',
-  'name': 'name',
-  'activities': 'activities',
-  'income': 'income',
-  'grants': 'grants',
-  'areas': 'areasOfOperation',
-  'causes': 'causes',
-  'beneficiaries': 'beneficiaries',
-  'operations': 'operations',
-  'geo': 'contact.geo',
-  'contact': 'contact',
-  'website': 'website',
-}
-
-// allow getting nested field from object with dot notation e.g. getNestedField({ a: { b: 'hello' } }, 'a.b')
-const getNestedField = (obj, field) => (
-  field.split('.').reduce((acc, part) => acc ? acc[part] : '', obj)
-)
 
 // Note this is not the same as the FilteredCharitiesCHC.list resolver (additional args)
 async function listCharities(
