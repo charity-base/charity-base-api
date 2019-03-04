@@ -16,7 +16,6 @@ const typeDefs = `
     Less than.
     """
     lt: Float
-    equals: Int @deprecated(reason: "Use \`lt\` and \`gt\` combined.")
     lessThanInclusive: Int @deprecated(reason: "Use \`lte\`.")
     lessThanExclusive: Int @deprecated(reason: "Use \`lt\`.")
     moreThanInclusive: Int @deprecated(reason: "Use \`gte\`.")
