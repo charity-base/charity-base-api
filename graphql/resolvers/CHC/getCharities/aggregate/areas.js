@@ -8,6 +8,7 @@ const aggQuery = () => ({
 const parseResponse = aggregation => {
   const buckets = aggregation.buckets.map(x => ({
     id: `${x.key}`,
+    key: `${x.key}`,
     name: `${x.key}`,
     count: x.doc_count,
     sumIncome: null, // remove this from bucket type?
