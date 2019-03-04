@@ -20,6 +20,7 @@ const aggQuery = () => ({
 const parseResponse = aggregation => {
   const buckets = aggregation.buckets.map(x => ({
     id: `${x.key}`,
+    key: `${x.key}`,
     name: `Min. £${Math.round(Math.pow(10, x.key))}`,
     count: x.doc_count,
     sumIncome: x.total_income.value,

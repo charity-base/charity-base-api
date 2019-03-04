@@ -39,6 +39,7 @@ const parseResponse = aggregation => {
     [aggType]: {
       buckets: aggregation[aggType].buckets.map(x => ({
         id: `${x.key}`,
+        key: `${x.key}`,
         name: `${x.key}`,
         count: x.doc_count,
         sumIncome: null, // remove this from bucket type?
