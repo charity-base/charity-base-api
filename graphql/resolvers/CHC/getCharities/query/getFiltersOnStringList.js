@@ -38,18 +38,6 @@ const getFiltersOnStringList = (field, listFilterInput) => {
     })
   }
 
-  if (length && !isNaN(length.equals)) {
-    filters.push({
-      script: {
-        script: {
-          source: `doc['${field}'].values.length === params.value`,
-          lang: 'painless',
-          params: { value: length.equals },
-        }
-      }
-    })
-  }
-
   if (length && !isNaN(length.lessThanInclusive)) {
     filters.push({
       script: {
