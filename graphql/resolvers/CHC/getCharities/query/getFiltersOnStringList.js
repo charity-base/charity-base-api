@@ -12,7 +12,7 @@ const getFiltersOnStringList = (field, listFilterInput) => {
     filters.push({
       bool: {
         should: some.map(value => ({
-          match_phrase: { [field]: value }
+          term: { [field]: value }
         }))
       }
     })
@@ -23,7 +23,7 @@ const getFiltersOnStringList = (field, listFilterInput) => {
     filters.push({
       bool: {
         must: every.map(value => ({
-          match_phrase: { [field]: value }
+          term: { [field]: value }
         }))
       }
     })
@@ -33,7 +33,7 @@ const getFiltersOnStringList = (field, listFilterInput) => {
     filters.push({
       bool: {
         must_not: notSome.map(value => ({
-          match_phrase: { [field]: value }
+          term: { [field]: value }
         }))
       }
     })
