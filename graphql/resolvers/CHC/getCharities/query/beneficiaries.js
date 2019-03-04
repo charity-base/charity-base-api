@@ -1,6 +1,6 @@
-const getFiltersOnIntegerList = require('./getFiltersOnIntegerList')
+const getFiltersOnStringList = require('./getFiltersOnStringList')
 
-const getBeneficiariesFilters = beneficiaries => getFiltersOnIntegerList(
+const getBeneficiariesFilters = beneficiaries => getFiltersOnStringList(
   'beneficiaries.id',
   beneficiaries,
 )
