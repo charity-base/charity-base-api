@@ -1,19 +1,12 @@
+const getFiltersOnNumber = require('./getFiltersOnNumber')
 const LATEST_INCOME_FIELD = 'income.latest.total'
 
 const getIncomeFilters = income => {
   if (!income) return []
 
-  const filters = []
+  const numericRange = income.latest && income.latest.total
 
-  if (income.latest && income.latest.total) {
-    filters.push({
-      range: {
-        [LATEST_INCOME_FIELD]: income.latest.total,
-      },
-    })
-  }
-
-  return filters
+  return getFiltersOnNumber(LATEST_INCOME_FIELD, numericRange)
 }
 
 module.exports = getIncomeFilters
