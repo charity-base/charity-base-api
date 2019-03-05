@@ -13,5 +13,6 @@
   "website": "website",
   "governingDoc": "governingDoc",
   "alternativeNames": "alternativeNames",
-  "objectives": "objectives"
+  "objectives": "objectives",
+  "numPeople": "people"
 }
