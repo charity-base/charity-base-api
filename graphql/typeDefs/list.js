@@ -112,6 +112,7 @@ const typeDefs = `
     contact: ContactCHC
     website: String
     governingDoc: String
+    objectives: String
   }
 `
 
