@@ -15,5 +15,6 @@
   "alternativeNames": "alternativeNames",
   "objectives": "objectives",
   "numPeople": "people",
-  "areaOfBenefit": "areaOfBenefit"
+  "areaOfBenefit": "areaOfBenefit",
+  "companiesHouseNumber": "companiesHouseNumber"
 }

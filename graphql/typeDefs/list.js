@@ -121,6 +121,7 @@ const typeDefs = `
     governingDoc: String
     objectives: String
     numPeople: PeopleCHC
+    companiesHouseNumber: String
   }
 `
 
