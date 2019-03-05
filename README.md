@@ -5,6 +5,7 @@
   * [Endpoint](#endpoint)
   * [Versioning](#versioning)
   * [Authorization](#authorization)
+  * [Response](#response)
 * [Working on the API](#working-on-the-api)
   * [Development](#development)
     * [Dev Environment Variables](#dev-environment-variables)
@@ -33,13 +34,28 @@ The API is versionless - we won't introduce any breaking changes. [What?!](https
 
 ### Authorization
 
-Whether using `GET` or `POST`, put your API key in an Authorization header like so:
+Whether using `GET` or `POST`, send your API key in an Authorization header like so:
 
 ```json
 "Authorization": "Apikey 9447fa04-c15b-40e6-92b6-30307deeb5d1"
 ```
 
 Replace the above key with your own (available from the [API Portal](https://charitybase.uk/api-portal)) and be sure to keep the `Apikey ` prefix as above.
+
+### Response
+
+A JSON body response is returned of the form:
+
+```json
+{
+  "data": { ... }, // not present if the request query was badly formed
+  "errors": [ ... ] // not present if there were no errors
+}
+```
+
+The response has a status code of `200` (even if errors occured) unless the query was badly formed in which case the status code is `400`.
+
+Conveniently the `data` object has the same shape as the query sent in the request.
 
 ## Working on the API
 
