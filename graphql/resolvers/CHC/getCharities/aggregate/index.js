@@ -7,7 +7,7 @@ const aggOperations = require('./operations')
 const aggAreas = require('./areas')
 const aggGeo = require('./geo')
 
-const esIndex = config.elastic.index
+const esIndex = config.elastic.indexes.chc
 
 const fieldMap = {
   income: aggIncome,
@@ -26,7 +26,7 @@ async function aggregateCharities(esQuery, aggTypes) {
     }), {})
 
     const searchParams = {
-      index: esIndex,
+      index: [esIndex],
       size: 0,
       body: {
         query: esQuery,

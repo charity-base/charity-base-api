@@ -3,7 +3,7 @@ const config = require('../../../../../config.json')
 const fieldMap = require('./graphQLToElasticFields.json')
 const getNestedField = require('./getNestedField')
 
-const esIndex = config.elastic.index
+const esIndex = config.elastic.indexes.chc
 
 // Note this is not the same as the FilteredCharitiesCHC.list resolver (additional args)
 async function listCharities(
@@ -12,7 +12,7 @@ async function listCharities(
   requestedFields
 ) {
   const searchParams = {
-    index: esIndex,
+    index: [esIndex],
     body: {
       query: esQuery,
     },
