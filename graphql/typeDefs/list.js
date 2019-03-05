@@ -110,6 +110,7 @@ const typeDefs = `
     activities: String
     income: IncomeCHC
     areas: [IdName]
+    areaOfBenefit: String
     causes: [IdName]
     beneficiaries: [IdName]
     operations: [IdName]

@@ -14,5 +14,6 @@
   "governingDoc": "governingDoc",
   "alternativeNames": "alternativeNames",
   "objectives": "objectives",
-  "numPeople": "people"
+  "numPeople": "people",
+  "areaOfBenefit": "areaOfBenefit"
 }
