@@ -10,5 +10,6 @@
   "operations": "operations",
   "geo": "contact.geo",
   "contact": "contact",
-  "website": "website"
+  "website": "website",
+  "governingDoc": "governingDoc"
 }

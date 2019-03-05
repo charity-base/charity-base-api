@@ -107,6 +107,7 @@ const typeDefs = `
     geo: Geo
     contact: ContactCHC
     website: String
+    governingDoc: String
   }
 `
 
