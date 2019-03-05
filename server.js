@@ -21,7 +21,7 @@ const app = express()
 app.use(cors())
 app.use(middleware.auth)
 app.use('/api/graphql', graphqlHTTP((req, res, graphQLParams) => {
-  logRequest(req, res, graphQLParams)
+  process.env.NODE_ENV === 'production' && logRequest(req, res, graphQLParams)
   return {
     schema,
     graphiql: false,
