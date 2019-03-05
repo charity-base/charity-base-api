@@ -46,7 +46,7 @@ Replace the above key with your own (available from the [API Portal](https://cha
 
 A JSON body response is returned of the form:
 
-```json
+```js
 {
   "data": { ... }, // not present if the request query was badly formed
   "errors": [ ... ] // not present if there were no errors
