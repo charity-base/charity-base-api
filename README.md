@@ -15,11 +15,7 @@
 
 ### Playground
 
-For testing queries and viewing the interactive docs, use the GraphiQL interface:
-
-```
-https://charitybase.uk/api-explorer
-```
+For testing queries and viewing the interactive docs, use the [GraphiQL interface](https://charitybase.uk/api-explorer).
 
 ### Endpoint
 
