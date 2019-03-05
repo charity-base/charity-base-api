@@ -95,6 +95,10 @@ const typeDefs = `
     """
     name: String
     """
+    Alternative working names of the charity
+    """
+    alternativeNames: [String]
+    """
     Short description of the charity's activities
     """
     activities: String
