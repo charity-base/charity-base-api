@@ -25,7 +25,7 @@ The API has a single endpoint:
 https://charitybase.uk/api/graphql
 ```
 
-As described in the [GraphQL docs](https://graphql.org/learn/serving-over-http/) you can send either a `GET` or `POST` request and the query string can either be written in the url or in the body (if using POST).
+As described in the [GraphQL docs](https://graphql.org/learn/serving-over-http/) you can send either a `GET` or `POST` request and the query string can either be written in the url or in the body (if using `POST`).
 
 ### Versioning
 
