@@ -85,6 +85,12 @@ const typeDefs = `
     postcode: String
   }
 
+  type PeopleCHC {
+    employees: Int
+    trustees: Int
+    volunteers: Int
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -113,6 +119,7 @@ const typeDefs = `
     website: String
     governingDoc: String
     objectives: String
+    numPeople: PeopleCHC
   }
 `
 
