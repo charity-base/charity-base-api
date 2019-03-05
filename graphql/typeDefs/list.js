@@ -1,13 +1,27 @@
 const typeDefs = `
+  scalar Date
+
   type IncomeLatestCHC {
     "End date of latest financial year"
-    date: String
+    date: Date
     "Latest gross income GBP"
     total: Float
   }
 
+  type FinancialYear {
+    begin: Date
+    end: Date
+  }
+
+  type IncomeAnnualCHC {
+    income: Float
+    expend: Float
+    financialYear: FinancialYear
+  }
+
   type IncomeCHC {
     latest: IncomeLatestCHC
+    annual: [IncomeAnnualCHC]
   }
 
   type IdName {
@@ -22,7 +36,7 @@ const typeDefs = `
     fundingOrganization: [IdName]
     amountAwarded: Float
     currency: String
-    awardDate: String
+    awardDate: Date
   }
 
   type GeoCodes {
