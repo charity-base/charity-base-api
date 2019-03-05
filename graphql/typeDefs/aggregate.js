@@ -1,6 +1,6 @@
 const typeDefs = `
   type AggregationBucket {
-    id: ID @deprecated(reason: "Use \`key\` instead.")
+    id: String @deprecated(reason: "Use \`key\` instead.")
     key: String
     name: String
     count: Int
