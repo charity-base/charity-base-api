@@ -3,7 +3,8 @@
     "host": "https://my-elastic-search-domain.eu-west-2.es.amazonaws.com",
     "region": "eu-west-2",
     "indexes": {
-      "chc": "charity-base-v300-feb-2019"
+      "chc": "charity-base-v300-feb-2019",
+      "requests": "charity-base-graphql-api-requests"
     }
   },
   "mongo" : {
