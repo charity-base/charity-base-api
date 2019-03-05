@@ -80,7 +80,7 @@ const typeDefs = `
   type ContactCHC {
     address: [String]
     email: String
-    person: String
+    person: String @deprecated(reason: "The Charity Commission stopped sharing this information.")
     phone: String
     postcode: String
   }
