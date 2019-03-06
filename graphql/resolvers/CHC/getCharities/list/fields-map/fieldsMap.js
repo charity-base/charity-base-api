@@ -57,7 +57,8 @@ const fieldsMap = {
 
       return orgIds
     }
-  )
+  ),
+  "financialYearEnd": new FieldsMapper(["fyend"]),
 }
 
 module.exports = fieldsMap
