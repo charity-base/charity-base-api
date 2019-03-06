@@ -1,5 +1,12 @@
 const FieldsMapper = require('./FieldsMapper')
 
+// TODO: do this validation in charity-base-data instead
+const validateCohId = (cohId) => {
+  if (!cohId || !cohId.length) return null
+  if (cohId.length >= 8) return cohId
+  return `${'0'.repeat(8 - cohId.length)}${cohId}`
+}
+
 const fieldsMap = {
   "id": new FieldsMapper(["ids.GB-CHC"]),
   "name": new FieldsMapper(["name"]),
@@ -18,7 +25,28 @@ const fieldsMap = {
   "objectives": new FieldsMapper(["objectives"]),
   "numPeople": new FieldsMapper(["people"]),
   "areaOfBenefit": new FieldsMapper(["areaOfBenefit"]),
-  "companiesHouseNumber": new FieldsMapper(["companiesHouseNumber"]),
+  "orgIds": new FieldsMapper(
+    ["ids.GB-CHC", "companiesHouseNumber"],
+    ([chcId, cohId]) => {
+
+      const orgIds = [{
+        id: `GB-CHC-${chcId}`,
+        scheme: 'GB-CHC',
+        rawId: chcId,
+      }]
+
+      const validCohId = validateCohId(cohId)
+      if (validCohId) {
+        orgIds.push({
+          id: `GB-COH-${validCohId}`,
+          scheme: 'GB-COH',
+          rawId: validCohId,
+        })
+      }
+
+      return orgIds
+    }
+  )
 }
 
 module.exports = fieldsMap
