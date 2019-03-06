@@ -133,6 +133,7 @@ const typeDefs = `
     objectives: String
     numPeople: PeopleCHC
     orgIds: [OrgId]
+    financialYearEnd: String
   }
 `
 
