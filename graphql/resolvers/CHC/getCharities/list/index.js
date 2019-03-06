@@ -1,7 +1,9 @@
 const { esClient } = require('../../../../../connection')
 const config = require('../../../../../config.json')
-const fieldMap = require('./graphQLToElasticFields.json')
-const getNestedField = require('./getNestedField')
+const {
+  getSourceFields,
+  mapDocToGraphQL
+} = require('./fields-map')
 
 const esIndex = config.elastic.indexes.chc
 
@@ -16,7 +18,7 @@ async function listCharities(
     body: {
       query: esQuery,
     },
-    _source: Object.keys(requestedFields).map(x => fieldMap[x]), // This could be further optimised by just fetching requested sub fields
+    _source: getSourceFields(requestedFields),
     sort: [],
     size: limit || 10,
     from: skip || 0,
@@ -24,12 +26,7 @@ async function listCharities(
 
   try {
     const response = await esClient.search(searchParams)
-    return response.hits.hits.map(doc => (
-      Object.keys(fieldMap).reduce((agg, field) => ({
-        ...agg,
-        [field]: getNestedField(doc._source, fieldMap[field])
-      }), {})
-    ))
+    return response.hits.hits.map(doc => mapDocToGraphQL(doc, requestedFields))
   } catch(e) {
     throw e
   }
