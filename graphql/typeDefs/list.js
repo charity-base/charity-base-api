@@ -91,6 +91,12 @@ const typeDefs = `
     volunteers: Int
   }
 
+  type OrgId {
+    id: ID
+    scheme: String
+    rawId: String
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -121,7 +127,7 @@ const typeDefs = `
     governingDoc: String
     objectives: String
     numPeople: PeopleCHC
-    companiesHouseNumber: String
+    orgIds: [OrgId]
   }
 `
 
