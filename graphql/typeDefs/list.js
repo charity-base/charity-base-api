@@ -97,6 +97,11 @@ const typeDefs = `
     rawId: String
   }
 
+  type Name {
+    value: String
+    primary: Boolean
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -105,11 +110,11 @@ const typeDefs = `
     """
     Registered name of the charity
     """
-    name: String
-    """
-    Alternative working names of the charity
-    """
-    alternativeNames: [String]
+    name: String @deprecated(reason: "Use \`names\` instead.")
+    names(
+      """If \`true\` then all working names are returned"""
+      all: Boolean = false
+    ): [Name]
     """
     Short description of the charity's activities
     """
