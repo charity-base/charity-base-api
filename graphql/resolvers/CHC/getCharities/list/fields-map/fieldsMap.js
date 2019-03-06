@@ -10,6 +10,18 @@ const validateCohId = (cohId) => {
 const fieldsMap = {
   "id": new FieldsMapper(["ids.GB-CHC"]),
   "name": new FieldsMapper(["name"]),
+  "names": new FieldsMapper(
+    ["name", "alternativeNames"],
+    ([primaryName, allNames]) => {
+      return ({ all }) => all ? allNames.map(x => ({
+        value: x,
+        primary: x === primaryName,
+      })) : [{
+        value: primaryName,
+        primary: true,
+      }]
+    }
+  ),
   "activities": new FieldsMapper(["activities"]),
   "income": new FieldsMapper(["income"]),
   "grants": new FieldsMapper(["grants"]),
@@ -21,7 +33,6 @@ const fieldsMap = {
   "contact": new FieldsMapper(["contact"]),
   "website": new FieldsMapper(["website"]),
   "governingDoc": new FieldsMapper(["governingDoc"]),
-  "alternativeNames": new FieldsMapper(["alternativeNames"]),
   "objectives": new FieldsMapper(["objectives"]),
   "numPeople": new FieldsMapper(["people"]),
   "areaOfBenefit": new FieldsMapper(["areaOfBenefit"]),
