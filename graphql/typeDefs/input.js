@@ -22,6 +22,25 @@ const typeDefs = `
     moreThanExclusive: Int @deprecated(reason: "Use \`gt\`.")
   }
 
+  input DateRangeInput {
+    """
+    Greater than or equal to. \`yyyy-MM-dd\`.
+    """
+    gte: String
+    """
+    Greater than. \`yyyy-MM-dd\`.
+    """
+    gt: String
+    """
+    Less than or equal to. \`yyyy-MM-dd\`.
+    """
+    lte: String
+    """
+    Less than. \`yyyy-MM-dd\`.
+    """
+    lt: String
+  }
+
   """
   This input type allows filtering on a field which itself contains a list of values.
   """
@@ -101,6 +120,7 @@ const typeDefs = `
     grants: GrantsFilterInput
     geo: GeoFilterInput
     income: IncomeFilterInput
+    registrationDate: DateRangeInput
   }
 `
 
