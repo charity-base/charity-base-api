@@ -1,5 +1,5 @@
 const getFiltersOnNumber = require('./getFiltersOnNumber')
-const LATEST_INCOME_FIELD = 'income.latest.total'
+const LATEST_INCOME_FIELD = 'financial.latest.income'
 
 const getIncomeFilters = income => {
   if (!income) return []
