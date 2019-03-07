@@ -1,12 +1,5 @@
 const FieldsMapper = require('./FieldsMapper')
 
-// TODO: do this validation in charity-base-data instead
-const validateCohId = (cohId) => {
-  if (!cohId || !cohId.length) return null
-  if (cohId.length >= 8) return cohId
-  return `${'0'.repeat(8 - cohId.length)}${cohId}`
-}
-
 const fieldsMap = {
   "id": new FieldsMapper(["ids.GB-CHC"]),
   "name": new FieldsMapper(["name"]),
@@ -46,12 +39,11 @@ const fieldsMap = {
         rawId: chcId,
       }]
 
-      const validCohId = validateCohId(cohId)
-      if (validCohId) {
+      if (cohId) {
         orgIds.push({
-          id: `GB-COH-${validCohId}`,
+          id: `GB-COH-${cohId}`,
           scheme: 'GB-COH',
-          rawId: validCohId,
+          rawId: cohId,
         })
       }
 
@@ -60,17 +52,14 @@ const fieldsMap = {
   ),
   "financialYearEnd": new FieldsMapper(["fyend"]),
   "registrations": new FieldsMapper(
-    ["registration"],
-    ([regList]) => {
-      const registrations = regList
-        .map(x => ({
-          registrationDate: x.registered,
-          removalDate: x.removed,
-          removalCode: x.removedCode,
-          removalReason: x.removedReason,
-        }))
-        .sort((a, b) => (b.registrationDate || '').localeCompare(a.registrationDate))
-      return ({ all }) => all ? registrations : registrations.filter(x => !x.removalDate)
+    ["registrations", "lastRegistrationDate"],
+    ([registrations, lastRegistrationDate]) => {
+      return ({ all }) => all ? registrations : [{
+        registrationDate: lastRegistrationDate,
+        removalDate: null,
+        removalCode: null,
+        removalReason: null,
+      }]
     }
   ),
 }
