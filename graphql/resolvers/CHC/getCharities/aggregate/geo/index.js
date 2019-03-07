@@ -1,9 +1,23 @@
 const geohashPrecision = require('./geohashPrecision')
 const geoBoundingBox = require('./geoBoundingBox')
-const GEO_FIELD = 'contact.geoCoords'
+const geoRegionNames = require('./geoRegionNames')
+const GEO_REGION_FIELD = 'contact.geo.region'
+const GEO_COORDS_FIELD = 'contact.geoCoords'
 const GEO_AGG_TYPES = [
-  'geohash'
+  'geohash',
+  'region',
 ] // reflects enum type GeoAggregationType
+
+const getBucketKey = (key, aggType) => {
+  if (aggType === 'region') {
+    return geoRegionNames[key] || key
+  }
+  return `${key}`
+}
+
+const getBucketName = (key, aggType) => {
+  return `${key}`
+}
 
 const aggQuery = graphQLFields => {
   if (!graphQLFields) return undefined
@@ -14,7 +28,7 @@ const aggQuery = graphQLFields => {
   const geoAggs = {
     filter: {
       geo_bounding_box: {
-        [GEO_FIELD]: bbox,
+        [GEO_COORDS_FIELD]: bbox,
       },
     },
     aggs: {}
@@ -23,8 +37,17 @@ const aggQuery = graphQLFields => {
   if (graphQLFields.geohash) {
     geoAggs.aggs.geohash = {
       geohash_grid: {
-        field: GEO_FIELD,
+        field: GEO_COORDS_FIELD,
         precision: geohashPrecision(bbox),
+      }
+    }
+  }
+
+  if (graphQLFields.region) {
+    geoAggs.aggs.region = {
+      terms: {
+        field: GEO_REGION_FIELD,
+        size: 9,
       }
     }
   }
@@ -38,9 +61,9 @@ const parseResponse = aggregation => {
     ...combinedAggs,
     [aggType]: {
       buckets: aggregation[aggType].buckets.map(x => ({
-        id: `${x.key}`,
-        key: `${x.key}`,
-        name: `${x.key}`,
+        id: getBucketKey(x.key, aggType),
+        key: getBucketKey(x.key, aggType),
+        name: getBucketName(x.key, aggType),
         count: x.doc_count,
         sumIncome: null, // remove this from bucket type?
       }))
