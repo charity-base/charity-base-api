@@ -12,6 +12,18 @@ const typeDefs = `
     """metres"""
     m
   }
+
+  enum GeoRegion {
+    E12000001
+    E12000002
+    E12000003
+    E12000004
+    E12000005
+    E12000006
+    E12000007
+    E12000008
+    E12000009
+  }
 `
 
 module.exports = typeDefs
