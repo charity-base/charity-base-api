@@ -16,7 +16,33 @@ const fieldsMap = {
     }
   ),
   "activities": new FieldsMapper(["activities"]),
-  "income": new FieldsMapper(["income"]),
+  "income": new FieldsMapper(
+    ["financial"],
+    ([financial]) => {
+      return {
+        latest: {
+          date: financial.latest && financial.latest.financialYear ? financial.latest.financialYear.end : null,
+          total: financial.latest ? financial.latest.income : null,
+        },
+        annual: (financial.annual || []).map(x => ({
+          income: x.income,
+          expend: x.spending,
+          financialYear: x.financialYear
+        }))
+      }
+    }
+  ),
+  "finances": new FieldsMapper(
+    ["financial"],
+    ([financial]) => {
+      return ({ all }) => {
+        if (all) {
+          return financial.annual || []
+        }
+        return financial.latest ? [financial.latest] : []
+      }
+    }
+  ),
   "grants": new FieldsMapper(["grants"]),
   "areas": new FieldsMapper(["areasOfOperation"]),
   "causes": new FieldsMapper(["causes"]),
