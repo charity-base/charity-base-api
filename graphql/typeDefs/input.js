@@ -110,6 +110,10 @@ const typeDefs = `
     latest: LatestIncomeInput
   }
 
+  input FinancesFilterInput {
+    latestIncome: NumericRangeInput
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -119,7 +123,8 @@ const typeDefs = `
     operations: ListFilterInput
     grants: GrantsFilterInput
     geo: GeoFilterInput
-    income: IncomeFilterInput
+    income: IncomeFilterInput @deprecated(reason: "Use \`finances\` instead.")
+    finances: FinancesFilterInput
     registrationDate: DateRangeInput
   }
 `
