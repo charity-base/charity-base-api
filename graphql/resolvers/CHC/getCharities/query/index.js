@@ -7,7 +7,7 @@ const getOperationsFilters = require('./operations')
 const getGeoFilters = require('./geo')
 const getIncomeFilters = require('./income')
 const getFinancesFilters = require('./finances')
-const getRegistrationDateFilters = require('./registrationDate')
+const getRegistrationsFilters = require('./registrations')
 
 const getElasticQuery = ({
   id,
@@ -20,7 +20,7 @@ const getElasticQuery = ({
   geo,
   income,
   finances,
-  registrationDate,
+  registrations,
 }) => {
   const must = search ? ({
     simple_query_string : {
@@ -53,7 +53,7 @@ const getElasticQuery = ({
     ...getGeoFilters(geo),
     ...getIncomeFilters(income),
     ...getFinancesFilters(finances),
-    ...getRegistrationDateFilters(registrationDate),
+    ...getRegistrationsFilters(registrations),
   ]
 
   return {

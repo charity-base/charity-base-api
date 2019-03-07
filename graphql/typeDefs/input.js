@@ -114,6 +114,10 @@ const typeDefs = `
     latestIncome: NumericRangeInput
   }
 
+  input RegistrationsFilterInput {
+    latestRegistrationDate: DateRangeInput
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -125,7 +129,7 @@ const typeDefs = `
     geo: GeoFilterInput
     income: IncomeFilterInput @deprecated(reason: "Use \`finances\` instead.")
     finances: FinancesFilterInput
-    registrationDate: DateRangeInput
+    registrations: RegistrationsFilterInput
   }
 `
 
