@@ -13,6 +13,7 @@ const typeDefs = `
 
   type GeoAggregation {
     geohash: Aggregation
+    region: Aggregation
   }
 
   type AggregationTypesCHC {
