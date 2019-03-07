@@ -59,6 +59,20 @@ const fieldsMap = {
     }
   ),
   "financialYearEnd": new FieldsMapper(["fyend"]),
+  "registrations": new FieldsMapper(
+    ["registration"],
+    ([regList]) => {
+      const registrations = regList
+        .map(x => ({
+          registrationDate: x.registered,
+          removalDate: x.removed,
+          removalCode: x.removedCode,
+          removalReason: x.removedReason,
+        }))
+        .sort((a, b) => (b.registrationDate || '').localeCompare(a.registrationDate))
+      return ({ all }) => all ? registrations : registrations.filter(x => !x.removalDate)
+    }
+  ),
 }
 
 module.exports = fieldsMap

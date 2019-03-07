@@ -102,6 +102,13 @@ const typeDefs = `
     primary: Boolean
   }
 
+  type RegistrationCHC {
+    registrationDate: Date
+    removalDate: Date
+    removalCode: String
+    removalReason: String
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -134,6 +141,10 @@ const typeDefs = `
     numPeople: PeopleCHC
     orgIds: [OrgId]
     financialYearEnd: String
+    registrations(
+      """If \`true\` then all previous registrations are returned"""
+      all: Boolean = false
+    ): [RegistrationCHC]
   }
 `
 
