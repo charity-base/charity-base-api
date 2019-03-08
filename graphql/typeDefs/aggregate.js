@@ -14,6 +14,7 @@ const typeDefs = `
   type GeoAggregation {
     geohash: Aggregation
     region: Aggregation
+    country: Aggregation
   }
 
   type FinancesAggregation {
