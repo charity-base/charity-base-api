@@ -1,16 +1,22 @@
 const geohashPrecision = require('./geohashPrecision')
 const geoBoundingBox = require('./geoBoundingBox')
 const geoRegionNames = require('./geoRegionNames')
+const geoCountryNames = require('./geoCountryNames')
+const GEO_COUNTRY_FIELD = 'contact.geo.country'
 const GEO_REGION_FIELD = 'contact.geo.region'
 const GEO_COORDS_FIELD = 'contact.geoCoords'
 const GEO_AGG_TYPES = [
   'geohash',
   'region',
+  'country',
 ] // reflects the fields on type GeoAggregation
 
 const getBucketKey = (key, aggType) => {
   if (aggType === 'region') {
     return geoRegionNames[key] || key
+  }
+  if (aggType === 'country') {
+    return geoCountryNames[key] || key
   }
   return `${key}`
 }
@@ -48,6 +54,15 @@ const aggQuery = graphQLFields => {
       terms: {
         field: GEO_REGION_FIELD,
         size: 9,
+      }
+    }
+  }
+
+  if (graphQLFields.country) {
+    geoAggs.aggs.country = {
+      terms: {
+        field: GEO_COUNTRY_FIELD,
+        size: 7,
       }
     }
   }
