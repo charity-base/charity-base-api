@@ -1,3 +1,4 @@
+const GEO_COUNTRY_FIELD = 'contact.geo.country'
 const GEO_REGION_FIELD = 'contact.geo.region'
 const GEO_COORDS_FIELD = 'contact.geoCoords'
 
@@ -11,6 +12,16 @@ const geoRegionCodes = {
   E12000007: 'London',
   E12000008: 'South East',
   E12000009: 'South West',
+}
+
+const geoCountryCodes = {
+  E92000001: 'England',
+  K02000001: 'United Kingdom',
+  K03000001: 'Great Britain',
+  K04000001: 'England and Wales',
+  N92000002: 'Northern Ireland',
+  S92000003: 'Scotland',
+  W92000004: 'Wales',
 }
 
 const getGeoFilters = geo => {
@@ -43,6 +54,15 @@ const getGeoFilters = geo => {
     filters.push({
       term: {
         [GEO_REGION_FIELD]: geoRegionName,
+      },
+    })
+  }
+
+  if (geo.country) {
+    const geoCountryName = geoCountryCodes[geo.country]
+    filters.push({
+      term: {
+        [GEO_COUNTRY_FIELD]: geoCountryName,
       },
     })
   }

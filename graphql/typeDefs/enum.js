@@ -14,15 +14,41 @@ const typeDefs = `
   }
 
   enum GeoRegion {
+    "North East"
     E12000001
+    "North West"
     E12000002
+    "Yorkshire and The Humber"
     E12000003
+    "East Midlands"
     E12000004
+    "West Midlands"
     E12000005
+    "East of England"
     E12000006
+    "London"
     E12000007
+    "South East"
     E12000008
+    "South West"
     E12000009
+  }
+
+  enum GeoCountry {
+    "England"
+    E92000001
+    # "United Kingdom"
+    # K02000001
+    # "Great Britain"
+    # K03000001
+    # "England and Wales"
+    # K04000001
+    "Northern Ireland"
+    N92000002
+    "Scotland"
+    S92000003
+    "Wales"
+    W92000004
   }
 `
 

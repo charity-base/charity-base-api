@@ -101,6 +101,7 @@ const typeDefs = `
     boundingBox: GeoBoundingBoxInput
     boundingCircle: GeoBoundingCircleInput
     region: GeoRegion
+    country: GeoCountry
   }
 
   input LatestIncomeInput {
