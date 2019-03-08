@@ -8,6 +8,9 @@ const getBucketKey = (key, aggType) => {
 }
 
 const getBucketName = (key, aggType) => {
+  if (aggType === 'latestIncome') {
+    return `Min. £${Math.round(Math.pow(10, key))}`
+  }
   return `${key}`
 }
 
