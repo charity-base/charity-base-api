@@ -1,6 +1,7 @@
 const { esClient } = require('../../../../../connection')
 const config = require('../../../../../config.json')
 const aggIncome = require('./income')
+const aggFinances = require('./finances')
 const aggCauses = require('./causes')
 const aggBeneficiaries = require('./beneficiaries')
 const aggOperations = require('./operations')
@@ -11,6 +12,7 @@ const esIndex = config.elastic.indexes.chc
 
 const fieldMap = {
   income: aggIncome,
+  finances: aggFinances,
   causes: aggCauses,
   beneficiaries: aggBeneficiaries,
   operations: aggOperations,
