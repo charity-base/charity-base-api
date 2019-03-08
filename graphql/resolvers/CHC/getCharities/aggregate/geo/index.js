@@ -6,7 +6,7 @@ const GEO_COORDS_FIELD = 'contact.geoCoords'
 const GEO_AGG_TYPES = [
   'geohash',
   'region',
-] // reflects enum type GeoAggregationType
+] // reflects the fields on type GeoAggregation
 
 const getBucketKey = (key, aggType) => {
   if (aggType === 'region') {

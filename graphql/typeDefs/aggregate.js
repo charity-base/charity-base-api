@@ -16,8 +16,13 @@ const typeDefs = `
     region: Aggregation
   }
 
+  type FinancesAggregation {
+    latestIncome: Aggregation
+  }
+
   type AggregationTypesCHC {
-    income: Aggregation
+    income: Aggregation @deprecated(reason: "Use \`finances\` instead.")
+    finances: FinancesAggregation
     causes: Aggregation
     beneficiaries: Aggregation
     operations: Aggregation
