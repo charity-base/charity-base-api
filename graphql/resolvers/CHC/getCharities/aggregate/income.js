@@ -1,6 +1,8 @@
+const LATEST_INCOME_FIELD = 'financial.latest.income'
+
 const aggQuery = () => ({
   histogram: {
-    field: 'income.latest.total',
+    field: LATEST_INCOME_FIELD,
     script: 'Math.log10(_value)',
     interval: 0.5,
     extended_bounds: {
@@ -11,7 +13,7 @@ const aggQuery = () => ({
   aggs: {
     total_income: {
       sum: {
-        field: 'income.latest.total',
+        field: LATEST_INCOME_FIELD,
       },
     },
   },
