@@ -8,7 +8,7 @@ const aggOperations = require('./operations')
 const aggAreas = require('./areas')
 const aggGeo = require('./geo')
 
-const esIndex = config.elastic.indexes.chc
+const esIndex = config.elastic.indexes.chc.charities
 
 const fieldMap = {
   income: aggIncome,

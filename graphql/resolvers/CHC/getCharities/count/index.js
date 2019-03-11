@@ -1,7 +1,7 @@
 const { esClient } = require('../../../../../connection')
 const config = require('../../../../../config.json')
 
-const esIndex = config.elastic.indexes.chc
+const esIndex = config.elastic.indexes.chc.charities
 
 // Note this is not the same as the FilteredCharitiesCHC.count resolver (additional args)
 async function countCharities(esQuery) {
