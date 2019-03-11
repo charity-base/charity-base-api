@@ -5,7 +5,7 @@ const {
   mapDocToGraphQL
 } = require('./fields-map')
 
-const esIndex = config.elastic.indexes.chc
+const esIndex = config.elastic.indexes.chc.charities
 
 // Note this is not the same as the FilteredCharitiesCHC.list resolver (additional args)
 async function listCharities(
