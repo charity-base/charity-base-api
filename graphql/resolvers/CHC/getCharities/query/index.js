@@ -8,6 +8,7 @@ const getGeoFilters = require('./geo')
 const getIncomeFilters = require('./income')
 const getFinancesFilters = require('./finances')
 const getRegistrationsFilters = require('./registrations')
+const getSearchFilters = require('./search')
 
 const getElasticQuery = ({
   id,
@@ -22,26 +23,9 @@ const getElasticQuery = ({
   finances,
   registrations,
 }) => {
-  const must = search ? ({
-    simple_query_string : {
-      query: `${search.trim()}`, //`${search.trim().split(" ").join("~1 + ")}~1`, // what about "quoted searches"?
-      fields: [
-        "name^3",
-        "alternativeNames^3",
-        "activities",
-        "contact.email",
-        "trustees.names",
-        "areasOfOperation.name",
-        "causes.name",
-        "beneficiaries.name",
-        "operations.name",
-        "grants.description",
-        "grants.fundingOrganization.name",
-      ],
-    }
-  }) : ({
-    match_all: {}
-  })
+  const must = [
+    ...getSearchFilters(search),
+  ]
 
   const filter = [
     ...getIdFilters(id),
