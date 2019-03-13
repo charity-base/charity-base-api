@@ -80,7 +80,6 @@ const parseResponse = aggregation => {
         key: getBucketKey(x.key, aggType),
         name: getBucketName(x.key, aggType),
         count: x.doc_count,
-        sumIncome: null, // remove this from bucket type?
       }))
     }
   }), {})

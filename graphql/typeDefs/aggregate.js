@@ -1,10 +1,15 @@
 const typeDefs = `
   type AggregationBucket {
     id: String @deprecated(reason: "Use \`key\` instead.")
+    """Unique across a given aggregation's buckets"""
     key: String
+    """Aggregation bucket description"""
     name: String
+    """Number of charities in the aggregation bucket"""
     count: Int
-    sumIncome: Float
+    """If the aggregation is on a numerical field e.g. income, the \`sum\` gives the bucket's cumulative total of that field."""
+    sum: Float
+    sumIncome: Float @deprecated(reason: "Use \`sum\` instead.")
   }
 
   type Aggregation {
