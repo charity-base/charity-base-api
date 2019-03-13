@@ -11,7 +11,6 @@ const parseResponse = aggregation => {
     key: `${x.key}`,
     name: `${x.key}`,
     count: x.doc_count,
-    sumIncome: null, // remove this from bucket type?
   }))
   return {
     buckets,
