@@ -24,11 +24,20 @@ const highLevelTypes = `
     aggregate: AggregationTypesCHC
   }
 
+  type FilterCHC {
+    id: ID
+    value: String
+    label: String
+    filterType: String # todo: change to enum
+    score: Float
+  }
+
   type QueryCHC {
     """
     Query charities registered in England & Wales
     """
     getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
+    getFilters(prefix: String, id: [ID]): [FilterCHC]
   }
 
   type Query {
