@@ -20,11 +20,15 @@ const fieldMap = {
   geo: aggGeo,
 }
 
-async function aggregateCharities(esQuery, aggTypes) {
+const getAggTypes = reqFieldsObj => {
+  return Object.keys(reqFieldsObj).filter(x => fieldMap[x])
+}
+
+async function aggregateCharities(esQuery, requestedFields) {
   try {
-    const aggs = Object.keys(aggTypes).reduce((agg, x) => ({
+    const aggs = getAggTypes(requestedFields).reduce((agg, x) => ({
       ...agg,
-      [x]: fieldMap[x].aggQuery(aggTypes[x]),
+      [x]: fieldMap[x].aggQuery(requestedFields[x]),
     }), {})
 
     const searchParams = {
