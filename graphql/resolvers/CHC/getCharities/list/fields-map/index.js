@@ -1,22 +1,26 @@
 const getNestedField = require('./getNestedField')
 const fieldsMap = require('./fieldsMap')
 
-// This could be further optimised by just fetching requested sub fields
-const getSourceFields = requestedFields => {
-  return Object.keys(requestedFields).reduce((agg, x) => [
-    ...agg,
-    ...fieldsMap[x].fields,
-  ], [])
+const reqFieldsList = reqFieldsObj => {
+  return Object.keys(reqFieldsObj).filter(x => fieldsMap[x])
 }
 
+// This could be further optimised by just fetching requested sub fields
+const getSourceFields = requestedFields => {
+  return reqFieldsList(requestedFields).reduce((agg, x) => [
+      ...agg,
+      ...fieldsMap[x].fields,
+    ], [])
+}
+
+const getGqlFieldValue = (gqlField, esDoc) => fieldsMap[gqlField].resolveValues(
+  fieldsMap[gqlField].fields.map(esField => getNestedField(esDoc._source, esField))
+)
+
 const mapDocToGraphQL = (doc, requestedFields) => {
-  const docValues = Object.keys(requestedFields).reduce((agg, x) => ({
+  return reqFieldsList(requestedFields).reduce((agg, x) => ({
     ...agg,
-    [x]: fieldsMap[x].fields.map(esField => getNestedField(doc._source, esField))
-  }), {})
-  return Object.keys(requestedFields).reduce((agg, x) => ({
-    ...agg,
-    [x]: fieldsMap[x].resolveValues(docValues[x])
+    [x]: getGqlFieldValue(x, doc)
   }), {})
 }
 
