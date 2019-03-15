@@ -17,7 +17,7 @@ const geohashLonRange = p => {
   return 360/Math.pow(2, Math.ceil(5*p/2))
 }
 
-const geohashPrecision = ({ top, left, bottom, right }) => {
+const geohashPrecision = ({ top=90, left=-180, bottom=-90, right=180 }) => {
   const portalArea = getArea(top, bottom, right-left)
   const avgLat = 0.5*(top + bottom)
 
