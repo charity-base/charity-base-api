@@ -40,13 +40,13 @@ const typeDefs = `
     """
     geo(
       """Latitude defining the portal's top boundary. Default: \`90\`."""
-      top: Float,
+      top: Float = 90
       """Longitude defining the portal's left boundary. Default: \`-180\`."""
-      left: Float,
+      left: Float = -180
       """Latitude defining the portal's bottom boundary. Default: \`-90\`."""
-      bottom: Float,
+      bottom: Float = -90
       """Longitude defining the portal's right boundary. Default: \`180\`."""
-      right: Float
+      right: Float = 180
     ): GeoAggregation
   }
 `

@@ -1,23 +1,8 @@
-const aggQuery = () => ({
-  terms: {
-    field: 'beneficiaries.id',
-    size: 7,
-  },
-})
+const aggByTerm = require('./aggByTerm')
+const AGG_NAME = 'beneficiaries'
+const ES_FIELD = 'beneficiaries.id'
+const NUM_VALUES = 7
 
-const parseResponse = aggregation => {
-  const buckets = aggregation.buckets.map(x => ({
-    id: `${x.key}`,
-    key: `${x.key}`,
-    name: `${x.key}`,
-    count: x.doc_count,
-  }))
-  return {
-    buckets,
-  }
-}
+const aggBeneficiaries = aggByTerm(AGG_NAME, ES_FIELD, NUM_VALUES)
 
-module.exports = {
-  aggQuery,
-  parseResponse,
-}
+module.exports = aggBeneficiaries

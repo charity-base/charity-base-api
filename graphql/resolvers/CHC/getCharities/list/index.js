@@ -1,22 +1,17 @@
-const { esClient } = require('../../../../../connection')
-const config = require('../../../../../config.json')
 const {
   getSourceFields,
   mapDocToGraphQL
 } = require('./fields-map')
 
-const esIndex = config.elastic.indexes.chc.charities
-
-// Note this is not the same as the FilteredCharitiesCHC.list resolver (additional args)
 async function listCharities(
   { limit, skip, sort },
-  esQuery,
+  search,
   requestedFields
 ) {
   const searchParams = {
-    index: [esIndex],
+    index: undefined, // this is set when queries combined in parent class
     body: {
-      query: esQuery,
+      query: undefined, // this is set when queries combined in parent class
     },
     _source: getSourceFields(requestedFields),
     sort: [],
@@ -25,7 +20,7 @@ async function listCharities(
   }
 
   try {
-    const response = await esClient.search(searchParams)
+    const response = await search(searchParams)
     return response.hits.hits.map(doc => mapDocToGraphQL(doc, requestedFields))
   } catch(e) {
     throw e
