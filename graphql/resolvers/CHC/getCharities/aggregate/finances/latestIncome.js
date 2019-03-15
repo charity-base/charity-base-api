@@ -1,5 +1,5 @@
-const LATEST_INCOME_FIELD = 'financial.latest.income'
-const AGG_NAME = 'income'
+const AGG_NAME = 'finances_income'
+const ES_FIELD = 'financial.latest.income'
 
 async function aggIncome(search) {
   const searchParams = {
@@ -9,7 +9,7 @@ async function aggIncome(search) {
       aggs: {
         [AGG_NAME]: {
           histogram: {
-            field: LATEST_INCOME_FIELD,
+            field: ES_FIELD,
             script: 'Math.log10(_value)',
             interval: 0.5,
             extended_bounds: {
@@ -20,7 +20,7 @@ async function aggIncome(search) {
           aggs: {
             total_income: {
               sum: {
-                field: LATEST_INCOME_FIELD,
+                field: ES_FIELD,
               },
             },
           },

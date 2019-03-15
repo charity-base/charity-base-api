@@ -1,20 +1,16 @@
-const { esClient } = require('../../../../../connection')
-const config = require('../../../../../config.json')
-
-const esIndex = config.elastic.indexes.chc.charities
-
-// Note this is not the same as the FilteredCharitiesCHC.count resolver (additional args)
-async function countCharities(esQuery) {
+async function countCharities(search) {
   const searchParams = {
-    index: [esIndex],
+    index: undefined, // this is set when queries combined in parent class
     body: {
-      query: esQuery,
+      query: undefined, // this is set when queries combined in parent class
     },
+    size: 0,
+    from: undefined,
   }
 
   try {
-    const response = await esClient.count(searchParams)
-    return response.count
+    const response = await search(searchParams)
+    return response.hits.total
   } catch(e) {
     throw e
   }
