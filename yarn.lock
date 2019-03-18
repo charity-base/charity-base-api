@@ -1282,10 +1282,6 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
 
-graphql-fields@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-fields/-/graphql-fields-2.0.1.tgz#7cfccb8daf8fa27f10296f75cfb4eb016092685b"
-
 graphql-input-number@^0.0.10:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/graphql-input-number/-/graphql-input-number-0.0.10.tgz#509b1c1fb5baeef8ab516a7c82c40dcebb8f8358"

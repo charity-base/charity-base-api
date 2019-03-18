@@ -17,7 +17,11 @@ const highLevelTypes = `
     """
     List of charities matching query
     """
-    list(limit: PageLimit, skip: Int, sort: String): [CharityCHC]
+    list(
+      limit: PageLimit = 10
+      skip: Int = 0
+      sort: String
+    ): [CharityCHC]
     """
     Aggregations of charities matching query
     """

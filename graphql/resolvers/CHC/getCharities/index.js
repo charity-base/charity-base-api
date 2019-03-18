@@ -1,6 +1,5 @@
 const config = require('../../../../config.json')
 const { esClient } = require('../../../../connection')
-const graphqlFields = require('graphql-fields')
 const getElasticQuery = require('./query')
 const countCharities = require('./count')
 const listCharities = require('./list')
@@ -23,10 +22,10 @@ function combineQueries(searchParamsList, filters) {
       ...agg.body.aggs,
       ...x.body.aggs, // todo: spread aggs one layer down too (to allow merging geo aggs under same filter)
     }) : agg.body.aggs
-    agg._source = x._source ? [...agg._source, ...x._source] : agg._source
+    agg._source = x._source ? [...new Set([...agg._source, ...x._source])] : agg._source
     agg.sort = x.sort ? [...agg.sort, ...x.sort] : agg.sort
     agg.size = x.size > 0 ? x.size : agg.size
-    agg.from = x.from ? x.from : agg.from
+    agg.from = !isNaN(x.from) ? x.from : agg.from
     return agg
   }, baseParams)
   return searchParams
@@ -40,7 +39,7 @@ class FilteredCharitiesCHC {
     this.search = this.search.bind(this)
   }
   search(q) {
-    // resolves with the Elasticsearch response
+    // Resolves with the Elasticsearch response
     return new Promise((resolve, reject) => {
       if (this.queue.length === 0) {
         process.nextTick(this.dispatchQueue)
@@ -68,12 +67,10 @@ class FilteredCharitiesCHC {
       this.search,
     )
   }
-  list({ limit, skip, sort }, _, info) {
-    const requestedFields = graphqlFields(info)
+  list(args) {
     return listCharities(
-      { limit, skip, sort },
       this.search,
-      requestedFields
+      args,
     )
   }
   aggregate() {
