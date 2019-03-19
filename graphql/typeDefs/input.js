@@ -100,6 +100,7 @@ const typeDefs = `
   input GeoFilterInput {
     boundingBox: GeoBoundingBoxInput
     boundingCircle: GeoBoundingCircleInput
+    geohashes: [String]
     region: GeoRegion
     country: GeoCountry
   }

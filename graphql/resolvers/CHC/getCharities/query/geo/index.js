@@ -1,3 +1,5 @@
+const geohashBounds = require('./geohashBounds')
+
 const GEO_COUNTRY_FIELD = 'contact.geo.country'
 const GEO_REGION_FIELD = 'contact.geo.region'
 const GEO_COORDS_FIELD = 'contact.geoCoords'
@@ -34,6 +36,18 @@ const getGeoFilters = geo => {
       geo_bounding_box: {
         [GEO_COORDS_FIELD]: geo.boundingBox,
       },
+    })
+  }
+
+  if (geo.geohashes) {
+    filters.push({
+      bool: {
+        should: geo.geohashes.map(geohash => ({
+          geo_bounding_box: {
+            [GEO_COORDS_FIELD]: geohashBounds(geohash),
+          },
+        }))
+      }
     })
   }
 
