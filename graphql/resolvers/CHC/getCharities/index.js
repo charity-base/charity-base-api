@@ -11,9 +11,9 @@ function combineQueries(searchParamsList, filters) {
     body: {
       query: getElasticQuery(filters),
       aggs: {},
+      sort: [],
     },
     _source: [],
-    sort: [],
     size: 0,
     from: undefined,
   }
@@ -22,8 +22,8 @@ function combineQueries(searchParamsList, filters) {
       ...agg.body.aggs,
       ...x.body.aggs, // todo: spread aggs one layer down too (to allow merging geo aggs under same filter)
     }) : agg.body.aggs
+    agg.body.sort = agg.body.sort.length > 0 ? agg.body.sort : ((x.body && x.body.sort) || []) // only take the first non-trivial sort
     agg._source = x._source ? [...new Set([...agg._source, ...x._source])] : agg._source
-    agg.sort = x.sort ? [...agg.sort, ...x.sort] : agg.sort
     agg.size = x.size > 0 ? x.size : agg.size
     agg.from = !isNaN(x.from) ? x.from : agg.from
     return agg

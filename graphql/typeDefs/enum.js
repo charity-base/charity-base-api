@@ -50,6 +50,17 @@ const typeDefs = `
     "Wales"
     W92000004
   }
+
+  enum SortCHC {
+    age_asc
+    age_desc
+    default
+    income_asc
+    income_desc
+    random
+    spending_asc
+    spending_desc
+  }
 `
 
 module.exports = typeDefs

@@ -1,4 +1,5 @@
 const fieldResolvers = require('./field-resolvers')
+const sortFields = require('./sortFields')
 
 async function listCharities(search, { limit, skip, sort }) {
   try {
@@ -6,11 +7,14 @@ async function listCharities(search, { limit, skip, sort }) {
       index: undefined, // this is set when queries combined in parent class
       body: {
         query: undefined, // this is set when queries combined in parent class
+        sort: [
+          ...sortFields[sort],
+          '_doc', // ensures sorting is consistent
+        ],
       },
       _source,
       size: limit,
       from: skip,
-      // todo: add sort
     })
 
     // Is there a way to limit the results without an extra elasticsearch round trip?
