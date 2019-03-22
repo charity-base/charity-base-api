@@ -20,7 +20,7 @@ const highLevelTypes = `
     list(
       limit: PageLimit = 10
       skip: Int = 0
-      sort: String
+      sort: SortCHC = default
     ): [CharityCHC]
     """
     Aggregations of charities matching query
