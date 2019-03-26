@@ -42,7 +42,9 @@ const highLevelTypes = `
     """
     getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
     getFilters(
-      prefix: String
+      "Prefix search term for finding filters. Only used if \`id\` is not defined."
+      search: String
+      "List of IDs of desired filters."
       id: [ID]
     ): [FilterCHC]
   }

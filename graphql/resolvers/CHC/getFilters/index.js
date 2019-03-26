@@ -5,10 +5,10 @@ const esIndex = config.elastic.indexes.chc.filters
 
 const MAX_SUGGESTIONS = 12
 
-async function getFilters({ prefix, id }) {
+async function getFilters({ search, id }) {
   const filterIds = id && id.length > 0
 
-  if (!filterIds && !prefix) return []
+  if (!filterIds && !search) return []
 
   const searchParams = {
     index: [esIndex],
@@ -24,10 +24,10 @@ async function getFilters({ prefix, id }) {
         }))
       }
     }
-  } else if (prefix) {
+  } else if (search) {
     searchParams.body.suggest = {
       filterSuggest: {
-        prefix: prefix.toLowerCase(),
+        prefix: search.toLowerCase(),
         completion: {
           field: 'suggest',
           size: MAX_SUGGESTIONS,
@@ -51,7 +51,7 @@ async function getFilters({ prefix, id }) {
 
   try {
     const response = await esClient.search(searchParams)
-    if (!filterIds && prefix) {
+    if (!filterIds && search) {
       return response.suggest.filterSuggest[0].options.map(x => ({
         ...x._source,
         score: x._score,
