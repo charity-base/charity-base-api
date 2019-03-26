@@ -41,7 +41,10 @@ const highLevelTypes = `
     Query charities registered in England & Wales
     """
     getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
-    getFilters(prefix: String, id: [ID]): [FilterCHC]
+    getFilters(
+      prefix: String
+      id: [ID]
+    ): [FilterCHC]
   }
 
   type Query {
