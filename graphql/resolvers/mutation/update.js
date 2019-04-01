@@ -1,14 +1,7 @@
 const { dynamoClient } = require('../../../connection')
 
-const REQUIRED_SCOPE = 'edit:apikeys'
-
-const updateApiKey = async function({ id, scopes }, req) {
+const updateApiKey = async function({ id, scopes }) {
   try {
-    const { user } = req
-    const isAllowed = user && user.permissions && user.permissions.indexOf(REQUIRED_SCOPE) > -1
-    if (!isAllowed) {
-      throw `User missing required scope: ${REQUIRED_SCOPE}`
-    }
     const params = {
       Key: { id },
       ConditionExpression: 'attribute_exists(id)',
