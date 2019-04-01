@@ -1,12 +1,12 @@
 const { dynamoClient } = require('../../../connection')
 
-const deleteApiKey = async function({ id }) {
+const deleteApiKey = async function({ id }, req) {
   try {
     const params = {
       Key: { id },
       ConditionExpression: 'attribute_exists(id) AND userId = :userId',
       ExpressionAttributeValues: {
-        ":userId": "auth0|a", // todo: get userId from jwt auth header
+        ":userId": req.user.sub,
       },
       ReturnValues: 'ALL_OLD',
     }

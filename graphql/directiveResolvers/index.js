@@ -1,4 +1,5 @@
 const { GraphQLError } = require('graphql')
+const jwtAuth = require('./jwtAuth')
 
 const directiveResolvers = {
   isAuthenticated(next, source, args, context) {
@@ -18,7 +19,8 @@ const directiveResolvers = {
       throw new GraphQLError(`You are not authorized. Expected scopes: "${expectedScopes.join(', ')}"`)
     }
     return next()
-  }
+  },
+  jwtAuth,
 }
 
 module.exports = directiveResolvers
