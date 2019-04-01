@@ -55,6 +55,26 @@ const highLevelTypes = `
     """
     CHC: QueryCHC @isAuthenticated
   }
+
+  type ApiKey {
+    id: ID
+    scopes: [String]
+  }
+
+  type MutationApiKey {
+    create: ApiKey
+    update(
+      id: ID
+      scopes: [String]
+    ): ApiKey
+    delete(
+      id: ID
+    ): ApiKey
+  }
+
+  type Mutation {
+    apiKey: MutationApiKey #@isJWTAuthenticated
+  }
 `
 
 module.exports = [

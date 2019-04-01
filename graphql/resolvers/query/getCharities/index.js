@@ -1,6 +1,6 @@
 const config = require('../../../../config.json')
 const { esClient } = require('../../../../connection')
-const getElasticQuery = require('./query')
+const getElasticQuery = require('./elastic-query')
 const countCharities = require('./count')
 const listCharities = require('./list')
 const aggregateCharities = require('./aggregate')
