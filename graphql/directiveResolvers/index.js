@@ -1,10 +1,10 @@
-const isAuthenticated = require('./isAuthenticated')
+const apiKeyAuth = require('./apiKeyAuth')
 const hasScopes = require('./hasScopes')
 const jwtAuth = require('./jwtAuth')
 const jwtScopes = require('./jwtScopes')
 
 const directiveResolvers = {
-  isAuthenticated,
+  apiKeyAuth,
   hasScopes,
   jwtAuth,
   jwtScopes,
