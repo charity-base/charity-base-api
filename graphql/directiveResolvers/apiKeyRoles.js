@@ -1,4 +1,4 @@
-function hasScopes(next, source, args, req) {
+function apiKeyRoles(next, source, args, req) {
   const expectedScopes = args.scopes
   const scopes = req.apiScopes
   const hasAllScopes = scopes && expectedScopes.every(x => scopes.indexOf(x) !== -1)
@@ -8,4 +8,4 @@ function hasScopes(next, source, args, req) {
   return next()
 }
 
-module.exports = hasScopes
+module.exports = apiKeyRoles

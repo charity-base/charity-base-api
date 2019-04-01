@@ -40,7 +40,7 @@ const highLevelTypes = `
     """
     Query charities registered in England & Wales
     """
-    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @hasScopes(scopes: ["basic"])
+    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @apiKeyRoles(scopes: ["basic"])
     getFilters(
       "Prefix search term for finding filters. Only used if \`id\` is not defined."
       search: String
