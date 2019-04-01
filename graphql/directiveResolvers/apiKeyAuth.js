@@ -1,10 +1,32 @@
-function apiKeyAuth(next, source, args, req) {
-  if (!req.apiKeyValue) {
+const { authHeaders } = require('./helpers')
+const { dynamoClient } = require('../../connection')
+
+async function apiKeyAuth(next, source, args, req) {
+  if (!req.headers || !req.headers.authorization) {
+    throw 'No authorization header sent'
+  }
+
+  const { apikey } = authHeaders(req.headers.authorization)
+
+  if (!apikey) {
     throw `You must supply an Authorization header of the form "Apikey 9447fa04-c15b-40e6-92b6-30307deeb5d1". See https://charitybase.uk/api-portal for more information.`
   }
-  if (!req.apiKeyValid) {
-    throw `The provided API key is not valid: "${req.apiKeyValue}"`
+
+  try {
+    const params = {
+      Key: {
+        id: apikey
+      }
+    }
+    const data = await dynamoClient.get(params).promise()
+    if (!data.Item) {
+      throw new Error()
+    }
+    req.apiKey = data.Item
+  } catch(e) {
+    throw `The provided API key is not valid: "${apikey}"`
   }
+
   return next()
 }
 

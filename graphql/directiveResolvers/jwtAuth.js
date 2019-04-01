@@ -20,7 +20,7 @@ const jwtPromise = token => new Promise((resolve, reject) => {
 
 async function jwtAuth(next, source, args, req) {
   if (!req.headers || !req.headers.authorization) {
-    throw 'No authorization headers sent'
+    throw 'No authorization header sent'
   }
 
   const { bearer } = authHeaders(req.headers.authorization)
