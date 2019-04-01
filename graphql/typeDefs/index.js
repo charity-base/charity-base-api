@@ -40,7 +40,7 @@ const highLevelTypes = `
     """
     Query charities registered in England & Wales
     """
-    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @apiKeyRoles(scopes: ["basic"])
+    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @apiKeyRoles(roles: ["basic"])
     getFilters(
       "Prefix search term for finding filters. Only used if \`id\` is not defined."
       search: String
@@ -58,14 +58,14 @@ const highLevelTypes = `
 
   type ApiKey {
     id: ID
-    scopes: [String]
+    roles: [String]
   }
 
   type MutationApiKey {
     create: ApiKey
     update(
       id: ID
-      scopes: [String]
+      roles: [String]
     ): ApiKey @jwtScopes(scopes: ["edit:apikeys"])
     delete(
       id: ID

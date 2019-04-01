@@ -13,7 +13,7 @@ const deleteApiKey = async function({ id }, req) {
     const data = await dynamoClient.delete(params).promise()
     return data.Attributes
   } catch(e) {
-    throw e
+    throw `Failed to delete api key; ${e.message}`
   }
 }
 
