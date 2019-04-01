@@ -53,7 +53,7 @@ const highLevelTypes = `
     """
     Charity Commission of England & Wales
     """
-    CHC: QueryCHC @isAuthenticated
+    CHC: QueryCHC @apiKeyAuth
   }
 
   type ApiKey {

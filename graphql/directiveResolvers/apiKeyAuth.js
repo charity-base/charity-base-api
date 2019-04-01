@@ -1,4 +1,4 @@
-function isAuthenticated(next, source, args, req) {
+function apiKeyAuth(next, source, args, req) {
   if (!req.apiKeyValue) {
     throw `You must supply an Authorization header of the form "Apikey 9447fa04-c15b-40e6-92b6-30307deeb5d1". See https://charitybase.uk/api-portal for more information.`
   }
@@ -8,4 +8,4 @@ function isAuthenticated(next, source, args, req) {
   return next()
 }
 
-module.exports = isAuthenticated
+module.exports = apiKeyAuth
