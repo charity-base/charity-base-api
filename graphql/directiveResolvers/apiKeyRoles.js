@@ -1,9 +1,9 @@
 function apiKeyRoles(next, source, args, req) {
-  const expectedScopes = args.scopes
-  const scopes = req.apiScopes
-  const hasAllScopes = scopes && expectedScopes.every(x => scopes.indexOf(x) !== -1)
-  if (!hasAllScopes) {
-    throw `You are not authorized. Expected scopes: "${expectedScopes.join(', ')}"`
+  const expectedRoles = args.roles
+  const roles = req.apiRoles
+  const hasAllRoles = roles && expectedRoles.every(x => roles.indexOf(x) !== -1)
+  if (!hasAllRoles) {
+    throw `You are not authorized. Expected roles: "${expectedRoles.join(', ')}"`
   }
   return next()
 }

@@ -3,7 +3,7 @@ const { dynamoClient } = require('../../../connection')
 
 
 const MAX_API_KEYS = 3
-const DEFAULT_SCOPES = [
+const DEFAULT_ROLES = [
   'basic'
 ]
 
@@ -19,17 +19,17 @@ const createApiKey = async function(_, req) {
     }
     const data = await dynamoClient.query(params).promise()
     if (data.ScannedCount >= MAX_API_KEYS) {
-      throw `User already has ${data.ScannedCount} keys`
+      throw new Error(`User already has ${data.ScannedCount} keys`)
     }
   } catch(e) {
-    throw e
+    throw `Failed to create api key; ${e.message}`
   }
 
   try {
     const item = {
       id: uuidv4(),
       userId: req.user.sub,
-      scopes: DEFAULT_SCOPES,
+      roles: DEFAULT_ROLES,
     }
     var params = {
       Item: item,
@@ -38,7 +38,7 @@ const createApiKey = async function(_, req) {
     await dynamoClient.put(params).promise()
     return item
   } catch(e) {
-    throw e
+    throw `Failed to create api key; ${e.message}`
   }
 }
 
