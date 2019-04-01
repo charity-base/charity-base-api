@@ -31,7 +31,7 @@ const createApiKey = async function(_, req) {
       userId: req.user.sub,
       roles: DEFAULT_ROLES,
     }
-    var params = {
+    const params = {
       Item: item,
       ConditionExpression: 'attribute_not_exists(id)',
     }

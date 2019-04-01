@@ -5,7 +5,6 @@ const cors = require('cors')
 const { log, logRequest } = require('./helpers')
 const { mongooseConnection } = require('./connection')
 const schema = require('./graphql')
-const middleware = require('./middleware')
 
 log.info(`Starting process with NODE_ENV=${process.env.NODE_ENV}`)
 
@@ -19,7 +18,6 @@ mongooseConnection.catch(err => {
 const app = express()
 
 app.use(cors())
-app.use(middleware.auth)
 app.use('/api/graphql', graphqlHTTP((req, res, graphQLParams) => {
   process.env.NODE_ENV === 'production' && logRequest(req, res, graphQLParams)
   return {

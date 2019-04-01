@@ -10,14 +10,18 @@ const apiRequestMapping = {
       queryTime: {
         type: 'integer'
       },
-      apiKeyValue: {
-        type: 'keyword'
-      },
-      apiKeyValid: {
-        type: 'boolean'
-      },
-      apiScopes: {
-        type: 'keyword'
+      apiKey: {
+        properties: {
+          id: {
+            type: 'keyword'
+          },
+          userId: {
+            type: 'keyword'
+          },
+          roles: {
+            type: 'keyword'
+          }
+        }
       },
       ip: {
         type: 'keyword'
@@ -105,9 +109,7 @@ const logRequest = (req, res, graphQLParams) => {
 
       const reqLog = {
         queryTime: Date.now() - t0, // does not include api key lookup
-        apiKeyValue: req.apiKeyValue,
-        apiKeyValid: req.apiKeyValid,
-        apiScopes: req.apiScopes,
+        apiKey: req.apiKey,
         ip: req.ip,
         method: req.method,
         originalUrl: req.originalUrl,
