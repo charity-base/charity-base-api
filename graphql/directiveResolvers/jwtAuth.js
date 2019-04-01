@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { authHeaders } = require('./helpers')
 
 const jwtPromise = token => new Promise((resolve, reject) => {
   jwt.verify(
@@ -21,20 +22,15 @@ async function jwtAuth(next, source, args, req) {
   if (!req.headers || !req.headers.authorization) {
     throw 'No authorization headers sent'
   }
-  const authHeaders = req.headers.authorization.split(',').reduce((agg, x) => {
-    const [authType, authValue] = x.trim().split(' ')
-    return {
-      ...agg,
-      [authType.toLowerCase()]: authValue,
-    }
-  }, {})
 
-  if (!authHeaders.bearer) {
+  const { bearer } = authHeaders(req.headers.authorization)
+
+  if (!bearer) {
     throw 'No Bearer token found in authorization header'
   }
 
   try {
-    req.user = await jwtPromise(authHeaders.bearer)
+    req.user = await jwtPromise(bearer)
     return next()
   } catch(e) {
     throw `Failed to decode Bearer token: ${e.message}`
