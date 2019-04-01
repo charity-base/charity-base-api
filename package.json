@@ -18,7 +18,8 @@
     "graphql-input-number": "^0.0.10",
     "graphql-tools": "^4.0.4",
     "http-aws-es": "^6.0.0",
-    "mongoose": "^5.3.4"
+    "mongoose": "^5.3.4",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "jest": "^20.0.4",

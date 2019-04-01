@@ -1,9 +1,9 @@
 const customTypes = require('./custom-types')
-const CHC = require('./CHC')
+const mutationResolvers = require('./mutation')
+const queryResolvers = require('./query')
 
 module.exports = {
   ...customTypes,
-  Query: {
-    CHC: () => CHC,
-  },
+  Mutation: mutationResolvers,
+  Query: queryResolvers,
 }
