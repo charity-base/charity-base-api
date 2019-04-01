@@ -1,11 +1,11 @@
 const apiKeyAuth = require('./apiKeyAuth')
-const hasScopes = require('./hasScopes')
+const apiKeyRoles = require('./apiKeyRoles')
 const jwtAuth = require('./jwtAuth')
 const jwtScopes = require('./jwtScopes')
 
 const directiveResolvers = {
   apiKeyAuth,
-  hasScopes,
+  apiKeyRoles,
   jwtAuth,
   jwtScopes,
 }
