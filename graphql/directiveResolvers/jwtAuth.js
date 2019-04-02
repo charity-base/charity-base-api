@@ -2,13 +2,16 @@ const jwt = require('jsonwebtoken')
 const { authHeaders, hasAll } = require('./helpers')
 
 const jwtPromise = token => new Promise((resolve, reject) => {
+  const audience = process.env.CHARITY_BASE_AUTH0_JWT_AUDIENCE
+  const issuer = process.env.CHARITY_BASE_AUTH0_JWT_ISSUER
+  const secret = process.env.CHARITY_BASE_AUTH0_JWT_SECRET
+  if (!audience || !issuer || !secret) {
+    return reject(new Error('JWT audience, issuer and secret must be defined in env variables'))
+  }
   jwt.verify(
     token,
-    process.env.CHARITY_BASE_AUTH0_JWT_SECRET,
-    {
-      audience: process.env.CHARITY_BASE_AUTH0_JWT_AUDIENCE,
-      issuer: process.env.CHARITY_BASE_AUTH0_JWT_ISSUER,
-    },
+    secret,
+    { audience, issuer },
     (err, decoded) => {
       if (err) {
         return reject(err)
