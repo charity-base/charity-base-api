@@ -40,7 +40,7 @@ const highLevelTypes = `
     """
     Query charities registered in England & Wales
     """
-    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC @apiKeyRoles(roles: ["basic"])
+    getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC
     getFilters(
       "Prefix search term for finding filters. Only used if \`id\` is not defined."
       search: String
@@ -53,7 +53,7 @@ const highLevelTypes = `
     """
     Charity Commission of England & Wales
     """
-    CHC: QueryCHC @apiKeyAuth
+    CHC: QueryCHC @apiKeyAuth(roles: ["basic"])
   }
 
   type ApiKey {
