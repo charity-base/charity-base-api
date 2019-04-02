@@ -14,10 +14,6 @@
       "requests": "charity-base-graphql-api-requests"
     }
   },
-  "mongo" : {
-    "host": "my-mongo-atlas-host.mongodb.net",
-    "dbName": "charity-base-api"
-  },
   "jwt" : {
     "audience": "https://charitybase.uk/api",
     "issuer": "https://charity-base.eu.auth0.com/"
