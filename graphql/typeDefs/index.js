@@ -73,7 +73,7 @@ const highLevelTypes = `
   }
 
   type Mutation {
-    apiKey: MutationApiKey @jwtAuth
+    apiKeys: MutationApiKey @jwtAuth
   }
 `
 
