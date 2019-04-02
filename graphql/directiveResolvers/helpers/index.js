@@ -8,6 +8,11 @@ const authHeaders = authHeaderString => {
   }, {})
 }
 
+const hasAll = (required, given) => {
+  return required.every(x => given.indexOf(x) !== -1)
+}
+
 module.exports = {
   authHeaders,
+  hasAll,
 }
