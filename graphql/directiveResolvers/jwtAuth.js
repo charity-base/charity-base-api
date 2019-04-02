@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { authHeaders } = require('./helpers')
+const { authHeaders, hasAll } = require('./helpers')
 
 const jwtPromise = token => new Promise((resolve, reject) => {
   jwt.verify(
@@ -19,6 +19,16 @@ const jwtPromise = token => new Promise((resolve, reject) => {
 })
 
 async function jwtAuth(next, source, args, req) {
+  const expectedScopes = args.scopes
+
+  if (req.user) {
+    const scopes = req.user.permissions || []
+    if (!hasAll(expectedScopes, scopes)) {
+      throw `You are not authorized. Expected jwt scopes: "${expectedScopes.join(', ')}"`
+    }
+    return next()
+  }
+
   if (!req.headers || !req.headers.authorization) {
     throw 'No authorization header sent'
   }
@@ -31,11 +41,16 @@ async function jwtAuth(next, source, args, req) {
 
   try {
     req.user = await jwtPromise(bearer)
-    return next()
   } catch(e) {
     throw `Failed to decode Bearer token: ${e.message}`
   }
 
+  const scopes = req.user.permissions || []
+  if (!hasAll(expectedScopes, scopes)) {
+    throw `You are not authorized. Expected jwt scopes: "${expectedScopes.join(', ')}"`
+  }
+
+  return next()
 }
 
 module.exports = jwtAuth
