@@ -1,9 +1,5 @@
-const { authHeaders } = require('./helpers')
 const { dynamoClient } = require('../../connection')
-
-function hasAll(required, given) {
-  return required.every(x => given.indexOf(x) !== -1)
-}
+const { authHeaders, hasAll } = require('./helpers')
 
 async function apiKeyAuth(next, source, args, req) {
   const expectedRoles = args.roles
