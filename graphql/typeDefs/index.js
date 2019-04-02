@@ -66,7 +66,7 @@ const highLevelTypes = `
     update(
       id: ID
       roles: [String]
-    ): ApiKey @jwtScopes(scopes: ["edit:apikeys"])
+    ): ApiKey @jwtAuth(scopes: ["edit:apikeys"])
     delete(
       id: ID
     ): ApiKey
