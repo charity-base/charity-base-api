@@ -1,7 +1,21 @@
 const { authHeaders } = require('./helpers')
 const { dynamoClient } = require('../../connection')
 
+function hasAll(required, given) {
+  return required.every(x => given.indexOf(x) !== -1)
+}
+
 async function apiKeyAuth(next, source, args, req) {
+  const expectedRoles = args.roles
+
+  if (req.apiKey) {
+    const roles = req.apiKey.roles || []
+    if (!hasAll(expectedRoles, roles)) {
+      throw `You are not authorized. Expected roles: "${expectedRoles.join(', ')}"`
+    }
+    return next()
+  }
+
   if (!req.headers || !req.headers.authorization) {
     throw 'No authorization header sent'
   }
@@ -25,6 +39,11 @@ async function apiKeyAuth(next, source, args, req) {
     req.apiKey = data.Item
   } catch(e) {
     throw `The provided API key is not valid: "${apikey}"`
+  }
+
+  const roles = req.apiKey.roles || []
+  if (!hasAll(expectedRoles, roles)) {
+    throw `You are not authorized. Expected roles: "${expectedRoles.join(', ')}"`
   }
 
   return next()
