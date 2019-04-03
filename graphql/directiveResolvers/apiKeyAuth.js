@@ -23,6 +23,7 @@ async function apiKeyAuth(next, source, args, req) {
   }
 
   try {
+    // It would be cleaner to hit the /auth/graphql api here to validate apikey but for performance we query dynamodb directly instead.
     const params = {
       Key: {
         id: apikey
