@@ -49,36 +49,11 @@ const highLevelTypes = `
     ): [FilterCHC]
   }
 
-  type ApiKey {
-    id: ID
-    roles: [String!]
-  }
-
-  type QueryApiKeys {
-    list: [ApiKey]
-  }
-
   type Query {
-    apiKeys: QueryApiKeys @jwtAuth
     """
     Charity Commission of England & Wales
     """
     CHC: QueryCHC @apiKeyAuth(roles: ["basic"])
-  }
-
-  type MutationApiKeys {
-    create: ApiKey
-    update(
-      id: ID
-      roles: [String!]
-    ): ApiKey @jwtAuth(scopes: ["edit:apikeys"])
-    delete(
-      id: ID
-    ): ApiKey
-  }
-
-  type Mutation {
-    apiKeys: MutationApiKeys @jwtAuth
   }
 `
 
