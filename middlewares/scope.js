@@ -1,24 +1,30 @@
-const { Client } = require('../models')
+const { dynamoClient } = require('../connection')
 
-const getScopes = () => (req, res, next) => {
+const getScopes = () => async function(req, res, next) {
   const apiKeyValue = req.query.apiKey
 
   if (!apiKeyValue) {
     return res.status(401).send({ message: 'You must provide an API key in the URL query string.  See https://charitybase.uk/api-portal for more information.' })
   }
 
-  Client.findOne({ 'apiKeys.value': apiKeyValue }, (err, client) => {
-    if (err) {
-      return res.status(400).send({ message: err.message })
+
+  try {
+    // It would be cleaner to hit the /auth/graphql api here to validate apikey but for performance we query dynamodb directly instead.
+    const params = {
+      Key: {
+        id: apiKeyValue
+      }
     }
-    if (!client) {
-      return res.status(401).send({ message: `The provided API key is not valid: '${apiKeyValue}'` })
+    const data = await dynamoClient.get(params).promise()
+    if (!data.Item) {
+      throw new Error()
     }
-    const apiKeyObj = client.apiKeys.find(x => x.value === apiKeyValue)
-    req.apiKeyValue = apiKeyValue
-    req.apiScopes = apiKeyObj.scopes
+    req.apiKeyValue = data.Item.id
+    req.apiScopes = data.Item.roles
     return next()
-  })
+  } catch(e) {
+    return res.status(400).send({ message: `The provided API key is not valid: "${apiKeyValue}"` })
+  }
 }
 
 const checkScopes = requiredScope => (req, res, next) => {
