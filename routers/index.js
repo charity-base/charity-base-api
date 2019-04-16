@@ -26,7 +26,6 @@ const getApiRouter = () => {
 
   apiRouter.use(
     '/api-key',
-    checkScopes('admin'),
     jwtEnforcedCheck,
     apiKeyRouter(),
   )
@@ -48,7 +47,7 @@ const getApiRouter = () => {
   // )
   apiRouter.use(
     '/aggregate-charities',
-    checkScopes('aggregate'),
+    checkScopes('basic'),
     charityRouter.aggregate(esClient, esIndex),
   )
 
