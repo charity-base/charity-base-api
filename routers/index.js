@@ -24,11 +24,11 @@ const getApiRouter = () => {
   apiRouter.use(parseQuery())
   apiRouter.use(persistQuery())
 
-  apiRouter.use(
-    '/api-key',
-    jwtEnforcedCheck,
-    apiKeyRouter(),
-  )
+  // apiRouter.use(
+  //   '/api-key',
+  //   jwtEnforcedCheck,
+  //   apiKeyRouter(),
+  // )
   apiRouter.use(
     '/charities',
     checkScopes('basic'),
