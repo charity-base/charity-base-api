@@ -8,8 +8,9 @@ const stripQuery = query => {
   )
 }
 
-const persistRequest = (url, version, user, query, ) => {
+const persistRequest = (url, version, user, query, apiKey ) => {
   const hit = new Hit({
+    apiKey,
     url,
     version,
     user,
@@ -24,7 +25,7 @@ const persistRequest = (url, version, user, query, ) => {
 
 const persistQuery = () => (req, res, next) => {
   const { elasticSearch } = res.locals
-  persistRequest(req.url, req.params.version, req.user, elasticSearch)
+  persistRequest(req.url, req.params.version, req.user, elasticSearch, req.apiKeyValue)
   return next()
 }
 
