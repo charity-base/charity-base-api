@@ -17,8 +17,7 @@
     "express-jwt": "^5.3.1",
     "http-aws-es": "^6.0.0",
     "mongoose": "^5.3.4",
-    "node-fetch": "^2.3.0",
-    "uuid": "^3.3.2"
+    "node-fetch": "^2.3.0"
   },
   "devDependencies": {
     "jest": "^20.0.4",
