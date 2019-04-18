@@ -18,7 +18,6 @@ function aggByTerm(aggName, esField, numValues) {
     try {
       const response = await search(searchParams)
       const buckets = response.aggregations[aggName].buckets.map(x => ({
-        id: `${x.key}`,
         key: `${x.key}`,
         name: `${x.key}`,
         count: x.doc_count,

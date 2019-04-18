@@ -1,6 +1,5 @@
 const typeDefs = `
   type AggregationBucket {
-    id: String @deprecated(reason: "Use \`key\` instead.")
     """Unique across a given aggregation's buckets"""
     key: String
     """Aggregation bucket description"""

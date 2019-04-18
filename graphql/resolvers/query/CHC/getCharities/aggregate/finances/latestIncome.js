@@ -33,7 +33,6 @@ async function aggIncome(search) {
   try {
     const response = await search(searchParams)
     const buckets = response.aggregations[AGG_NAME].buckets.map(x => ({
-      id: `${x.key}`,
       key: `${x.key}`,
       name: `Min. £${Math.round(Math.pow(10, x.key))}`,
       count: x.doc_count,
