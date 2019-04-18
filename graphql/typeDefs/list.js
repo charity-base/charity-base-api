@@ -6,24 +6,6 @@ const typeDefs = `
     end: Date
   }
 
-  type IncomeLatestCHC {
-    "End date of latest financial year"
-    date: Date
-    "Latest gross income GBP"
-    total: Float
-  }
-
-  type IncomeAnnualCHC {
-    income: Float
-    expend: Float
-    financialYear: FinancialYear
-  }
-
-  type IncomeCHC {
-    latest: IncomeLatestCHC
-    annual: [IncomeAnnualCHC]
-  }
-
   type FinancialCHC {
     income: Float
     spending: Float
@@ -132,7 +114,6 @@ const typeDefs = `
     Short description of the charity's activities
     """
     activities: String
-    income: IncomeCHC @deprecated(reason: "Use \`finances\` instead.")
     finances(
       """If \`true\` then all annual finances are returned"""
       all: Boolean = false
