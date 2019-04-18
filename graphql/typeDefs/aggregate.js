@@ -24,6 +24,7 @@ const typeDefs = `
 
   type FinancesAggregation {
     latestIncome: Aggregation
+    latestSpending: Aggregation
   }
 
   type AggregationTypesCHC {
