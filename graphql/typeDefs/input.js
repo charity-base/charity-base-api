@@ -101,14 +101,6 @@ const typeDefs = `
     country: GeoCountry
   }
 
-  input LatestIncomeInput {
-    total: NumericRangeInput
-  }
-
-  input IncomeFilterInput {
-    latest: LatestIncomeInput
-  }
-
   input FinancesFilterInput {
     latestIncome: NumericRangeInput
   }
@@ -126,7 +118,6 @@ const typeDefs = `
     operations: ListFilterInput
     grants: GrantsFilterInput
     geo: GeoFilterInput
-    income: IncomeFilterInput @deprecated(reason: "Use \`finances\` instead.")
     finances: FinancesFilterInput
     registrations: RegistrationsFilterInput
   }
