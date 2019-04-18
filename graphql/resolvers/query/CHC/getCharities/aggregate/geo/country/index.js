@@ -33,7 +33,6 @@ async function aggGeoCountry(search, { top, left, bottom, right }) {
   try {
     const response = await search(searchParams)
     const buckets = response.aggregations[AGG_NAME][AGG_NAME_NESTED].buckets.map(x => ({
-      id: `${x.key}`,
       key: geoCountryNames[x.key] || x.key,
       name: `${x.key}`,
       count: x.doc_count,
