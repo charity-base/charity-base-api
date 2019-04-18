@@ -8,7 +8,6 @@ const typeDefs = `
     count: Int
     """If the aggregation is on a numerical field e.g. income, the \`sum\` gives the bucket's cumulative total of that field."""
     sum: Float
-    sumIncome: Float @deprecated(reason: "Use \`sum\` instead.")
   }
 
   type Aggregation {

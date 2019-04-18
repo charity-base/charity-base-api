@@ -37,7 +37,6 @@ async function aggIncome(search) {
       name: `Min. £${Math.round(Math.pow(10, x.key))}`,
       count: x.doc_count,
       sum: x.total_income.value,
-      sumIncome: x.total_income.value,
     }))
     return {
       buckets,
