@@ -26,7 +26,6 @@ const typeDefs = `
   }
 
   type AggregationTypesCHC {
-    income: Aggregation @deprecated(reason: "Use \`finances\` instead.")
     finances: FinancesAggregation
     causes: Aggregation
     beneficiaries: Aggregation

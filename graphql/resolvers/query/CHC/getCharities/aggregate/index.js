@@ -3,7 +3,6 @@ const aggBeneficiaries = require('./beneficiaries')
 const aggCauses = require('./causes')
 const aggFinances = require('./finances')
 const aggGeo = require('./geo')
-const aggIncome = require('./income')
 const aggOperations = require('./operations')
 
 function aggregateCharities(search) {
@@ -13,7 +12,6 @@ function aggregateCharities(search) {
     causes: () => aggCauses(search),
     finances: () => aggFinances(search),
     geo: (args) => aggGeo(search, args),
-    income: () => aggIncome(search),
     operations: () => aggOperations(search),
   }
 }
