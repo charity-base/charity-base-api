@@ -16,10 +16,6 @@ const typeDefs = `
     Less than.
     """
     lt: Float
-    lessThanInclusive: Int @deprecated(reason: "Use \`lte\`.")
-    lessThanExclusive: Int @deprecated(reason: "Use \`lt\`.")
-    moreThanInclusive: Int @deprecated(reason: "Use \`gte\`.")
-    moreThanExclusive: Int @deprecated(reason: "Use \`gt\`.")
   }
 
   input DateRangeInput {
