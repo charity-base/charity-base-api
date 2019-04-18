@@ -11,7 +11,6 @@ const fieldResolvers = {
   governingDoc: require('./governingDoc'),
   grants: require('./grants'),
   id: require('./id'),
-  income: require('./income'),
   name: require('./name'),
   names: require('./names'),
   numPeople: require('./numPeople'),
