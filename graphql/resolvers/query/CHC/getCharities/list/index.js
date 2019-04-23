@@ -19,7 +19,9 @@ async function listCharities(search, { limit, skip, sort }) {
 
     // Is there a way to limit the results without an extra elasticsearch round trip?
     const countResponse = await search({})
-    const numResults = Math.min(countResponse.hits.total, limit)
+    const numResults = Math.min(countResponse.hits.total - skip, limit)
+
+    if (numResults < 1) return []
 
     const fieldValueLists = {}
     const results = [...new Array(numResults)].map((_, i) => {
