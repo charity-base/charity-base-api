@@ -46,6 +46,8 @@ const highLevelTypes = `
       search: String
       "List of IDs of desired filters."
       id: [ID]
+      "List of filter types to return."
+      filterType: [String]
     ): [FilterCHC]
   }
 
