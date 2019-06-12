@@ -5,7 +5,16 @@ const esIndex = config.elastic.indexes.chc.filters
 
 const MAX_SUGGESTIONS = 12
 
-async function getFilters({ search, id }) {
+const FILTER_TYPES = [
+  { context: "id", boost: 1 },
+  { context: "area", boost: 2 },
+  { context: "funder", boost: 3 },
+  { context: "cause", boost: 4 },
+  { context: "operation", boost: 4 },
+  { context: "beneficiary", boost: 4 },
+]
+
+async function getFilters({ filterType, id, search }) {
   const filterIds = id && id.length > 0
 
   if (!filterIds && !search) return []
@@ -35,14 +44,9 @@ async function getFilters({ search, id }) {
             fuzziness: 1,
           },
           contexts: {
-            filter_type: [
-              { context: "id", boost: 1 },
-              { context: "area", boost: 2 },
-              { context: "funder", boost: 3 },
-              { context: "cause", boost: 4 },
-              { context: "operation", boost: 4 },
-              { context: "beneficiary", boost: 4 },
-            ]
+            filter_type: filterType ? (FILTER_TYPES.filter(x => {
+              return filterType.indexOf(x.context) > -1
+            })) : FILTER_TYPES
           },
         }
       }
