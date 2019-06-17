@@ -97,6 +97,18 @@ const typeDefs = `
     removalReason: String
   }
 
+  type TrusteeCharityCHC {
+    id: ID
+    name: String
+  }
+
+  type TrusteeCHC {
+    id: ID
+    name: String
+    trusteeships: Int
+    otherCharities: [TrusteeCharityCHC]
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -127,6 +139,7 @@ const typeDefs = `
     geo: Geo
     contact: ContactCHC
     website: String
+    trustees: [TrusteeCHC]
     governingDoc: String
     objectives: String
     numPeople: PeopleCHC
