@@ -37,7 +37,7 @@ async function getFilters({ filterType, id, search }) {
   } else if (search) {
     searchParams.body.suggest = {
       filterSuggest: {
-        prefix: search.toLowerCase(),
+        prefix: search.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
         completion: {
           field: 'suggest',
           size: MAX_SUGGESTIONS,
