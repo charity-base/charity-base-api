@@ -8,6 +8,7 @@ const getGeoFilters = require('./geo')
 const getFinancesFilters = require('./finances')
 const getRegistrationsFilters = require('./registrations')
 const getSearchFilters = require('./search')
+const getTrusteesFilters = require('./trustees')
 
 const getElasticQuery = ({
   id,
@@ -20,6 +21,7 @@ const getElasticQuery = ({
   geo,
   finances,
   registrations,
+  trustees,
 }) => {
   const must = [
     ...getSearchFilters(search),
@@ -35,6 +37,7 @@ const getElasticQuery = ({
     ...getGeoFilters(geo),
     ...getFinancesFilters(finances),
     ...getRegistrationsFilters(registrations),
+    ...getTrusteesFilters(trustees),
   ]
 
   return {
