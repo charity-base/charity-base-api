@@ -18,6 +18,7 @@ const fieldResolvers = {
   operations: require('./operations'),
   orgIds: require('./orgIds'),
   registrations: require('./registrations'),
+  trustees: require('./trustees'),
   website: require('./website'),
 }
 
