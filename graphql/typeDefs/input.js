@@ -120,6 +120,7 @@ const typeDefs = `
     geo: GeoFilterInput
     finances: FinancesFilterInput
     registrations: RegistrationsFilterInput
+    trustees: ListFilterInput
   }
 `
 
