@@ -8,10 +8,10 @@
     "region": "eu-west-2",
     "indexes": {
       "chc": {
-        "charities": "charity-base-v5-0-0-feb-2019",
-        "filters": "charity-base-v5-0-0-feb-2019-filters"
+        "charities": "charity-base-v6-2-0-jun-2019",
+        "filters": "charity-base-v6-2-0-jun-2019-filters"
       },
-      "requests": "charity-base-graphql-api-requests"
+      "requests": "charity-base-graphql-api-requests-v2"
     }
   },
   "s3" : {
