@@ -61,6 +61,11 @@ const typeDefs = `
     spending_asc
     spending_desc
   }
+
+  enum SocialPlatform {
+    facebook
+    twitter
+  }
 `
 
 module.exports = typeDefs
