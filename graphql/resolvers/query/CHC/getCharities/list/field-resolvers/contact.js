@@ -4,6 +4,7 @@ const ES_FIELDS = [
   'contact.person',
   'contact.phone',
   'contact.postcode',
+  'contact.social',
 ]
 
 async function getList(

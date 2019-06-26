@@ -65,12 +65,18 @@ const typeDefs = `
     codes: GeoCodes
   }
 
+  type SocialMediaHandle {
+    platform: SocialPlatform
+    handle: String
+  }
+
   type ContactCHC {
     address: [String]
     email: String
     person: String @deprecated(reason: "The Charity Commission stopped sharing this information.")
     phone: String
     postcode: String
+    social: [SocialMediaHandle]
   }
 
   type PeopleCHC {
