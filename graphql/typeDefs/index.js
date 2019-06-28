@@ -28,7 +28,9 @@ const highLevelTypes = `
     """
     aggregate: AggregationTypesCHC
     """
-    Download of charities matching query
+    Returns a CSV containing all matches.
+    This method requires special permissions on your API Key.
+    Email \`support@charitybase.uk\` for more info.
     """
     download: DownloadCHC @apiKeyAuth(roles: ["download"])
   }
