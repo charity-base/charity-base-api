@@ -4,6 +4,7 @@ const customTypes = require('./custom')
 const inputTypes = require('./input')
 const listCharitiesTypes = require('./list')
 const aggregateCharitiesTypes = require('./aggregate')
+const downloadCharitiesTypes = require('./download')
 
 const highLevelTypes = `
   """
@@ -26,6 +27,10 @@ const highLevelTypes = `
     Aggregations of charities matching query
     """
     aggregate: AggregationTypesCHC
+    """
+    Download of charities matching query
+    """
+    download: DownloadCHC @apiKeyAuth(roles: ["download"])
   }
 
   type FilterCHC {
@@ -66,5 +71,6 @@ module.exports = [
   inputTypes,
   listCharitiesTypes,
   aggregateCharitiesTypes,
+  downloadCharitiesTypes,
   highLevelTypes,
 ]

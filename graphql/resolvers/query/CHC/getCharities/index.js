@@ -4,6 +4,7 @@ const getElasticQuery = require('./elastic-query')
 const countCharities = require('./count')
 const listCharities = require('./list')
 const aggregateCharities = require('./aggregate')
+const downloadCharities = require('./download')
 
 function combineQueries(searchParamsList, filters) {
   const baseParams = {
@@ -76,6 +77,12 @@ class FilteredCharitiesCHC {
   aggregate() {
     return aggregateCharities(
       this.search,
+    )
+  }
+  download() {
+    // Not merging queries here since we need to slice & scroll
+    return downloadCharities(
+      this.filters,
     )
   }
 }
