@@ -17,7 +17,8 @@
     "graphql": "^14.1.1",
     "graphql-input-number": "^0.0.10",
     "graphql-tools": "^4.0.4",
-    "http-aws-es": "^6.0.0"
+    "http-aws-es": "^6.0.0",
+    "json2csv": "^4.5.1"
   },
   "devDependencies": {
     "jest": "^20.0.4",
