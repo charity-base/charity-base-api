@@ -68,7 +68,7 @@ const downloadCharities = (filters) => {
 
     try {
       const head = await s3.headObject(s3Params).promise() // checks if file exists (throws error if not)
-      const url = s3.getSignedUrl('getObject', s3Params)
+      const url = s3.getSignedUrl('getObject', { ...s3Params, Expires: LINK_EXPIRES_SECONDS })
       log.info('File already uploaded')
       return resolve({
         url,
@@ -85,7 +85,7 @@ const downloadCharities = (filters) => {
       }).promise() // checks if upload in progress (throws error if not)
       log.info('File is already being uploaded.  Waiting for it to be ready.')
       const meta = await s3.waitFor('objectExists', s3Params).promise() // wait for upload to complete
-      const url = s3.getSignedUrl('getObject', s3Params)
+      const url = s3.getSignedUrl('getObject', { ...s3Params, Expires: LINK_EXPIRES_SECONDS })
       log.info('File finished uploading')
       return resolve({
         url,
@@ -155,7 +155,7 @@ const downloadCharities = (filters) => {
         Body: combinedStream.pipe(json2csv).pipe(gzip),
       }).promise()
       log.info('Successfully uploaded file')
-      const url = s3.getSignedUrl('getObject', s3Params)
+      const url = s3.getSignedUrl('getObject', { ...s3Params, Expires: LINK_EXPIRES_SECONDS })
       const head = await s3.headObject(s3Params).promise()
       resolve({
         url,
