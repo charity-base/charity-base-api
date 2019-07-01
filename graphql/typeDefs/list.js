@@ -115,6 +115,21 @@ const typeDefs = `
     otherCharities: [TrusteeCharityCHC]
   }
 
+  type LogoImage {
+    """
+    URL of a small logo suitable for rendering in a list of charity avatars. The exact dimensions may vary.  URL is valid for 24 hours after the request.
+    """
+    small: String
+    """
+    URL of a medium logo suitable for rendering in a charity profile page. The exact dimensions may vary.  URL is valid for 24 hours after the request.
+    """
+    medium: String
+  }
+
+  type Image {
+    logo: LogoImage
+  }
+
   """
   Charity registered in England & Wales
   """
@@ -155,6 +170,7 @@ const typeDefs = `
       """If \`true\` then all previous registrations are returned"""
       all: Boolean = false
     ): [RegistrationCHC]
+    image: Image
   }
 `
 
