@@ -103,6 +103,7 @@ const typeDefs = `
 
   input FinancesFilterInput {
     latestIncome: NumericRangeInput
+    latestSpending: NumericRangeInput
   }
 
   input RegistrationsFilterInput {
