@@ -9,7 +9,7 @@
     "indexes": {
       "chc": {
         "charities": "charity-base-v6-3-0-jun-2019",
-        "filters": "charity-base-v6-2-0-jun-2019-filters"
+        "filters": "charity-base-filters-ngram"
       },
       "requests": "charity-base-graphql-api-requests-v2"
     }
