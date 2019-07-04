@@ -49,7 +49,7 @@ const highLevelTypes = `
     """
     getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC
     getFilters(
-      "Prefix search term for finding filters. Only used if \`id\` is not defined."
+      "Search term for finding filters."
       search: String
       "List of IDs of desired filters."
       id: [ID]
