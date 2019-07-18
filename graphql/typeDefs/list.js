@@ -131,6 +131,29 @@ const typeDefs = `
   }
 
   """
+  Thematic category auto-generated using topic modelling.
+  **Warning:** this feature is experimental and the topics are dynamic.
+  Both their names and ids are likely to change each month.
+  """
+  type Topic {
+    """
+    Topic ID.
+    **Warning:** topics are dynamic so a particular ID might not exist in the future.
+    Use \`CHC.getFilters\` to search currently available topics.
+    """
+    id: ID
+    """
+    A space-separated list of words relevant to the topic.
+    """
+    name: String
+    """
+    A numerical value between \`0\` and \`1\`.
+    A high value corresponds to a high likelihood that the topic is relevant to the Charity.
+    """
+    score: Float
+  }
+
+  """
   Charity registered in England & Wales
   """
   type CharityCHC {
@@ -171,6 +194,7 @@ const typeDefs = `
       all: Boolean = false
     ): [RegistrationCHC]
     image: Image
+    topics: [Topic]
   }
 `
 
