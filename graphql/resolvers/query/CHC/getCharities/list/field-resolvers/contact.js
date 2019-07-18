@@ -15,7 +15,10 @@ async function getList(
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => x._source.contact)
+    return response.hits.hits.map(x => ({
+      social: [],
+      ...x._source.contact,
+    }))
   } catch(e) {
     throw e
   }
