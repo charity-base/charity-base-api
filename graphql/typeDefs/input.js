@@ -122,6 +122,7 @@ const typeDefs = `
     finances: FinancesFilterInput
     registrations: RegistrationsFilterInput
     trustees: ListFilterInput
+    topics: ListFilterInput
   }
 `
 
