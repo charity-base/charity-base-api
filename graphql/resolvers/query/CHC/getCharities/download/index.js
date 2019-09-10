@@ -1,4 +1,5 @@
-const zlib = require('zlib')
+const archiver = require('archiver')
+const stream = require('stream')
 const crypto = require('crypto')
 const { PassThrough } = require('stream')
 const { Transform } = require('json2csv')
@@ -11,6 +12,7 @@ const ElasticStream = require('./elastic-stream')
 const BUCKET = 'charity-base-uk-downloads'
 const FOLDER = 'downloads'
 const LINK_EXPIRES_SECONDS = 24*60*60
+const FILE_PREFIX = 'CharityBase'
 
 const NUM_SLICES = 5
 const CHUNK_SIZE = 10000
@@ -50,15 +52,15 @@ const searchParams = (query, sliceId) => ({
   size: CHUNK_SIZE,
 })
 
-const fileName = filters => {
+const fileName = (filters) => {
   const idString = JSON.stringify(filters) + SOURCE.join('')
   const hash = crypto.createHash('md5').update(idString).digest('hex')
-  return `CharityBase_${hash}.csv.gz`
+  return `${FILE_PREFIX}_${hash}`
 }
 
 const downloadCharities = (filters) => {
   return new Promise(async (resolve, reject) => {
-    const path = fileName(filters)
+    const path = `${fileName(filters)}.zip`
     log.info(`Attempting upload: "${path}"`)
 
     const s3Params = {
@@ -146,13 +148,26 @@ const downloadCharities = (filters) => {
       objectMode: true,
     })
 
-    const gzip = zlib.createGzip()
-
     try {
       log.info('Piping output to s3')
+
+      const zippedStream = new stream.Transform({
+        transform: (chunk, encoding, callback) => {
+          callback(null, chunk) // callback(<error>, <result>)
+        }
+      })
+      const zip = archiver('zip')
+      zip.pipe(zippedStream)
+      zip.append(
+        combinedStream.pipe(json2csv),
+        { name: `${fileName(filters)}.csv` } // name of the unzipped file
+      )
+      // todo: handle append and zippedStream warnings & errors
+      zip.finalize()
+
       const upload = await s3.upload({
         ...s3Params,
-        Body: combinedStream.pipe(json2csv).pipe(gzip),
+        Body: zippedStream,
       }).promise()
       log.info('Successfully uploaded file')
       const url = s3.getSignedUrl('getObject', { ...s3Params, Expires: LINK_EXPIRES_SECONDS })
