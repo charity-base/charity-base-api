@@ -29,20 +29,31 @@ async function getFilters({ filterType, id, search }) {
     from: 0,
   }
 
+  // warning: filterType only filters if values are in FILTER_TYPES
+  // e.g. filterType=['fake'] will return all filter types.
+
   searchParams.body.query = {
     function_score: {
       query: {
         bool: {
-          must: cleanSearch ? {
+          minimum_should_match : cleanSearch ? 1 : 0,
+          should: cleanSearch ? [{
             match: {
               suggest: {
                 query: cleanSearch,
                 operator: 'and',
                 fuzziness: 'AUTO',
-                // auto_generate_synonyms_phrase_query: false,
               },
             },
-          } : null,
+          }, {
+            // we include a non-fuzzy search to ensure that exact matches have a higher score
+            match: {
+              suggest: {
+                query: cleanSearch,
+                operator: 'and',
+              },
+            },
+          }] : [],
           filter: [
             {
               bool: {
