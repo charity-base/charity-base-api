@@ -1,7 +1,8 @@
 const getFiltersOnStringList = require('./getFiltersOnStringList')
+const AREA_ID_FIELD = 'areas.id'
 
 const getAreasFilters = areas => getFiltersOnStringList(
-  'areas.id',
+  AREA_ID_FIELD,
   areas,
 )
 
