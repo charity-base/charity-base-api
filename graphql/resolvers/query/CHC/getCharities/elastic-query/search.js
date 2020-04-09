@@ -1,3 +1,4 @@
+// TODO: UPDATE FOR NEW SCHEMA
 const getSearchFilters = search => {
   if (!search || !search.trim()) {
     return [{

@@ -1,3 +1,5 @@
+// TODO: ADD LATEST INCOME/SPENDING FIELDS IN TRANSFORM-DB SCRIPTS
+// TODO: UPDATE FOR NEW SCHEMA
 const getFiltersOnNumber = require('./getFiltersOnNumber')
 const LATEST_INCOME_FIELD = 'financial.latest.income'
 const LATEST_SPENDING_FIELD = 'financial.latest.spending'
