@@ -4,7 +4,7 @@ const getGrantsFilters = grants => {
   if (!grants) return []
 
   const grantFundersFilters = getFiltersOnStringList(
-    'grants.fundingOrganization.id',
+    'funding.funders.id',
     grants.funders,
   )
 
