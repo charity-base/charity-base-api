@@ -7,9 +7,9 @@
   * [Authorization](#authorization)
   * [Response](#response)
 * [Working on the API](#working-on-the-api)
-  * [Development](#development)
-    * [Dev Environment Variables](#dev-environment-variables)
-  * [Deployment](#development)
+  * [Installing](#installing)
+  * [Developing](#developing)
+  * [Deploying](#deploying)
     * [Prod Environment Variables](#prod-environment-variables)
 
 ## Using the API
@@ -59,26 +59,22 @@ Conveniently the `data` object has the same shape as the query sent in the reque
 
 ## Working on the API
 
-### Development
+### Installing
+
+```bash
+yarn # or npm install
+cp .env-example .env # then update variables in .env
+```
+Note: variables already in your environment (e.g. in `.bash_profile`) will override those in .env
+
+
+### Developing
 
 ```bash
 yarn dev
 ```
 
-#### Dev Environment Variables
-Expected environment variables are listed in `env` in [now.json](./now.json).  You may define them in a `.env` as follows:
-
-```bash
-# example .env file in charity-base-api
-CHARITY_BASE_ES_AWS_ACCESS_KEY_ID=example-key-id
-CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY=example-secret-key
-...
-```
-
-Note: these values will not override any environment variables already set e.g. in your `.bash_profile`.
-
-
-### Deployment
+### Deploying
 
 ```bash
 yarn deploy:production
