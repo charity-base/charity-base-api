@@ -1,7 +1,8 @@
 const { esClient } = require('../../../../../connection')
-const config = require('../../../../../config.json')
 
-const esIndex = config.elastic.indexes.chc.filters
+const {
+  CHARITY_BASE_ES_AWS_INDEX_CHC_FILTER,
+} = process.env
 
 const MAX_SUGGESTIONS = 12
 
@@ -22,7 +23,7 @@ async function getFilters({ filterType, id, search }) {
   if (!filterIds && !cleanSearch) return []
 
   const searchParams = {
-    index: [esIndex],
+    index: [CHARITY_BASE_ES_AWS_INDEX_CHC_FILTER],
     body: {},
     _source: ['id', 'value', 'label', 'filterType'],
     size: MAX_SUGGESTIONS,

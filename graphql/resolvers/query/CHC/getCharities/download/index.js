@@ -3,11 +3,14 @@ const stream = require('stream')
 const crypto = require('crypto')
 const { PassThrough } = require('stream')
 const { Transform } = require('json2csv')
-const config = require('../../../../../../config.json')
 const { log } = require('../../../../../../helpers')
 const { esClient, s3 } = require('../../../../../../connection')
 const getElasticQuery = require('../elastic-query')
 const ElasticStream = require('./elastic-stream')
+
+const {
+  CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY,
+} = process.env
 
 const BUCKET = 'charity-base-uk-downloads'
 const FOLDER = 'downloads'
@@ -39,7 +42,7 @@ const SOURCE = [
 ]
 
 const searchParams = (query, sliceId) => ({
-  index: [config.elastic.indexes.chc.charities],
+  index: [CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY],
   body: {
     query: query,
     slice: {

@@ -1,17 +1,20 @@
 const AWS = require('aws-sdk')
-const config = require('../../config')
 
-const accessKeyId = process.env.CHARITY_BASE_ES_AWS_ACCESS_KEY_ID
-const secretAccessKey = process.env.CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY
+const {
+  CHARITY_BASE_ES_AWS_ACCESS_KEY_ID,
+  CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY,
+  CHARITY_BASE_ES_AWS_REGION,
+} = process.env
 
 const awsConfig = new AWS.Config({
-  region: config.elastic.region,
+  region: CHARITY_BASE_ES_AWS_REGION,
 })
 
-if (accessKeyId && secretAccessKey) {
-  awsConfig.update({
-    credentials: new AWS.Credentials(accessKeyId, secretAccessKey)
-  })
-}
+awsConfig.update({
+  credentials: new AWS.Credentials(
+    CHARITY_BASE_ES_AWS_ACCESS_KEY_ID,
+    CHARITY_BASE_ES_AWS_SECRET_ACCESS_KEY
+  )
+})
 
 module.exports = awsConfig
