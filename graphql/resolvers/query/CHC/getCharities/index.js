@@ -1,4 +1,3 @@
-const config = require('../../../../../config.json')
 const { esClient } = require('../../../../../connection')
 const getElasticQuery = require('./elastic-query')
 const countCharities = require('./count')
@@ -6,9 +5,13 @@ const listCharities = require('./list')
 const aggregateCharities = require('./aggregate')
 const downloadCharities = require('./download')
 
+const {
+  CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY,
+} = process.env
+
 function combineQueries(searchParamsList, filters) {
   const baseParams = {
-    index: [config.elastic.indexes.chc.charities],
+    index: [CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY],
     body: {
       query: getElasticQuery(filters),
       aggs: {},
