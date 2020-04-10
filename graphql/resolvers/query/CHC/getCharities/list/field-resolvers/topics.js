@@ -11,12 +11,7 @@ async function getTopics(
     }
     const response = await searchSource(searchParams)
     return response.hits.hits.map(x => {
-      const topics = x._source.topics || []
-      return topics.map(({ id, content, score }) => ({
-        id,
-        score,
-        name: content,
-      }))
+      return x._source.topics || []
     })
   } catch(e) {
     throw e
