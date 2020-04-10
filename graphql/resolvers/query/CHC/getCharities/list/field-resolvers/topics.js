@@ -2,7 +2,7 @@ const ES_FIELDS = [
   'topics',
 ]
 
-async function getTopics(
+async function getList(
   searchSource,
 ) {
   try {
@@ -18,4 +18,4 @@ async function getTopics(
   }
 }
 
-module.exports = getTopics
+module.exports = getList
