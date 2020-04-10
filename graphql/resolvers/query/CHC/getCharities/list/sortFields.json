@@ -7,13 +7,13 @@
   ],
   "default": [
     "_score",
-    { "financial.latest.income": "desc" }
+    { "finances.latest.income": "desc" }
   ],
   "income_asc": [
-    { "financial.latest.income": "asc" }
+    { "finances.latest.income": "asc" }
   ],
   "income_desc": [
-    { "financial.latest.income": "desc" }
+    { "finances.latest.income": "desc" }
   ],
   "random": [
     {
@@ -21,9 +21,9 @@
         "type": "number",
         "script": {
           "lang": "painless",
-          "source": "(doc['ids.GB-CHC'].value + params.salt).hashCode()",
+          "source": "(doc['chcId'].value + params.salt).hashCode()",
           "params": {
-            "salt": "this_could_be_sent_as_a_gql_arg"
+            "salt": "this_could_be_sent_as_a_gql_arg_1"
           }
         },
         "order": "asc"
@@ -31,9 +31,9 @@
     }
   ],
   "spending_asc": [
-    { "financial.latest.spending": "asc" }
+    { "finances.latest.spending": "asc" }
   ],
   "spending_desc": [
-    { "financial.latest.spending": "desc" }
+    { "finances.latest.spending": "desc" }
   ]
 }
