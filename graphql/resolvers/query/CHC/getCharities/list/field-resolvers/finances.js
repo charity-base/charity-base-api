@@ -13,6 +13,9 @@ async function getList(
     const response = await searchSource(searchParams)
     return response.hits.hits.map(x => {
       const { finances } = x._source
+      if (!finances) {
+        return []
+      }
       if (all) {
         return finances.annual || []
       }
