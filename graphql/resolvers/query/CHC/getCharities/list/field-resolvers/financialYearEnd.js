@@ -1,5 +1,5 @@
 const ES_FIELDS = [
-  'fyend',
+  'financialYearEnd',
 ]
 
 async function getList(
@@ -10,7 +10,7 @@ async function getList(
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => x._source.fyend)
+    return response.hits.hits.map(x => x._source.financialYearEnd)
   } catch(e) {
     throw e
   }
