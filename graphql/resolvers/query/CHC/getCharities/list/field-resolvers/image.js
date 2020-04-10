@@ -17,11 +17,18 @@ async function getImage(
       if (!x._source.image || !x._source.image.logo) return null
       const image = {
         logo: Object.keys(x._source.image.logo).reduce((agg, size) => {
-          const { Bucket, Key } = x._source.image.logo[size]
-          if (!Bucket || !Key) return agg
+          const { bucket, path } = x._source.image.logo[size]
+          if (!bucket || !path) return agg
           return {
             ...agg,
-            [size]: s3.getSignedUrl('getObject', { Bucket, Key, Expires: LINK_EXPIRES_SECONDS })
+            [size]: s3.getSignedUrl(
+              'getObject',
+              {
+                Bucket: bucket,
+                Key: path,
+                Expires: LINK_EXPIRES_SECONDS
+              }
+            )
           }
         }, {})
       }
