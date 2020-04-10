@@ -1,4 +1,3 @@
-// TODO: UPDATE FOR NEW SCHEMA
 const getSearchFilters = search => {
   if (!search || !search.trim()) {
     return [{
@@ -9,17 +8,16 @@ const getSearchFilters = search => {
     simple_query_string : {
       query: `${search.trim()}`, //`${search.trim().split(" ").join("~1 + ")}~1`, // what about "quoted searches"?
       fields: [
-        "name^3",
-        "alternativeNames^3",
+        "names.name^3",
         "activities",
         "contact.email",
-        "trustees.names",
-        "areasOfOperation.name",
+        "trustees.name",
+        "areas.name",
         "causes.name",
         "beneficiaries.name",
         "operations.name",
-        "grants.description",
-        "grants.fundingOrganization.name",
+        "funding.grants.description",
+        "funding.funders.name",
       ],
     }
   }]
