@@ -1,15 +1,12 @@
-const AGG_NAME = 'finances_spending'
-const ES_FIELD = 'financial.latest.spending'
-
-async function aggSpending(search) {
+async function agg(search, fieldName) {
   const searchParams = {
     index: undefined, // this is set when queries combined in parent class
     body: {
       query: undefined, // this is set when queries combined in parent class
       aggs: {
-        [AGG_NAME]: {
+        agg1: {
           histogram: {
-            field: ES_FIELD,
+            field: fieldName,
             script: 'Math.log10(_value)',
             interval: 0.5,
             extended_bounds: {
@@ -18,9 +15,9 @@ async function aggSpending(search) {
             },
           },
           aggs: {
-            total_spending: {
+            total: {
               sum: {
-                field: ES_FIELD,
+                field: fieldName,
               },
             },
           },
@@ -32,11 +29,11 @@ async function aggSpending(search) {
 
   try {
     const response = await search(searchParams)
-    const buckets = response.aggregations[AGG_NAME].buckets.map(x => ({
+    const buckets = response.aggregations.agg1.buckets.map(x => ({
       key: `${x.key}`,
       name: `Min. £${Math.round(Math.pow(10, x.key))}`,
       count: x.doc_count,
-      sum: x.total_spending.value,
+      sum: x.total.value,
     }))
     return {
       buckets,
@@ -46,4 +43,4 @@ async function aggSpending(search) {
   }
 }
 
-module.exports = aggSpending
+module.exports = agg
