@@ -1,5 +1,5 @@
 const aggByTerm = require('./aggByTerm')
-const AGG_NAME = 'causes'
+const AGG_NAME = 'agg_cause'
 const ES_FIELD = 'causes.id'
 const NUM_VALUES = 17
 
