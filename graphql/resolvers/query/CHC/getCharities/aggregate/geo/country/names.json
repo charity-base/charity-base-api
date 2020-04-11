@@ -1,9 +1,11 @@
 {
-  "England": "E92000001",
-  "United Kingdom": "K02000001",
-  "Great Britain": "K03000001",
-  "England and Wales": "K04000001",
-  "Northern Ireland": "N92000002",
-  "Scotland": "S92000003",
-  "Wales": "W92000004"
+  "E92000001": "England",
+  "K02000001": "United Kingdom",
+  "K03000001": "Great Britain",
+  "K04000001": "England and Wales",
+  "N92000002": "Northern Ireland",
+  "S92000003": "Scotland",
+  "W92000004": "Wales",
+  "L93000001": "Channel Islands",
+  "M83000003": "Isle of Man"
 }
