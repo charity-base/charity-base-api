@@ -1,3 +1,4 @@
+// todo: allow getting name from another field (e.g. using another sub-agg)
 function aggByTerm(aggName, esField, numValues) {
   async function getAggBuckets(search) {
     const searchParams = {
