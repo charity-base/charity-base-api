@@ -24,7 +24,7 @@ function combineQueries(searchParamsList, filters) {
   const searchParams = searchParamsList.reduce((agg, x) => {
     agg.body.aggs = x.body && x.body.aggs ? ({
       ...agg.body.aggs,
-      ...x.body.aggs, // todo: spread aggs one layer down too (to allow merging geo aggs under same filter)
+      ...x.body.aggs, // todo: spread aggs one layer down too (to allow merging geo aggs under same geo filter)
     }) : agg.body.aggs
     agg.body.sort = agg.body.sort.length > 0 ? agg.body.sort : ((x.body && x.body.sort) || []) // only take the first non-trivial sort
     agg._source = x._source ? [...new Set([...agg._source, ...x._source])] : agg._source
