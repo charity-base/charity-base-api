@@ -1,9 +1,7 @@
 const geoRegionNames = require('./names')
-const AGG_NAME = 'geo_region'
-const AGG_NAME_NESTED = 'geo_region_nested'
-const GEO_COORDS_ES_FIELD = 'contact.geoCoords'
-const ES_FIELD = 'contact.geo.region'
-const NUM_VALUES = 9
+const ES_FIELD_GEO_POINT = 'postcodeGeoPoint'
+const ES_FIELD = 'postcodeGeo.codes.rgn'
+const NUM_VALUES = Object.keys(geoRegionNames).length
 
 async function aggGeoRegion(search, { top, left, bottom, right }) {
   const searchParams = {
@@ -11,14 +9,14 @@ async function aggGeoRegion(search, { top, left, bottom, right }) {
     body: {
       query: undefined, // this is set when queries combined in parent class
       aggs: {
-        [AGG_NAME]: {
+        agg1: {
           filter: {
             geo_bounding_box: {
-              [GEO_COORDS_ES_FIELD]: { top, left, bottom, right },
+              [ES_FIELD_GEO_POINT]: { top, left, bottom, right },
             },
           },
           aggs: {
-            [AGG_NAME_NESTED]: {
+            agg2: {
               terms: {
                 field: ES_FIELD,
                 size: NUM_VALUES,
@@ -32,10 +30,11 @@ async function aggGeoRegion(search, { top, left, bottom, right }) {
   }
   try {
     const response = await search(searchParams)
-    const buckets = response.aggregations[AGG_NAME][AGG_NAME_NESTED].buckets.map(x => ({
-      key: geoRegionNames[x.key] || x.key,
-      name: `${x.key}`,
+    const buckets = response.aggregations.agg1.agg2.buckets.map(x => ({
+      key: x.key,
+      name: geoRegionNames[x.key] || x.key,
       count: x.doc_count,
+      sum: null,
     }))
     return {
       buckets,
