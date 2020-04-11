@@ -134,11 +134,21 @@ const downloadCharities = (filters) => {
       })
     })
 
-    combinedStream.on('error', e => {
+    combinedStream.on('error', async e => {
       log.error(e)
+      // Delete file
+      try {
+        await s3.deleteObject(s3Params).promise()
+      } catch (delErr) {}
+      // Delete placeholder
+      try {
+        await s3.deleteObject({
+          Bucket: BUCKET,
+          Key: `${FOLDER}/attempt_${path}`,
+        }).promise()
+      } catch (delErr) {}
       reject(e)
-      // uploading code will still run :(
-      s3.deleteObject(s3Params).promise()
+      // will s3.upload still run?
     })
 
     const json2csv = new Transform({
@@ -181,6 +191,7 @@ const downloadCharities = (filters) => {
       })
     } catch (e) {
       log.error('Failed to upload file')
+      // todo: delete placeholder & file
       reject(e)
     }
 
