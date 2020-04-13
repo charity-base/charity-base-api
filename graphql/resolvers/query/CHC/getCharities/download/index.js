@@ -10,10 +10,10 @@ const ElasticStream = require('./elastic-stream')
 
 const {
   CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY,
+  CHARITY_BASE_S3_DOWNLOADS_BUCKET,
+  CHARITY_BASE_S3_DOWNLOADS_PATH,
 } = process.env
 
-const BUCKET = 'charity-base-uk-downloads'
-const FOLDER = 'downloads'
 const LINK_EXPIRES_SECONDS = 24*60*60
 const FILE_PREFIX = 'CharityBase'
 
@@ -67,8 +67,8 @@ const downloadCharities = (filters) => {
     log.info(`Attempting upload: "${path}"`)
 
     const s3Params = {
-      Bucket: BUCKET,
-      Key: `${FOLDER}/${path}`,
+      Bucket: CHARITY_BASE_S3_DOWNLOADS_BUCKET,
+      Key: `${CHARITY_BASE_S3_DOWNLOADS_PATH}/${path}`,
     }
 
     try {
@@ -85,8 +85,8 @@ const downloadCharities = (filters) => {
 
     try {
       await s3.headObject({
-        Bucket: BUCKET,
-        Key: `${FOLDER}/attempt_${path}`,
+        Bucket: CHARITY_BASE_S3_DOWNLOADS_BUCKET,
+        Key: `${CHARITY_BASE_S3_DOWNLOADS_PATH}/attempt_${path}`,
       }).promise() // checks if upload in progress (throws error if not)
       log.info('File is already being uploaded.  Waiting for it to be ready.')
       const meta = await s3.waitFor('objectExists', s3Params).promise() // wait for upload to complete
@@ -102,8 +102,8 @@ const downloadCharities = (filters) => {
 
     try {
       await s3.putObject({
-        Bucket: BUCKET,
-        Key: `${FOLDER}/attempt_${path}`,
+        Bucket: CHARITY_BASE_S3_DOWNLOADS_BUCKET,
+        Key: `${CHARITY_BASE_S3_DOWNLOADS_PATH}/attempt_${path}`,
         Body: '',
       }).promise() // let the world know we're uploading
       log.info('Successfully uploaded a placeholder file')
@@ -143,8 +143,8 @@ const downloadCharities = (filters) => {
       // Delete placeholder
       try {
         await s3.deleteObject({
-          Bucket: BUCKET,
-          Key: `${FOLDER}/attempt_${path}`,
+          Bucket: CHARITY_BASE_S3_DOWNLOADS_BUCKET,
+          Key: `${CHARITY_BASE_S3_DOWNLOADS_PATH}/attempt_${path}`,
         }).promise()
       } catch (delErr) {}
       reject(e)
@@ -198,8 +198,8 @@ const downloadCharities = (filters) => {
     try {
       log.info('Deleting placeholder')
       s3.deleteObject({
-        Bucket: BUCKET,
-        Key: `${FOLDER}/attempt_${path}`,
+        Bucket: CHARITY_BASE_S3_DOWNLOADS_BUCKET,
+        Key: `${CHARITY_BASE_S3_DOWNLOADS_PATH}/attempt_${path}`,
       }).promise()
     } catch(e) {
       log.error('Failed to delete placeholder')
