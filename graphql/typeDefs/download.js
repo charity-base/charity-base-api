@@ -1,9 +1,11 @@
 const typeDefs = `
   type DownloadCHC {
-    """URL of output file"""
-    url: String
+    """Name of output file"""
+    name: String
     """Content-Length of output file"""
     size: Int
+    """URL of output file"""
+    url: String
   }
 `
 
