@@ -14,9 +14,11 @@
     "CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY": "charity-base-v6-4-0-nov-2019",
     "CHARITY_BASE_ES_AWS_INDEX_CHC_FILTER": "charity-base-v6-4-0-nov-2019-filters",
     "CHARITY_BASE_ES_AWS_INDEX_REQUEST": "charity-base-graphql-api-requests-v2",
+    "CHARITY_BASE_S3_REGION": "eu-west-2",
     "CHARITY_BASE_S3_DOWNLOADS_ACCESS_KEY_ID": "@charity-base-s3-downloads-access-key-id",
     "CHARITY_BASE_S3_DOWNLOADS_SECRET_ACCESS_KEY": "@charity-base-s3-downloads-secret-access-key",
-    "CHARITY_BASE_S3_REGION": "eu-west-2",
+    "CHARITY_BASE_S3_DOWNLOADS_BUCKET": "charity-base-uk-downloads",
+    "CHARITY_BASE_S3_DOWNLOADS_PATH": "downloads-2020-02",
     "CHARITY_BASE_AUTH0_JWT_SECRET": "@charity-base-auth0-jwt-secret",
     "CHARITY_BASE_AUTH0_JWT_AUDIENCE": "https://charitybase.uk/api",
     "CHARITY_BASE_AUTH0_JWT_ISSUER": "https://charity-base.eu.auth0.com/"
