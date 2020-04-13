@@ -2,12 +2,12 @@ const archiver = require('archiver')
 const stream = require('stream')
 const crypto = require('crypto')
 const { PassThrough } = require('stream')
-const { Transform } = require('json2csv')
 const { log } = require('../../../../../../helpers')
 const { esClient, s3 } = require('../../../../../../connection')
 const getElasticQuery = require('../elastic-query')
 const ElasticStream = require('./elastic-stream')
 const SOURCE = require('./fields')
+const transformer = require('./transformer')
 
 const {
   CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY,
@@ -134,15 +134,6 @@ const downloadCharities = (filters) => {
       // will s3.upload still run?
     })
 
-    const json2csv = new Transform({
-      fields: SOURCE,
-      unwindBlank: true,
-    }, {
-      // highWaterMark: 16384,
-      encoding: 'utf-8',
-      objectMode: true,
-    })
-
     try {
       log.info('Piping output to s3')
 
@@ -154,7 +145,7 @@ const downloadCharities = (filters) => {
       const zip = archiver('zip')
       zip.pipe(zippedStream)
       zip.append(
-        combinedStream.pipe(json2csv),
+        combinedStream.pipe(transformer),
         { name: `${fileName(filters)}.csv` } // name of the unzipped file
       )
       // todo: handle append and zippedStream warnings & errors
