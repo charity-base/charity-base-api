@@ -7,6 +7,7 @@ const { log } = require('../../../../../../helpers')
 const { esClient, s3 } = require('../../../../../../connection')
 const getElasticQuery = require('../elastic-query')
 const ElasticStream = require('./elastic-stream')
+const SOURCE = require('./fields')
 
 const {
   CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY,
@@ -19,39 +20,7 @@ const FILE_PREFIX = 'CharityBase'
 
 const NUM_SLICES = 5
 const CHUNK_SIZE = 10000
-const SOURCE = [
-  'chcId',
-  'cohId',
-  'primaryName',
-  'website',
-  'numPeople.trustees',
-  'numPeople.employees',
-  'numPeople.volunteers',
-  'lastRegistrationDate',
-  'finances.latest.financialYear.end',
-  'finances.latest.income',
-  'finances.latest.spending',
-  'contact.email',
-  'contact.phone',
-  'contact.address',
-  'contact.postcode',
-  'social.facebook',
-  'social.twitter',
-  // 'contact.geo.parliamentary_constituency',
-  // 'contact.geo.codes.parliamentary_constituency',
-  'postcodeGeo.names.ccg',
-  // 'postcodeGeo.names.cty',
-  'postcodeGeo.names.eer',
-  'postcodeGeo.names.laua',
-  'postcodeGeo.names.lsoa11',
-  'postcodeGeo.names.msoa11',
-  'postcodeGeo.names.pcon',
-  'postcodeGeo.names.ru11ind',
-  'postcodeGeo.names.ttwa',
-  'postcodeGeo.names.ward',
-  'postcodeGeo.coordinates.lat',
-  'postcodeGeo.coordinates.lon',
-]
+
 
 const searchParams = (query, sliceId) => ({
   index: [CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY],
