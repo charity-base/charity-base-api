@@ -78,6 +78,7 @@ const downloadCharities = (filters) => {
       return resolve({
         url,
         size: head.ContentLength,
+        name: path,
       })
     } catch (e) {
       log.info('Could not find existing file matching that query')
@@ -95,6 +96,7 @@ const downloadCharities = (filters) => {
       return resolve({
         url,
         size: meta.ContentLength,
+        name: path,
       })
     } catch (e) {
       log.info('Could not find placeholder file matching that query.  We will do the upload ourselves.')
@@ -188,6 +190,7 @@ const downloadCharities = (filters) => {
       resolve({
         url,
         size: head.ContentLength,
+        name: path,
       })
     } catch (e) {
       log.error('Failed to upload file')
