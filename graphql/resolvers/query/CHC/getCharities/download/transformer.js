@@ -39,11 +39,12 @@ const transformer = () => {
     }
   })
 
-  const row = fields
+  // Write header:
+  const header = fields
     .map(({ label }) => `"${getEscapedString(label)}"`)
     .join(',')
 
-  jsonToCsv.push(row + '\n')
+  jsonToCsv.push(header + '\n')
 
   return jsonToCsv
 }
