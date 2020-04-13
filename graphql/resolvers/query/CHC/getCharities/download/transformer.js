@@ -24,18 +24,28 @@ const parser = doc => {
       const value = getValue(doc, field)
       return `"${getEscapedString(value)}"`
     })
-    .join(',') + '\n'
-  return row
+    .join(',')
+  return row + '\n'
 }
 
-const transformer = new Transform({
-  writableObjectMode: true,
-  transform(doc, encoding, callback) {
-    this.push(
-      doc ? parser(doc) : doc
-    )
-    callback()
-  }
-})
+const transformer = () => {
+  const jsonToCsv = new Transform({
+    writableObjectMode: true,
+    transform(doc, encoding, callback) {
+      this.push(
+        doc ? parser(doc) : doc
+      )
+      callback()
+    }
+  })
+
+  const row = fields
+    .map(({ label }) => `"${getEscapedString(label)}"`)
+    .join(',')
+
+  jsonToCsv.push(row + '\n')
+
+  return jsonToCsv
+}
 
 module.exports = transformer
