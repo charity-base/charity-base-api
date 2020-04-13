@@ -1,12 +1,11 @@
 const archiver = require('archiver')
-const stream = require('stream')
 const crypto = require('crypto')
-const { PassThrough } = require('stream')
+const { PassThrough, Transform } = require('stream')
 const { log } = require('../../../../../../helpers')
 const { esClient, s3 } = require('../../../../../../connection')
 const getElasticQuery = require('../elastic-query')
 const ElasticStream = require('./elastic-stream')
-const SOURCE = require('./fields')
+const fields = require('./fields')
 const transformer = require('./transformer')
 
 const {
@@ -20,7 +19,7 @@ const FILE_PREFIX = 'CharityBase'
 
 const NUM_SLICES = 5
 const CHUNK_SIZE = 10000
-
+const FIELD_DESCRIPTIONS_FILE_NAME = 'field-descriptions.json'
 
 const searchParams = (query, sliceId) => ({
   index: [CHARITY_BASE_ES_AWS_INDEX_CHC_CHARITY],
@@ -31,13 +30,13 @@ const searchParams = (query, sliceId) => ({
       max: NUM_SLICES,
     },
   },
-  _source: SOURCE,
+  _source: fields.map(x => x.field),
   scroll: '1m',
   size: CHUNK_SIZE,
 })
 
 const fileName = (filters) => {
-  const idString = JSON.stringify(filters) + SOURCE.join('')
+  const idString = JSON.stringify(filters) + fields.map(x => x.field).join('')
   const hash = crypto.createHash('md5').update(idString).digest('hex')
   return `${FILE_PREFIX}_${hash}`
 }
@@ -136,14 +135,22 @@ const downloadCharities = (filters) => {
 
     try {
       log.info('Piping output to s3')
-
-      const zippedStream = new stream.Transform({
+      transformer.push(fields.map(x => `"${x.label}"`).join(',') + '\n')
+      const zippedStream = new Transform({
         transform: (chunk, encoding, callback) => {
           callback(null, chunk) // callback(<error>, <result>)
         }
       })
       const zip = archiver('zip')
       zip.pipe(zippedStream)
+      zip.append(
+        JSON.stringify(fields.map((x, i) => ({
+          field: x.label,
+          column: i + 1,
+          description: x.description,
+        })), null, 2),
+        { name: FIELD_DESCRIPTIONS_FILE_NAME }
+      )
       zip.append(
         combinedStream.pipe(transformer),
         { name: `${fileName(filters)}.csv` } // name of the unzipped file

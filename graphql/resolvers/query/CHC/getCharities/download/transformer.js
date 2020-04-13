@@ -1,5 +1,5 @@
 const { Transform } = require('stream')
-const SOURCE = require('./fields')
+const fields = require('./fields')
 
 const getValue = (obj, key) => {
   const keys = key.split('.')
@@ -19,9 +19,9 @@ const getEscapedString = x => {
 }
 
 const parser = doc => {
-  const row = SOURCE
-    .map(key => {
-      const value = getValue(doc, key)
+  const row = fields
+    .map(({ field }) => {
+      const value = getValue(doc, field)
       return `"${getEscapedString(value)}"`
     })
     .join(',') + '\n'
