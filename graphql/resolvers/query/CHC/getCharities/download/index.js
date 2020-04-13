@@ -35,6 +35,8 @@ const SOURCE = [
   'contact.phone',
   'contact.address',
   'contact.postcode',
+  'social.facebook',
+  'social.twitter',
   // 'contact.geo.parliamentary_constituency',
   // 'contact.geo.codes.parliamentary_constituency',
   'postcodeGeo.names.ccg',
@@ -165,7 +167,6 @@ const downloadCharities = (filters) => {
 
     const json2csv = new Transform({
       fields: SOURCE,
-      unwind: ['contact.social'],
       unwindBlank: true,
     }, {
       // highWaterMark: 16384,
