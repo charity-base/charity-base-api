@@ -135,7 +135,8 @@ const downloadCharities = (filters) => {
 
     try {
       log.info('Piping output to s3')
-      transformer.push(fields.map(x => `"${x.label}"`).join(',') + '\n')
+      const jsonToCsv = transformer()
+
       const zippedStream = new Transform({
         transform: (chunk, encoding, callback) => {
           callback(null, chunk) // callback(<error>, <result>)
@@ -152,7 +153,7 @@ const downloadCharities = (filters) => {
         { name: FIELD_DESCRIPTIONS_FILE_NAME }
       )
       zip.append(
-        combinedStream.pipe(transformer),
+        combinedStream.pipe(jsonToCsv),
         { name: `${fileName(filters)}.csv` } // name of the unzipped file
       )
       // todo: handle append and zippedStream warnings & errors
