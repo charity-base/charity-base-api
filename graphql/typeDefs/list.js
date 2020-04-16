@@ -21,10 +21,16 @@ const typeDefs = `
     id: ID
     title: String
     description: String
-    fundingOrganization: [IdName]
+    funder: IdName
+    fundingOrganization: [IdName] @deprecated(reason: "Use \`funder\` instead.")
     amountAwarded: Float
     currency: String
     awardDate: Date
+  }
+
+  type Funding {
+    funders: [IdName]
+    grants: [Grant]
   }
 
   type GeoCodes {
@@ -179,7 +185,8 @@ const typeDefs = `
     causes: [IdName]
     beneficiaries: [IdName]
     operations: [IdName]
-    grants: [Grant]
+    funding: Funding
+    grants: [Grant] @deprecated(reason: "Use \`funding.grants\` instead.")
     geo: Geo
     contact: ContactCHC
     website: String

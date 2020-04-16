@@ -7,6 +7,7 @@ const fieldResolvers = {
   contact: require('./contact'),
   finances: require('./finances'),
   financialYearEnd: require('./financialYearEnd'),
+  funding: require('./funding'),
   geo: require('./geo'),
   governingDoc: require('./governingDoc'),
   grants: require('./grants'),

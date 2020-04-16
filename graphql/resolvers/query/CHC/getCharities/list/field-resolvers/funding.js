@@ -1,4 +1,6 @@
 const ES_FIELDS = [
+  'funding.funders.id',
+  'funding.funders.name',
   'funding.grants.id',
   'funding.grants.title',
   'funding.grants.description',
@@ -8,15 +10,17 @@ const ES_FIELDS = [
   'funding.grants.awardDate',
 ]
 
-const parse = grants => {
-  if (!grants) {
-    return []
-  }
-  return grants.map(x => ({
+const parse = ({ funders, grants }) => {
+  const fundersArr = funders ? funders : []
+  const grantsArr = grants ? grants.map(x => ({
     ...x,
     fundingOrganization: [x.fundingOrganization],
     funder: x.fundingOrganization,
-  }))
+  })) : []
+  return {
+    funders: fundersArr,
+    grants: grantsArr,
+  }
 }
 
 async function getList(
@@ -27,7 +31,12 @@ async function getList(
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => x._source.funding ? parse(x._source.funding.grants) : [])
+    return response.hits.hits.map(x => x._source.funding ? (
+      parse(x._source.funding)
+    ) : ({
+      funders: [],
+      grants: [],
+    }))
   } catch(e) {
     throw e
   }
