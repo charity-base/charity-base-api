@@ -3,6 +3,7 @@ const geohashBounds = require('./geohashBounds')
 const GEO_COUNTRY_FIELD = 'postcodeGeo.codes.ctry'
 const GEO_REGION_FIELD = 'postcodeGeo.codes.rgn'
 const GEO_COORDS_FIELD = 'postcodeGeoPoint'
+const GEO_LAUA_FIELD = 'postcodeGeo.codes.laua'
 
 const getGeoFilters = geo => {
   if (!geo) return []
@@ -53,6 +54,14 @@ const getGeoFilters = geo => {
     filters.push({
       term: {
         [GEO_COUNTRY_FIELD]: geo.country,
+      },
+    })
+  }
+
+  if (geo.laua) {
+    filters.push({
+      term: {
+        [GEO_LAUA_FIELD]: geo.laua,
       },
     })
   }
