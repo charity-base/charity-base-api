@@ -99,6 +99,7 @@ const typeDefs = `
     geohashes: [String]
     region: GeoRegion
     country: GeoCountry
+    laua: String
   }
 
   input FinancesFilterInput {
