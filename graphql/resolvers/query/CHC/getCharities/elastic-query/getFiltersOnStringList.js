@@ -39,7 +39,7 @@ const getFiltersOnStringList = (field, listFilterInput) => {
     })
   }
 
-  getFiltersOnListLength(field, length).map(f => filters.push(f))
+  filters.push(...getFiltersOnListLength(field, length))
 
   return filters
 }
