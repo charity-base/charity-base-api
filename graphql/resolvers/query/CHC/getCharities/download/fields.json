@@ -55,6 +55,11 @@
     "description": "Latest reported spending"
   },
   {
+    "field": "funding.numFunders",
+    "label": "Funders",
+    "description": "Number of unique funders (from grants published to the 360Giving data standard)"
+  },
+  {
     "field": "contact.email",
     "label": "Email",
     "description": "Email"
