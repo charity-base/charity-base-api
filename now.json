@@ -19,6 +19,7 @@
     "CHARITY_BASE_S3_DOWNLOADS_SECRET_ACCESS_KEY": "@charity-base-s3-downloads-secret-access-key",
     "CHARITY_BASE_S3_DOWNLOADS_BUCKET": "charity-base-uk-downloads",
     "CHARITY_BASE_S3_DOWNLOADS_PATH": "downloads-2020-04",
+    "CHARITY_BASE_CDN_DOMAIN": "dhfgcjbq1k6ro.cloudfront.net",
     "CHARITY_BASE_AUTH0_JWT_SECRET": "@charity-base-auth0-jwt-secret",
     "CHARITY_BASE_AUTH0_JWT_AUDIENCE": "https://charitybase.uk/api",
     "CHARITY_BASE_AUTH0_JWT_ISSUER": "https://charity-base.eu.auth0.com/"
