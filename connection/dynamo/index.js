@@ -1,4 +1,4 @@
-const AWS = require('aws-sdk')
+const AWS = require("aws-sdk")
 
 const {
   CHARITY_BASE_DYNAMO_ACCESS_KEY_ID,
@@ -13,7 +13,7 @@ const credentials = new AWS.Credentials(
 )
 
 const dynamodb = new AWS.DynamoDB.DocumentClient({
-  apiVersion: '2012-08-10',
+  apiVersion: "2012-08-10",
   credentials,
   params: {
     TableName: CHARITY_BASE_DYNAMO_TABLE_AUTH_KEYS,

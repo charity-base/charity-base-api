@@ -1,10 +1,10 @@
-const directiveTypes = require('./directive')
-const enumTypes = require('./enum')
-const customTypes = require('./custom')
-const inputTypes = require('./input')
-const listCharitiesTypes = require('./list')
-const aggregateCharitiesTypes = require('./aggregate')
-const downloadCharitiesTypes = require('./download')
+const directiveTypes = require("./directive")
+const enumTypes = require("./enum")
+const customTypes = require("./custom")
+const inputTypes = require("./input")
+const listCharitiesTypes = require("./list")
+const aggregateCharitiesTypes = require("./aggregate")
+const downloadCharitiesTypes = require("./download")
 
 const highLevelTypes = `
   """

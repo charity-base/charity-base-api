@@ -1,15 +1,15 @@
-const getIdFilters = require('./id')
-const getAreasFilters = require('./areas')
-const getGrantsFilters = require('./grants')
-const getCausesFilters = require('./causes')
-const getBeneficiariesFilters = require('./beneficiaries')
-const getOperationsFilters = require('./operations')
-const getGeoFilters = require('./geo')
-const getFinancesFilters = require('./finances')
-const getRegistrationsFilters = require('./registrations')
-const getSearchFilters = require('./search')
-const getTrusteesFilters = require('./trustees')
-const getTopicsFilters = require('./topics')
+const getIdFilters = require("./id")
+const getAreasFilters = require("./areas")
+const getGrantsFilters = require("./grants")
+const getCausesFilters = require("./causes")
+const getBeneficiariesFilters = require("./beneficiaries")
+const getOperationsFilters = require("./operations")
+const getGeoFilters = require("./geo")
+const getFinancesFilters = require("./finances")
+const getRegistrationsFilters = require("./registrations")
+const getSearchFilters = require("./search")
+const getTrusteesFilters = require("./trustees")
+const getTopicsFilters = require("./topics")
 
 const getElasticQuery = ({
   id,
@@ -25,9 +25,7 @@ const getElasticQuery = ({
   trustees,
   topics,
 }) => {
-  const must = [
-    ...getSearchFilters(search),
-  ]
+  const must = [...getSearchFilters(search)]
 
   const filter = [
     ...getIdFilters(id),
@@ -47,7 +45,7 @@ const getElasticQuery = ({
     bool: {
       must,
       filter,
-    }
+    },
   }
 }
 

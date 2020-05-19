@@ -1,4 +1,4 @@
-const PageLimit = require('./PageLimit')
+const PageLimit = require("./PageLimit")
 
 module.exports = {
   PageLimit,

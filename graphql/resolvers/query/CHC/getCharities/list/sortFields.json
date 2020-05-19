@@ -1,20 +1,9 @@
 {
-  "age_asc": [
-    { "lastRegistrationDate": "desc" }
-  ],
-  "age_desc": [
-    { "lastRegistrationDate": "asc" }
-  ],
-  "default": [
-    "_score",
-    { "finances.latest.income": "desc" }
-  ],
-  "income_asc": [
-    { "finances.latest.income": "asc" }
-  ],
-  "income_desc": [
-    { "finances.latest.income": "desc" }
-  ],
+  "age_asc": [{ "lastRegistrationDate": "desc" }],
+  "age_desc": [{ "lastRegistrationDate": "asc" }],
+  "default": ["_score", { "finances.latest.income": "desc" }],
+  "income_asc": [{ "finances.latest.income": "asc" }],
+  "income_desc": [{ "finances.latest.income": "desc" }],
   "random": [
     {
       "_script": {
@@ -30,10 +19,6 @@
       }
     }
   ],
-  "spending_asc": [
-    { "finances.latest.spending": "asc" }
-  ],
-  "spending_desc": [
-    { "finances.latest.spending": "desc" }
-  ]
+  "spending_asc": [{ "finances.latest.spending": "asc" }],
+  "spending_desc": [{ "finances.latest.spending": "desc" }]
 }

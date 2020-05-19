@@ -1,4 +1,4 @@
-const apiKeyAuth = require('./apiKeyAuth')
+const apiKeyAuth = require("./apiKeyAuth")
 
 const directiveResolvers = {
   apiKeyAuth,

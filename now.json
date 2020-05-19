@@ -23,11 +23,7 @@
     "CHARITY_BASE_AUTH0_JWT_AUDIENCE": "https://charitybase.uk/api",
     "CHARITY_BASE_AUTH0_JWT_ISSUER": "https://charity-base.eu.auth0.com/"
   },
-  "builds": [
-    { "src": "server.js", "use": "@now/node-server" }
-  ],
+  "builds": [{ "src": "server.js", "use": "@now/node-server" }],
   "regions": ["lhr"],
-  "routes": [
-    { "src": "/api/graphql", "dest": "/server.js" }
-  ]
+  "routes": [{ "src": "/api/graphql", "dest": "/server.js" }]
 }

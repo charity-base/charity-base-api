@@ -1,11 +1,11 @@
-const geohashBounds = require('./geohashBounds')
+const geohashBounds = require("./geohashBounds")
 
-const GEO_COUNTRY_FIELD = 'postcodeGeo.codes.ctry'
-const GEO_REGION_FIELD = 'postcodeGeo.codes.rgn'
-const GEO_COORDS_FIELD = 'postcodeGeoPoint'
-const GEO_LAUA_FIELD = 'postcodeGeo.codes.laua'
+const GEO_COUNTRY_FIELD = "postcodeGeo.codes.ctry"
+const GEO_REGION_FIELD = "postcodeGeo.codes.rgn"
+const GEO_COORDS_FIELD = "postcodeGeoPoint"
+const GEO_LAUA_FIELD = "postcodeGeo.codes.laua"
 
-const getGeoFilters = geo => {
+const getGeoFilters = (geo) => {
   if (!geo) return []
 
   const filters = []
@@ -21,12 +21,12 @@ const getGeoFilters = geo => {
   if (geo.geohashes) {
     filters.push({
       bool: {
-        should: geo.geohashes.map(geohash => ({
+        should: geo.geohashes.map((geohash) => ({
           geo_bounding_box: {
             [GEO_COORDS_FIELD]: geohashBounds(geohash),
           },
-        }))
-      }
+        })),
+      },
     })
   }
 
@@ -58,6 +58,7 @@ const getGeoFilters = geo => {
     })
   }
 
+  // should we make this an array to allow filtering by multiple?
   if (geo.laua) {
     filters.push({
       term: {

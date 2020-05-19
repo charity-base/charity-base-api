@@ -11,7 +11,7 @@ async function countCharities(search) {
   try {
     const response = await search(searchParams)
     return response.hits.total
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }
