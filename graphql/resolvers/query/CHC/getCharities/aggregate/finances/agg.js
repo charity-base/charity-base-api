@@ -8,7 +8,7 @@ const agg = (aggName, esField) => {
           [aggName]: {
             histogram: {
               field: esField,
-              script: 'Math.log10(_value)',
+              script: "Math.log10(_value)",
               interval: 0.5,
               extended_bounds: {
                 min: 0,
@@ -22,8 +22,8 @@ const agg = (aggName, esField) => {
                 },
               },
             },
-          }
-        }
+          },
+        },
       },
       size: 0,
     }
@@ -31,17 +31,17 @@ const agg = (aggName, esField) => {
     try {
       const response = await search(searchParams)
       const buckets = response.aggregations[aggName].buckets
-        .map(x => ({
+        .map((x) => ({
           key: `${x.key}`,
           name: `Min. £${Math.round(Math.pow(10, x.key))}`,
           count: x.doc_count,
           sum: x.total.value,
         }))
-        .filter(x => x.key !== 'NaN') // to deal with negative spending (bad data from CC)
+        .filter((x) => x.key !== "NaN") // to deal with negative spending (bad data from CC)
       return {
         buckets,
       }
-    } catch(e) {
+    } catch (e) {
       throw e
     }
   }

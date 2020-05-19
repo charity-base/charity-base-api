@@ -1,4 +1,4 @@
-const CHC = require('./CHC')
+const CHC = require("./CHC")
 
 module.exports = {
   CHC,

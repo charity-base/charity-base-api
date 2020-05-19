@@ -1,8 +1,8 @@
-const geoRegionNames = require('./names')
-const ES_FIELD_GEO_POINT = 'postcodeGeoPoint'
-const ES_FIELD = 'postcodeGeo.codes.rgn'
+const geoRegionNames = require("./names")
+const ES_FIELD_GEO_POINT = "postcodeGeoPoint"
+const ES_FIELD = "postcodeGeo.codes.rgn"
 const NUM_VALUES = Object.keys(geoRegionNames).length
-const AGG_NAME = 'agg_geo_region' // distinct from other agg names to allow combining agg queries
+const AGG_NAME = "agg_geo_region" // distinct from other agg names to allow combining agg queries
 
 async function aggGeoRegion(search, { top, left, bottom, right }) {
   const searchParams = {
@@ -21,17 +21,17 @@ async function aggGeoRegion(search, { top, left, bottom, right }) {
               terms: {
                 field: ES_FIELD,
                 size: NUM_VALUES,
-              }
-            }
+              },
+            },
           },
-        }
-      }
+        },
+      },
     },
     size: 0,
   }
   try {
     const response = await search(searchParams)
-    const buckets = response.aggregations[AGG_NAME].agg2.buckets.map(x => ({
+    const buckets = response.aggregations[AGG_NAME].agg2.buckets.map((x) => ({
       key: x.key,
       name: geoRegionNames[x.key] || x.key,
       count: x.doc_count,
@@ -40,7 +40,7 @@ async function aggGeoRegion(search, { top, left, bottom, right }) {
     return {
       buckets,
     }
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }

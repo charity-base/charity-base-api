@@ -1,5 +1,5 @@
-const { dynamoClient } = require('../../connection')
-const { authHeaders, hasAll } = require('./helpers')
+const { dynamoClient } = require("../../connection")
+const { authHeaders, hasAll } = require("./helpers")
 
 async function apiKeyAuth(next, source, args, req) {
   const expectedRoles = args.roles
@@ -7,13 +7,15 @@ async function apiKeyAuth(next, source, args, req) {
   if (req.apiKey) {
     const roles = req.apiKey.roles || []
     if (!hasAll(expectedRoles, roles)) {
-      throw `You are not authorized. Expected roles: "${expectedRoles.join(', ')}"`
+      throw `You are not authorized. Expected roles: "${expectedRoles.join(
+        ", "
+      )}"`
     }
     return next()
   }
 
   if (!req.headers || !req.headers.authorization) {
-    throw 'No authorization header sent'
+    throw "No authorization header sent"
   }
 
   const { apikey } = authHeaders(req.headers.authorization)
@@ -26,21 +28,23 @@ async function apiKeyAuth(next, source, args, req) {
     // It would be cleaner to hit the /auth/graphql api here to validate apikey but for performance we query dynamodb directly instead.
     const params = {
       Key: {
-        id: apikey
-      }
+        id: apikey,
+      },
     }
     const data = await dynamoClient.get(params).promise()
     if (!data.Item) {
       throw new Error()
     }
     req.apiKey = data.Item
-  } catch(e) {
+  } catch (e) {
     throw `The provided API key is not valid: "${apikey}"`
   }
 
   const roles = req.apiKey.roles || []
   if (!hasAll(expectedRoles, roles)) {
-    throw `You are not authorized. Expected roles: "${expectedRoles.join(', ')}"`
+    throw `You are not authorized. Expected roles: "${expectedRoles.join(
+      ", "
+    )}"`
   }
 
   return next()

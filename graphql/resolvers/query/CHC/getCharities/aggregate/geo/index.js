@@ -1,6 +1,6 @@
-const country = require('./country')
-const geohash = require('./geohash')
-const region = require('./region')
+const country = require("./country")
+const geohash = require("./geohash")
+const region = require("./region")
 
 function aggGeo(search, args) {
   return {

@@ -1,16 +1,16 @@
 # CharityBase GraphQL API
 
-* [Using the API](#using-the-api)
-  * [Playground](#playground)
-  * [Endpoint](#endpoint)
-  * [Versioning](#versioning)
-  * [Authorization](#authorization)
-  * [Response](#response)
-* [Working on the API](#working-on-the-api)
-  * [Installing](#installing)
-  * [Developing](#developing)
-  * [Deploying](#deploying)
-    * [Prod Environment Variables](#prod-environment-variables)
+- [Using the API](#using-the-api)
+  - [Playground](#playground)
+  - [Endpoint](#endpoint)
+  - [Versioning](#versioning)
+  - [Authorization](#authorization)
+  - [Response](#response)
+- [Working on the API](#working-on-the-api)
+  - [Installing](#installing)
+  - [Developing](#developing)
+  - [Deploying](#deploying)
+    - [Prod Environment Variables](#prod-environment-variables)
 
 ## Using the API
 
@@ -40,7 +40,7 @@ Whether using `GET` or `POST`, send your API key in an Authorization header like
 "Authorization": "Apikey 9447fa04-c15b-40e6-92b6-30307deeb5d1"
 ```
 
-Replace the above key with your own (available from the [API Portal](https://charitybase.uk/api-portal)) and be sure to keep the `Apikey ` prefix as above.
+Replace the above key with your own (available from the [API Portal](https://charitybase.uk/api-portal)) and be sure to keep the `Apikey` prefix as above.
 
 ### Response
 
@@ -65,8 +65,8 @@ Conveniently the `data` object has the same shape as the query sent in the reque
 yarn # or npm install
 cp .env-example .env # then update variables in .env
 ```
-Note: variables already in your environment (e.g. in `.bash_profile`) will override those in .env
 
+Note: variables already in your environment (e.g. in `.bash_profile`) will override those in .env
 
 ### Developing
 
@@ -84,7 +84,7 @@ Note: this requires [Now](https://zeit.co/now) which can be installed globally w
 
 #### Prod Environment Variables
 
-To ensure our sensitive environment variables are only accessible by the API code, we store them as [Now secrets](https://zeit.co/docs/v2/deployments/environment-variables-and-secrets/).  This is achieved on the command line:
+To ensure our sensitive environment variables are only accessible by the API code, we store them as [Now secrets](https://zeit.co/docs/v2/deployments/environment-variables-and-secrets/). This is achieved on the command line:
 
 ```bash
 now secret add charity-base-es-aws-access-key-id example-key-id
@@ -92,4 +92,4 @@ now secret add charity-base-es-aws-secret-access-key example-secret-key
 ...
 ```
 
-The environment variable names are mapped to the secret names in `env` in [now.json](./now.json).  Note the `@` prefixing each secret name.
+The environment variable names are mapped to the secret names in `env` in [now.json](./now.json). Note the `@` prefixing each secret name.

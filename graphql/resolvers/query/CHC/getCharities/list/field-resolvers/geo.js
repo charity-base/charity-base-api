@@ -1,6 +1,4 @@
-const ES_FIELDS = [
-  'postcodeGeo',
-]
+const ES_FIELDS = ["postcodeGeo"]
 
 const nullGeo = {
   postcode: null,
@@ -35,10 +33,10 @@ const nullGeo = {
     ced: null,
     ccg: null,
     nuts: null,
-  }
+  },
 }
 
-const parse = postcodeGeo => {
+const parse = (postcodeGeo) => {
   if (!postcodeGeo) {
     return nullGeo
   }
@@ -76,22 +74,20 @@ const parse = postcodeGeo => {
       ced: codes.ced,
       ccg: codes.ccg,
       nuts: codes.nuts, // used to be like "UKI32" (from postcodes.io), now like "E05000644" (from postcode-gql)
-    }
+    },
   }
 }
 
-async function getList(
-  searchSource,
-) {
+async function getList(searchSource) {
   try {
     const searchParams = {
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => {
+    return response.hits.hits.map((x) => {
       return parse(x._source.postcodeGeo)
     })
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }

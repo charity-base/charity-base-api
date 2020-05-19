@@ -5,22 +5,17 @@ const getFiltersOnListLength = (field, numericRangeInput) => {
 
   const filters = []
 
-  const {
-    gte,
-    gt,
-    lte,
-    lt,
-  } = numericRangeInput
+  const { gte, gt, lte, lt } = numericRangeInput
 
   if (!isNaN(lte)) {
     filters.push({
       script: {
         script: {
           source: `doc['${field}'].values.length <= params.value`,
-          lang: 'painless',
+          lang: "painless",
           params: { value: lte },
-        }
-      }
+        },
+      },
     })
   }
 
@@ -29,10 +24,10 @@ const getFiltersOnListLength = (field, numericRangeInput) => {
       script: {
         script: {
           source: `doc['${field}'].values.length < params.value`,
-          lang: 'painless',
+          lang: "painless",
           params: { value: lt },
-        }
-      }
+        },
+      },
     })
   }
 
@@ -41,10 +36,10 @@ const getFiltersOnListLength = (field, numericRangeInput) => {
       script: {
         script: {
           source: `doc['${field}'].values.length >= params.value`,
-          lang: 'painless',
+          lang: "painless",
           params: { value: gte },
-        }
-      }
+        },
+      },
     })
   }
 
@@ -53,10 +48,10 @@ const getFiltersOnListLength = (field, numericRangeInput) => {
       script: {
         script: {
           source: `doc['${field}'].values.length > params.value`,
-          lang: 'painless',
+          lang: "painless",
           params: { value: gt },
-        }
-      }
+        },
+      },
     })
   }
 

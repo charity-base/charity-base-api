@@ -1,6 +1,6 @@
-const { Readable } = require('stream')
+const { Readable } = require("stream")
 
-const defaultParser = x => x._source
+const defaultParser = (x) => x._source
 
 class ElasticStream extends Readable {
   constructor(opt) {
@@ -16,7 +16,9 @@ class ElasticStream extends Readable {
   async _read() {
     if (!this._startedReading) {
       this._responseQueue.push(
-        await this._client.search(this._searchParams).catch(e => this.emit('error', e))
+        await this._client
+          .search(this._searchParams)
+          .catch((e) => this.emit("error", e))
       )
     }
     this._startedReading = true
@@ -24,7 +26,7 @@ class ElasticStream extends Readable {
       try {
         const response = this._responseQueue.shift()
         this._count += response.hits.hits.length
-        response.hits.hits.forEach(x => this.push(this._parser(x)))
+        response.hits.hits.forEach((x) => this.push(this._parser(x)))
         if (response.hits.total === this._count) {
           this.push(null)
           break
@@ -35,9 +37,8 @@ class ElasticStream extends Readable {
             scroll: this._searchParams.scroll,
           })
         )
-      }
-      catch(e) {
-        this.emit('error', e)
+      } catch (e) {
+        this.emit("error", e)
       }
     }
   }

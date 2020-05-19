@@ -1,8 +1,8 @@
-const getFiltersOnNumber = require('./getFiltersOnNumber')
-const LATEST_INCOME_FIELD = 'finances.latest.income'
-const LATEST_SPENDING_FIELD = 'finances.latest.spending'
+const getFiltersOnNumber = require("./getFiltersOnNumber")
+const LATEST_INCOME_FIELD = "finances.latest.income"
+const LATEST_SPENDING_FIELD = "finances.latest.spending"
 
-const getFinancesFilters = finances => {
+const getFinancesFilters = (finances) => {
   if (!finances) return []
 
   const filters = []

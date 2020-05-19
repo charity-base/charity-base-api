@@ -1,19 +1,15 @@
-const ES_FIELDS = [
-  'topics',
-]
+const ES_FIELDS = ["topics"]
 
-async function getList(
-  searchSource,
-) {
+async function getList(searchSource) {
   try {
     const searchParams = {
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => {
+    return response.hits.hits.map((x) => {
       return x._source.topics || []
     })
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }
