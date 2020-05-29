@@ -111,6 +111,11 @@ const typeDefs = `
     latestRegistrationDate: DateRangeInput
   }
 
+  input ImageFilterInput {
+    smallLogoExists: Boolean
+    mediumLogoExists: Boolean
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -124,6 +129,7 @@ const typeDefs = `
     registrations: RegistrationsFilterInput
     trustees: ListFilterInput
     topics: ListFilterInput
+    image: ImageFilterInput
   }
 `
 

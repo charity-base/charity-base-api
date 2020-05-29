@@ -10,6 +10,7 @@ const getRegistrationsFilters = require("./registrations")
 const getSearchFilters = require("./search")
 const getTrusteesFilters = require("./trustees")
 const getTopicsFilters = require("./topics")
+const getImageFilters = require("./image")
 
 const getElasticQuery = ({
   id,
@@ -24,6 +25,7 @@ const getElasticQuery = ({
   registrations,
   trustees,
   topics,
+  image,
 }) => {
   const must = [...getSearchFilters(search)]
 
@@ -39,6 +41,7 @@ const getElasticQuery = ({
     ...getRegistrationsFilters(registrations),
     ...getTrusteesFilters(trustees),
     ...getTopicsFilters(topics),
+    ...getImageFilters(image),
   ]
 
   return {
