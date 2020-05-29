@@ -116,6 +116,11 @@ const typeDefs = `
     mediumLogoExists: Boolean
   }
 
+  input SocialFilterInput {
+    twitterExists: Boolean
+    facebookExists: Boolean
+  }
+
   input FilterCHCInput {
     id: [ID]
     search: String
@@ -130,6 +135,7 @@ const typeDefs = `
     trustees: ListFilterInput
     topics: ListFilterInput
     image: ImageFilterInput
+    social: SocialFilterInput
   }
 `
 
