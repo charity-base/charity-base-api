@@ -11,6 +11,7 @@ const getSearchFilters = require("./search")
 const getTrusteesFilters = require("./trustees")
 const getTopicsFilters = require("./topics")
 const getImageFilters = require("./image")
+const getSocialFilters = require("./social")
 
 const getElasticQuery = ({
   id,
@@ -26,6 +27,7 @@ const getElasticQuery = ({
   trustees,
   topics,
   image,
+  social,
 }) => {
   const must = [...getSearchFilters(search)]
 
@@ -42,6 +44,7 @@ const getElasticQuery = ({
     ...getTrusteesFilters(trustees),
     ...getTopicsFilters(topics),
     ...getImageFilters(image),
+    ...getSocialFilters(social),
   ]
 
   return {
