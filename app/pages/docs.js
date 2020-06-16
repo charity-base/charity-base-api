@@ -15,6 +15,7 @@ const ClipboardCopy = ({ text }) => {
   return (
     <div className="clipboard-copy-container">
       <button
+        aria-label="Copy to Clipboard"
         onClick={() => {
           try {
             copy(text)
@@ -67,6 +68,7 @@ export default function Home({ html, toc }) {
       </Head>
 
       <aside>
+        <h1>Documentation</h1>
         <ul>
           {toc.map(({ id, name, children }) => (
             <li key={`contents-${id}`}>
@@ -92,26 +94,53 @@ export default function Home({ html, toc }) {
       <main>
         <div
           ref={docsNode}
-          className="docs-content docs"
+          className="docs"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </main>
 
       <style jsx global>{`
         .container {
-          max-width: 800px;
+          max-width: 1000px;
           margin: 0 auto;
           padding: 1rem;
+          display: flex;
+          flex-wrap: nowrap;
+        }
+
+        .container > aside {
+          position: sticky;
+          top: calc(2rem + 81px);
+          margin-right: 1rem;
+          height: calc(100vh - 2rem - 81px - 50px);
+          padding-bottom: 0;
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-flex-direction: column;
+          -ms-flex-direction: column;
+          flex-direction: column;
+          z-index: 1;
+          flex-shrink: 0;
+        }
+
+        .container > main {
+          min-width: 0px;
+        }
+
+        pre > code {
         }
 
         .clipboard-copy-container {
           position: absolute;
           top: 0.5rem;
           right: 0.5rem;
+          display: flex;
+          flex-direction: row-reverse;
         }
 
         .clipboard-copy-container > div {
-          display: inline-block;
           margin: 0 1em;
           padding: 0.4em 0.8em;
           background-color: rgba(0, 0, 0, 0.75);
@@ -597,16 +626,18 @@ export default function Home({ html, toc }) {
 
         /* Code */
         .docs pre {
+          overflow: hidden;
           background: #1d1f21;
           color: #f8f8f2;
           white-space: pre;
-          overflow: auto;
-          padding: 1.5rem;
           margin: 1.5rem 0;
           border-radius: 3px;
-          -webkit-overflow-scrolling: touch;
         }
         .docs pre > code {
+          padding: 1.5rem;
+          display: block;
+          overflow: auto;
+          -webkit-overflow-scrolling: touch;
           font-size: 14px;
           line-height: 20px;
         }
