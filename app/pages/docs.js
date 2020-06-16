@@ -32,8 +32,12 @@ export default function Home({ html, toc }) {
   return (
     <div className="container">
       <Head>
-        <title>CharityBase App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>CharityBase Docs</title>
+        <meta property="og:title" content="CharityBase Docs" key="title" />
+        <meta
+          name="Description"
+          content="CharityBase GraphQL API Documentation"
+        />
       </Head>
 
       <aside>
