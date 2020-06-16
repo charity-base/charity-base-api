@@ -9,38 +9,7 @@ import remarkToRehype from "remark-rehype"
 import html from "rehype-stringify"
 import prism from "@mapbox/rehype-prism"
 import slug from "rehype-slug"
-import copy from "copy-to-clipboard"
-
-const ClipboardCopy = ({ text }) => {
-  return (
-    <div className="clipboard-copy-container">
-      <button
-        aria-label="Copy to Clipboard"
-        onClick={() => {
-          try {
-            copy(text)
-          } catch (e) {
-            console.log("Error copying text")
-          }
-        }}
-      >
-        <svg
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="2"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          width="24"
-          height="24"
-        >
-          <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
-        </svg>
-      </button>
-      <div className="hidden">copied</div>
-    </div>
-  )
-}
+import ClipboardCopy from "components/ClipboardCopy"
 
 export default function Home({ html, toc }) {
   const docsNode = useRef(null)
@@ -130,37 +99,6 @@ export default function Home({ html, toc }) {
         }
 
         pre > code {
-        }
-
-        .clipboard-copy-container {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          display: flex;
-          flex-direction: row-reverse;
-        }
-
-        .clipboard-copy-container > div {
-          margin: 0 1em;
-          padding: 0.4em 0.8em;
-          background-color: rgba(0, 0, 0, 0.75);
-        }
-
-        .clipboard-copy-container > button {
-          cursor: pointer;
-          background-color: rgba(0, 0, 0, 0.75);
-          color: white;
-          padding: 0.5rem;
-          border-style: none;
-          border-radius: 9999px;
-        }
-
-        .hidden {
-          opacity: 0;
-        }
-
-        .clipboard-copy-container > button:focus + div {
-          opacity: 1;
         }
 
         code {
