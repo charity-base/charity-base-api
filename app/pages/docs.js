@@ -26,9 +26,9 @@ const ClipboardCopy = ({ text }) => {
       >
         <svg
           fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
           viewBox="0 0 24 24"
           stroke="currentColor"
           width="24"
@@ -69,16 +69,16 @@ export default function Home({ html, toc }) {
 
       <aside>
         <h1>Documentation</h1>
-        <ul>
+        <ul className="list-disc list-outside space-y-2">
           {toc.map(({ id, name, children }) => (
-            <li key={`contents-${id}`}>
+            <li key={`contents-${id}`} className="text-lg">
               <Link href={`#${id}`}>
                 <a>{name}</a>
               </Link>
               {children ? (
-                <ul>
+                <ul className="list-disc list-inside space-y-1 pt-1">
                   {children.map(({ id, name }) => (
-                    <li key={`contents-${id}`}>
+                    <li key={`contents-${id}`} className="text-base">
                       <Link href={`#${id}`}>
                         <a>{name}</a>
                       </Link>
