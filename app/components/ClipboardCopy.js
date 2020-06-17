@@ -10,7 +10,7 @@ export default function ({ text }) {
       setOpen(true)
       const id = setTimeout(() => {
         setOpen(false)
-      }, 1000)
+      }, 1200)
 
       return () => clearTimeout(id)
     }
@@ -19,14 +19,14 @@ export default function ({ text }) {
   return (
     <div className="absolute top-0 right-0 m-2 flex items-center space-x-2">
       <div
-        className={`bg-black bg-opacity-75 py-1 px-2 rounded transition-opacity duration-300 ${
-          open ? "opacity-100" : "opacity-0"
+        className={`bg-black bg-opacity-75 text-white py-1 px-2 rounded transform origin-right transition duration-300 ${
+          open ? "opacity-100 scale-100" : "opacity-0 scale-0"
         }`}
       >
         copied
       </div>
       <button
-        className="bg-black bg-opacity-75 text-white p-3 rounded-full"
+        className="bg-black bg-opacity-75 text-gray-300 hover:text-white focus:text-white focus:outline-none border border-gray-800 p-3 rounded-full"
         aria-label="Copy to Clipboard"
         onClick={() => {
           try {
