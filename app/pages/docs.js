@@ -81,6 +81,14 @@ export default function Home({ html, toc }) {
           flex-wrap: nowrap;
         }
 
+        .docs > [id]::before {
+          content: "";
+          display: block;
+          height: 100px;
+          margin-top: -100px;
+          visibility: hidden;
+        }
+
         .container > aside {
           position: sticky;
           top: calc(2rem + 81px);
