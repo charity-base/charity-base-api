@@ -1,5 +1,6 @@
 import { Fragment } from "react"
 import Head from "next/head"
+import AppBar from "components/AppBar"
 import "index.css"
 
 export default function MyApp({ Component, pageProps }) {
@@ -12,6 +13,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <AppBar />
       <Component {...pageProps} />
     </Fragment>
   )
