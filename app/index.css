@@ -1,6 +1,9 @@
 @tailwind base;
+
 @import "./custom-base.css";
 
 @tailwind components;
 
 @tailwind utilities;
+
+@import "./custom-graphiql.css";

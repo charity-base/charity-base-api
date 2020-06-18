@@ -28,6 +28,7 @@ export default function ({ text }) {
       <button
         className="bg-black bg-opacity-75 text-gray-300 hover:text-white focus:text-white focus:outline-none border border-gray-800 p-3 rounded-full"
         aria-label="Copy to Clipboard"
+        title="Copy to Clipboard"
         onClick={() => {
           try {
             copy(text)
