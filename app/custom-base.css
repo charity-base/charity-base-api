@@ -11,6 +11,13 @@ body {
   color: #fff;
 }
 
+.docs a {
+  @apply text-gray-600 font-semibold;
+}
+.docs a:hover {
+  @apply text-black;
+}
+
 .docs p {
   @apply leading-7;
 }
