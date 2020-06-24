@@ -30,7 +30,7 @@ export default function Home({ html, toc }) {
   }, [html])
 
   return (
-    <div className="max-w-5xl mx-auto flex">
+    <div className="max-w-5xl mx-auto flex px-2 sm:px-4 md:px-8">
       <Head>
         <title>CharityBase Docs</title>
         <meta property="og:title" content="CharityBase Docs" key="title" />
@@ -45,19 +45,16 @@ export default function Home({ html, toc }) {
         <ul className="space-y-3">
           {toc.map(({ id, name, children }) => (
             <li key={`contents-${id}`} className="text-lg">
-              <a className="text-gray-700 hover:text-black" href={`#${id}`}>
-                {name}
-              </a>
+              <Link href={`#${id}`}>
+                <a className="text-gray-700 hover:text-black">{name}</a>
+              </Link>
               {children ? (
                 <ul className="space-y-2 pl-3 pt-2">
                   {children.map(({ id, name }) => (
                     <li key={`contents-${id}`} className="text-base">
-                      <a
-                        className="text-gray-700 hover:text-black"
-                        href={`#${id}`}
-                      >
-                        {name}
-                      </a>
+                      <Link href={`#${id}`}>
+                        <a className="text-gray-700 hover:text-black">{name}</a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
