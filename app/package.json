@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "deploy:preview": "now --name charity-base-mono",
     "deploy:production": "now --name charity-base-mono --prod"
   },
   "dependencies": {
