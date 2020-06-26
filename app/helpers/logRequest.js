@@ -68,6 +68,110 @@ const apiRequestMapping = {
 }
 
 async function createIndexIfNotExists(index) {
+  // const res = await esClient.indices.get({
+  //   index,
+  //   // fielddata_fields: ['creation.date.string']
+  // })
+  // log.info(res)
+  // const res = await esClient.search({
+  //   index,
+  //   // body: {
+  //   //   query: { match_all: {} },
+  //   //   size: 10,
+  //   // }
+  //   body: {
+  //     aggs: {
+  //       api_key: {
+  //         terms: {
+  //           field: 'apiKey.id',
+  //           size: 50,
+  //         }
+  //       }
+  //     }
+  //   }
+  // })
+  // log.info(res.hits.hits.map(x => x._source).map(({ queryTime, apiKey, ip, method, operationName, statusCode, bytesSent }) => (
+  //   { queryTime, apiKey, ip, method, operationName, statusCode, bytesSent }
+  // )))
+  // log.info(res.aggregations.api_key)
+  // const res = await esClient.search({
+  //   index: 'charity-base-v300-feb-2019',
+  //   body: {
+  //     aggs: {
+  //       // api_key: {
+  //       //   terms: {
+  //       //     field: 'apiKey.id',
+  //       //     size: 20,
+  //       //   }
+  //       // },
+  //       common_name_words : {
+  //         terms : { field : "alternativeNames", size: 3000 } 
+  //       }
+  //     }
+  //   }
+  // })
+  // const csv = res.aggregations.common_name_words.buckets.reduce((agg, x) => (`${agg}\n${x.key},${x.doc_count}`), '')
+  // fs.writeFile('./common_words.csv', csv, err => {
+  //   console.log(err || 'successfully wrote csv')
+  // })
+
+  // const res = await esClient.search({
+  //   index: 'charity-base-v300-feb-2019',
+  //   body: {
+  //     query: {
+  //       simple_query_string: {
+  //         query: 'association branch'
+  //       }
+  //     },
+  //     "aggregations" : {
+  //         "my_sample" : {
+  //             "sampler" : {
+  //                 "shard_size" : 500,
+  //             },
+  //             "aggregations": {
+  //                 "keywords" : {
+  //                     "significant_text" : { "field" : "alternativeNames", size: 100 }
+  //                 }
+  //             }
+  //         }
+  //     }
+  //   }
+  // })
+  // log.info(res.aggregations.my_sample.keywords.buckets.reduce((agg, x) => (`${agg}\n${x.key},${x.doc_count}`), ''))
+
+  // const res = await esClient.search({
+  //   index: 'charity-base-v300-feb-2019',
+  //   body: {
+  //     query: {
+  //       simple_query_string: {
+  //         query: 'Oxfam'
+  //       }
+  //     }
+  //   }
+  // })
+  // log.info(res.hits.hits[0])
+
+  // const res = await esClient.indices.getMapping({
+  //   index: 'charity-base-v300-feb-2019',
+  //   // type: [],
+  //   // fields: ['alternativeNames'],
+  // })
+  // log.info(res)
+
+  // const res = await esClient.indices.putMapping({
+  //   index: 'charity-base-v300-feb-2019',
+  //   type: 'charity',
+  //   body: {
+  //     "properties": {
+  //       "alternativeNames": {
+  //         "type": "text",
+  //         "fielddata": true
+  //       },
+  //     }
+  //   }
+  // })
+  // log.info(res)
+
   try {
     const indexExists = await esClient.indices.exists({
       index,

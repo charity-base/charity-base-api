@@ -8,6 +8,7 @@ const ES_FIELDS = [
   "funding.grants.awardDate",
 ]
 
+// todo: use x.funder instead of x.fundingOrganization (once may data updated)
 const parse = (grants) => {
   if (!grants) {
     return []

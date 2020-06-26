@@ -10,6 +10,7 @@ const ES_FIELDS = [
   "funding.grants.awardDate",
 ]
 
+// todo: use x.funder instead of x.fundingOrganization (once may data updated)
 const parse = ({ funders, grants }) => {
   const fundersArr = funders ? funders : []
   const grantsArr = grants
