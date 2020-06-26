@@ -1,4 +1,5 @@
-.env
+# dotenv environment variables file
+.env*.local
 
 git_ignore
 

@@ -1,6 +1,11 @@
 {
-  "name": "charity-base-mono",
-  "version": "0.1.0",
+  "name": "charity-base-app",
+  "version": "9.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/charity-base/charity-base-api.git"
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,9 +16,17 @@
   },
   "dependencies": {
     "@mapbox/rehype-prism": "^0.4.0",
+    "apollo-server-micro": "^2.15.0",
+    "archiver": "^4.0.1",
+    "aws-sdk": "^2.704.0",
+    "bunyan": "^1.8.13",
     "copy-to-clipboard": "^3.3.1",
+    "elasticsearch": "^16.7.1",
     "graphiql": "0.x",
     "graphql": "14.6.0",
+    "graphql-input-number": "^0.0.10",
+    "graphql-tools": "^6.0.10",
+    "http-aws-es": "^6.0.0",
     "next": "9.4.4",
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-preset-env": "^6.7.0",

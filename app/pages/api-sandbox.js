@@ -13,8 +13,8 @@ const DEFAULT_QUERY = `
 `
 
 function graphQLFetcher(graphQLParams) {
-  return fetch("https://charitybase.uk/api/graphql", {
-    method: "post",
+  return fetch("/api/graphql", {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Apikey ${process.env.NEXT_PUBLIC_CB_SANDBOX_API_KEY}`,
@@ -28,7 +28,7 @@ export default function () {
 
   useEffect(() => {
     // https://github.com/graphql/graphiql/issues/770
-    setTimeout(() => sandbox.current.refresh(), 100)
+    setTimeout(() => sandbox.current.refresh(), 300)
   }, [])
 
   return (
