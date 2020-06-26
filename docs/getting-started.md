@@ -1,6 +1,6 @@
 ## Getting Started
 
-Welcome to the CharityBase API Documentation!
+Welcome to the CharityBase API documentation!
 
 > **What's an API?**
 >
