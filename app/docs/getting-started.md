@@ -2,13 +2,13 @@
 
 Welcome to the CharityBase API Documentation!
 
-##### What's an API?
-
-An API is a generic term for the tool which one piece of software uses to communicate with another piece of software. It's an acronym for _application programming interface_, but that's not worth remembering. Put simply, the CharityBase API **_allows anyone to plug into our database_**. A user of the API can send a request for specific information and the API will respond almost immediately with the relevant structured data. This enables organisations to build charitable digital tools without needing to do the heavy lifting of collecting, storing, cleaning, aggregating and serving data.
+> **What's an API?**
+>
+> An API is a generic term for the tool which one piece of software uses to communicate with another. It's an acronym for _application programming interface_, but that's not important to remember. Put simply, the CharityBase API **_allows anyone to plug into our database_**. A user of the API can request specific information about charities in the UK and the API will respond almost immediately with the relevant structured data. This enables organisations to build charitable digital tools without needing to do the heavy lifting of collecting, storing, cleaning, aggregating and serving data.
 
 ### Endpoint
 
-CharityBase is a GraphQL API ... It differs from the REST paradigm however you still send an HTTP request and get back a JSON response, and you can use the same tools you're used to. The main difference is that there's only one endpoint, and every request you send will be to this URL:
+To use the API you send an HTTP request to an endpoint and get back a JSON response. CharityBase is a GraphQL API - this differs from the REST paradigm but you can still use your usual tools. The main difference is that there's only one endpoint. Every request you send will be to this URL:
 
 ```http
 https://charitybase.uk/api/graphql
@@ -22,11 +22,11 @@ Every request must be sent with an `Authorization` header of the form:
 Apikey YOUR_API_KEY
 ```
 
-where `YOUR_API_KEY` is one of your keys, generated at the API portal.
+where `YOUR_API_KEY` is one of [your keys](https://charitybase.uk/api-portal/keys).
 
 ### Query
 
-We request different types of data by specifying a `query` parameter, which is a string. This string is written in GraphQL syntax and specifies everything about the data we want to receive. For example, let's say we wanted to count all charities registered with the Charity Commission for England & Wales (CHC). Here's what the query string looks like:
+We request different types of data by specifying a `query` parameter, which is a string. This string is written in GraphQL syntax and specifies everything about the data we want to receive. Don't be put off if the query language is unfamiliar - it's a bit like JSON and doesn't take long to learn. For example, here's a query string to count all charities registered with the Charity Commission for England & Wales (CHC):
 
 ```graphql
 {
@@ -38,11 +38,11 @@ We request different types of data by specifying a `query` parameter, which is a
 }
 ```
 
-It might look unfamiliar to begin with but it's a bit like JSON and fairly easy to learn. The indentation is for readability - all the whitespace can be stripped.
+> Whitespace in the query doesn't affect the response - the newlines and indentation here are just for readability.
 
 ### Response
 
-The JSON response can contain a `data` object and an `errors` array:
+We get back a JSON response which can contain a `data` object and an `errors` array:
 
 ```json
 {
@@ -81,15 +81,15 @@ If there are problems with the query, the `data` object may or may not be define
 
 ### GET vs POST
 
-In REST APIs you normally read data with a `GET` request and you can do that here too. Simply include your query as a URL search parameter:
+Data can be fetched by sending a `GET` request to the API endpoint, just like you'd do with a REST API. Simply include your query as a URL search parameter:
 
 ```http
 https://charitybase.uk/api/graphql?query={CHC{getCharities(filters:{}){count}}}
 ```
 
-In GraphQL APIs it's also common to use `POST` requests for reading data. That way we don't have to worry about the URL getting too long since the query is sent in a JSON body. The examples below use `POST` but choose whichever method you prefer.
+Unlike the REST paradigm however, with GraphQL it's also possible (and encouraged) to fetch data using `POST`. This way you don't have to worry about the URL getting too long since the query is sent in a JSON body. The examples below use `POST` but choose whichever method you prefer.
 
-### Basic Examples
+### Basic Example
 
 These code snippets use the query from above to count all charities registered in England & Wales. Remember to replace `YOUR_API_KEY` with your actual key.
 
@@ -211,12 +211,12 @@ COUNT_QUERY = """
 
 def count_charities():
     try:
-      res = requests.post(
-          URL,
-          headers=HEADERS,
-          json={ "query": COUNT_QUERY }
-      )
-      payload = res.json()
+        res = requests.post(
+            URL,
+            headers=HEADERS,
+            json={ "query": COUNT_QUERY }
+        )
+        payload = res.json()
     except Exception as e:
         print("REQUEST ERROR (probably your network)")
         raise Exception(e)
@@ -227,8 +227,71 @@ def count_charities():
     return payload["data"]["CHC"]["getCharities"]["count"]
 ```
 
-To experiment with the query language and see what fields are available, visit the playground. The contents of the left panel makes up the query string to send in your request, as shown in the examples above. Click on the "Docs" button in the top right corner of the playground for an interactive schema.
+### Arguments
+
+`filters` is required on `getCharities`. Use a `search` or `income` example.
+
+### Query Name
+
+Up until now we've been using a shorthand syntax where we omit both the query keyword and the query name. In production apps it's useful to explicitly tell CharityBase we're sending a query, and to give that query a name. For example, let's name our query `CountCharitiesCHC`:
+
+```graphql
+query CountCharitiesCHC {
+  CHC {
+    getCharities(filters: {}) {
+      count
+    }
+  }
+}
+```
+
+> This longhand syntax is required if you're using [variables](#variables).
+
+### Variables
+
+Suppose we wanted to query with different argument values depending on some context e.g. user input. One option would be to dynamically create our query string before sending it. However GraphQL provides a neater way to deal with variables which allows us to keep our query strings static. Here's how it works:
+
+- Declare `$variableName` and its type as one of the variables accepted by the query
+- Replace the static value in the query with `$variableName`
+- Send the variable value in a `variables` JSON parameter alongside the `query` parameter
+
+Let's define a variable `minIncome` in our query:
+
+```graphql
+query CountCharitiesCHC($minIncome: Float) {
+  CHC {
+    getCharities(filters: { finances: { latestIncome: { gte: $minIncome } } }) {
+      count
+    }
+  }
+}
+```
+
+Now we can send its value in a `variables` object alongside the `query` in the request body:
+
+```json
+{
+  "query": "...",
+  "variables": { "minIncome": 100000 }
+}
+```
+
+> The declared variable type e.g. `Float` must match the CharityBase schema.
+
+> As with `query`, you may send `variables` as a URL search parameter instead of in the body.
+
+To experiment with the query language and see an interactive schema, visit the [sandbox](/api-sandbox).
+
+### Version
+
+There is no versioning.
+
+## Query Examples
 
 ## CharityBase Elements
 
 CharityBase Elements is a set of prebuilt UI components, like inputs and maps, which utilise the API for common use cases. Elements are completely customisable and you can style Elements to match the look and feel of your site. They're coming soon...
+
+## React Components
+
+## Schema
