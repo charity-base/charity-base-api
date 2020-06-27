@@ -1,5 +1,6 @@
 import Head from "next/head"
 import getCharitiesList from "web-lib/getCharitiesList"
+import CharityList from "components/CharityList"
 
 export default function ({ count, list }) {
   return (
@@ -9,24 +10,24 @@ export default function ({ count, list }) {
         <meta property="og:title" content="CharityBase Search" key="title" />
         <meta name="Description" content="CharityBase England & Wales Search" />
       </Head>
-      <aside className="flex-shrink-0 py-24 pr-8 xl:pr-16 sticky top-0 h-screen overflow-auto bg-gray-800">
-        Filters section
+      <aside className="flex-shrink-0 py-24 pr-8 xl:pr-16 sticky top-0 h-screen overflow-auto bg-gray-100">
+        <h2 className="text-3xl">Filters</h2>
       </aside>
-      <div className="bg-gray-300 py-24">
-        Results section
-        <div>Counted {count} charities</div>
-        <ul>
-          {list.map((x) => (
-            <li key={x.id}>{x.id}</li>
-          ))}
-        </ul>
+      <div className="py-24">
+        <div>{count} charities</div>
+        <CharityList charities={list} />
       </div>
     </div>
   )
 }
 
 export async function getServerSideProps({ query }) {
-  const filters = query.filters || {}
+  let filters
+  try {
+    filters = JSON.parse(query.filters)
+  } catch (e) {
+    filters = {}
+  }
   const { count, list } = await getCharitiesList({
     filters,
     skip: 0,
