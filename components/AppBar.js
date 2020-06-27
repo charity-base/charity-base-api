@@ -3,11 +3,11 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useAppBar } from "hooks"
 
-const NavLink = ({ href, label, secondary }) => {
+const NavLink = ({ href, label, secondary, matchPath }) => {
   const { pathname } = useRouter()
-  const textClassName =
-    pathname === href ? "text-black" : "text-gray-600 hover:text-black"
-  const bgClassName = pathname === href ? "bg-gray-200" : "hover:bg-gray-100"
+  const active = pathname.indexOf(matchPath || href) === 0
+  const textClassName = active ? "text-black" : "text-gray-600 hover:text-black"
+  const bgClassName = active ? "bg-gray-200" : "hover:bg-gray-100"
   return (
     <Link href={href}>
       <a
@@ -38,12 +38,14 @@ const AppBar = () => {
         </a>
       </Link>
       <section className="inline-flex items-center space-x-4" role="navigation">
+        <NavLink href="/chc" label="Search" />
+        <NavLink href="/about" label="About" />
         <div className="relative group">
-          <NavLink href="/docs" label="API" />
+          <NavLink href="/a/docs" label="API" matchPath="/a/" />
           <div className="absolute right-0 transition duration-100 opacity-0 transform origin-top-right scale-0 group-hover:scale-100 group-hover:opacity-100">
             <div className="bg-white shadow-lg border border-gray-200 mt-2 px-5 py-4 space-y-4 rounded">
-              <NavLink href="/docs" label="Docs" secondary />
-              <NavLink href="/api-sandbox" label="Sandbox" secondary />
+              <NavLink href="/a/docs" label="Docs" secondary />
+              <NavLink href="/a/sandbox" label="Sandbox" secondary />
             </div>
           </div>
         </div>
