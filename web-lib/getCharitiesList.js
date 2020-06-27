@@ -34,6 +34,9 @@ const LIST_CHARITIES = `
               small
             }
           }
+          registrations {
+            registrationDate
+          }
         }
       }
     }
