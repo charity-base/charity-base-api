@@ -1,6 +1,6 @@
 ## Getting Started
 
-Welcome to the CharityBase API Documentation!
+Welcome to the CharityBase API documentation!
 
 > **What's an API?**
 >
@@ -280,9 +280,9 @@ Now we can send its value in a `variables` object alongside the `query` in the r
 
 > As with `query`, you may send `variables` as a URL search parameter instead of in the body.
 
-To experiment with the query language and see an interactive schema, visit the [sandbox](/api-sandbox).
+To experiment with the query language and see an interactive schema, visit the [sandbox](/a/sandbox).
 
-### Version
+### Versioning
 
 There is no versioning.
 
