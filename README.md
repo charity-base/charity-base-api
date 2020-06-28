@@ -1,5 +1,7 @@
 # CharityBase API + Web App
 
+[![charity-base](https://circleci.com/gh/charity-base/charity-base-api.svg?style=svg)](https://circleci.com/gh/charity-base/charity-base-api)
+
 This is a monorepo incorporating what was previously the `charity-base-api`, `charity-base-auth` and `charity-base-web` repositories. It's built with Next.js.
 
 ## Developing
