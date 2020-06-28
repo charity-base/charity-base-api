@@ -3,32 +3,35 @@ function includesNumber(arr) {
 }
 
 function deconstructFilters({ finances }) {
-  const d = {}
+  const d = {
+    incomeRange: [undefined, undefined],
+    spendingRange: [undefined, undefined],
+  }
   try {
-    d.minIncome = finances.latestIncome.gte
-  } catch (e) {}
+    d.incomeRange = [finances.latestIncome.gte, finances.latestIncome.lt]
+  } catch {}
   try {
-    d.maxIncome = finances.latestIncome.lt
-  } catch (e) {}
-  try {
-    d.minSpending = finances.latestSpending.gte
-  } catch (e) {}
-  try {
-    d.maxSpending = finances.latestSpending.lt
-  } catch (e) {}
+    d.spendingRange = [finances.latestSpending.gte, finances.latestSpending.lt]
+  } catch {}
 
   return d
 }
 
-function constructFilters({ minIncome, maxIncome, minSpending, maxSpending }) {
+function constructFilters({ incomeRange, spendingRange }) {
   const filters = {}
-  if (includesNumber([minIncome, maxIncome, minSpending, maxSpending])) {
+  if (includesNumber([...incomeRange, ...spendingRange])) {
     filters.finances = {}
-    if (includesNumber([minIncome, maxIncome])) {
-      filters.finances.latestIncome = { gte: minIncome, lt: maxIncome }
+    if (includesNumber(incomeRange)) {
+      filters.finances.latestIncome = {
+        gte: incomeRange[0],
+        lt: incomeRange[1],
+      }
     }
-    if (includesNumber([minSpending, maxSpending])) {
-      filters.finances.latestSpending = { gte: minSpending, lt: maxSpending }
+    if (includesNumber(spendingRange)) {
+      filters.finances.latestSpending = {
+        gte: spendingRange[0],
+        lt: spendingRange[1],
+      }
     }
   }
   return filters

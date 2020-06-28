@@ -6,18 +6,15 @@ import { constructFilters, deconstructFilters } from "./helpers"
 
 export default function Filters(filters) {
   const router = useRouter()
-  const [
-    { minIncome, maxIncome, minSpending, maxSpending },
-    setState,
-  ] = useState(deconstructFilters(filters))
+  const [{ incomeRange, spendingRange }, setState] = useState(
+    deconstructFilters(filters)
+  )
 
   useEffect(() => {
     const filtersString = JSON.stringify(
       constructFilters({
-        minIncome,
-        maxIncome,
-        minSpending,
-        maxSpending,
+        incomeRange,
+        spendingRange,
       })
     )
     const query = filtersString === "{}" ? {} : { filters: filtersString }
@@ -26,30 +23,28 @@ export default function Filters(filters) {
       query,
     })
     window.scrollTo(0, 0)
-  }, [minIncome, maxIncome, minSpending, maxSpending])
+  }, [...incomeRange, ...spendingRange])
 
   return (
     <div className="p-3 border border-gray-400 rounded">
       <div className="space-y-3">
         <IntegerRange
           title="Income (£)"
-          initial={[minIncome, maxIncome]}
-          onChange={([minIncome, maxIncome]) => {
+          initial={incomeRange}
+          onChange={(incomeRange) => {
             setState((x) => ({
               ...x,
-              minIncome,
-              maxIncome,
+              incomeRange,
             }))
           }}
         />
         <IntegerRange
           title="Spending (£)"
-          initial={[minSpending, maxSpending]}
-          onChange={([minSpending, maxSpending]) => {
+          initial={spendingRange}
+          onChange={(spendingRange) => {
             setState((x) => ({
               ...x,
-              minSpending,
-              maxSpending,
+              spendingRange,
             }))
           }}
         />
