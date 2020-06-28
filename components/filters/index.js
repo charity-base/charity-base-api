@@ -6,7 +6,7 @@ import { constructFilters, deconstructFilters } from "./helpers"
 
 export default function Filters(filters) {
   const router = useRouter()
-  const [{ incomeRange, spendingRange }, setState] = useState(
+  const [{ incomeRange, spendingRange, fundersRange }, setState] = useState(
     deconstructFilters(filters)
   )
 
@@ -15,6 +15,7 @@ export default function Filters(filters) {
       constructFilters({
         incomeRange,
         spendingRange,
+        fundersRange,
       })
     )
     const query = filtersString === "{}" ? {} : { filters: filtersString }
@@ -23,7 +24,7 @@ export default function Filters(filters) {
       query,
     })
     window.scrollTo(0, 0)
-  }, [...incomeRange, ...spendingRange])
+  }, [...incomeRange, ...spendingRange, ...fundersRange])
 
   return (
     <div className="p-3 border border-gray-400 rounded">
@@ -45,6 +46,16 @@ export default function Filters(filters) {
             setState((x) => ({
               ...x,
               spendingRange,
+            }))
+          }}
+        />
+        <IntegerRange
+          title="Number of Funders"
+          initial={fundersRange}
+          onChange={(fundersRange) => {
+            setState((x) => ({
+              ...x,
+              fundersRange,
             }))
           }}
         />
