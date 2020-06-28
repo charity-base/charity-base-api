@@ -65,65 +65,29 @@ export default function Filters(filters) {
 
   return (
     <div className="p-3 border border-gray-400 rounded">
-      <div className="space-y-6">
-        <div>
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold my-2">Income (£)</h3>
-            <button
-              className={`text-xs border px-1 bg-gray-100 hover:bg-gray-200 rounded ${
-                includesNumber([minIncome, maxIncome]) ? "" : "hidden"
-              }`}
-              onClick={() => {
-                setState((x) => ({
-                  ...x,
-                  minIncome: undefined,
-                  maxIncome: undefined,
-                }))
-              }}
-            >
-              reset
-            </button>
-          </div>
-          <IntegerRange
-            initial={[minIncome, maxIncome]}
-            onChange={([minIncome, maxIncome]) => {
-              setState((x) => ({
-                ...x,
-                minIncome,
-                maxIncome,
-              }))
-            }}
-          />
-        </div>
-        <div>
-          <div className="flex justify-between items-center">
-            <h3 className="font-semibold my-2">Spending (£)</h3>
-            <button
-              className={`text-xs border px-1 bg-gray-100 hover:bg-gray-200 rounded ${
-                includesNumber([minSpending, maxSpending]) ? "" : "hidden"
-              }`}
-              onClick={() => {
-                setState((x) => ({
-                  ...x,
-                  minSpending: undefined,
-                  maxSpending: undefined,
-                }))
-              }}
-            >
-              reset
-            </button>
-          </div>
-          <IntegerRange
-            initial={[minSpending, maxSpending]}
-            onChange={([minSpending, maxSpending]) => {
-              setState((x) => ({
-                ...x,
-                minSpending,
-                maxSpending,
-              }))
-            }}
-          />
-        </div>
+      <div className="space-y-3">
+        <IntegerRange
+          title="Income (£)"
+          initial={[minIncome, maxIncome]}
+          onChange={([minIncome, maxIncome]) => {
+            setState((x) => ({
+              ...x,
+              minIncome,
+              maxIncome,
+            }))
+          }}
+        />
+        <IntegerRange
+          title="Spending (£)"
+          initial={[minSpending, maxSpending]}
+          onChange={([minSpending, maxSpending]) => {
+            setState((x) => ({
+              ...x,
+              minSpending,
+              maxSpending,
+            }))
+          }}
+        />
       </div>
     </div>
   )
