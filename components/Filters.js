@@ -21,13 +21,22 @@ function deconstructFilters({ finances }) {
   return d
 }
 
+function includesNumber(arr) {
+  return arr.map((x) => typeof x).indexOf("number") > -1
+}
+
 function constructFilters({ minIncome, maxIncome, minSpending, maxSpending }) {
-  return {
-    finances: {
-      latestIncome: { gte: minIncome, lt: maxIncome },
-      latestSpending: { gte: minSpending, lt: maxSpending },
-    },
+  const filters = {}
+  if (includesNumber([minIncome, maxIncome, minSpending, maxSpending])) {
+    filters.finances = {}
+    if (includesNumber([minIncome, maxIncome])) {
+      filters.finances.latestIncome = { gte: minIncome, lt: maxIncome }
+    }
+    if (includesNumber([minSpending, maxSpending])) {
+      filters.finances.latestSpending = { gte: minSpending, lt: maxSpending }
+    }
   }
+  return filters
 }
 
 export default function Filters(filters) {
@@ -38,18 +47,18 @@ export default function Filters(filters) {
   ] = useState(deconstructFilters(filters))
 
   useEffect(() => {
+    const filtersString = JSON.stringify(
+      constructFilters({
+        minIncome,
+        maxIncome,
+        minSpending,
+        maxSpending,
+      })
+    )
+    const query = filtersString === "{}" ? {} : { filters: filtersString }
     router.push({
       pathname: "/chc",
-      query: {
-        filters: JSON.stringify(
-          constructFilters({
-            minIncome,
-            maxIncome,
-            minSpending,
-            maxSpending,
-          })
-        ),
-      },
+      query,
     })
     window.scrollTo(0, 0)
   }, [minIncome, maxIncome, minSpending, maxSpending])
@@ -62,9 +71,7 @@ export default function Filters(filters) {
             <h3 className="font-semibold my-2">Income (£)</h3>
             <button
               className={`text-xs border px-1 bg-gray-100 hover:bg-gray-200 rounded ${
-                typeof minIncome === "number" || typeof maxIncome === "number"
-                  ? ""
-                  : "hidden"
+                includesNumber([minIncome, maxIncome]) ? "" : "hidden"
               }`}
               onClick={() => {
                 setState((x) => ({
@@ -93,10 +100,7 @@ export default function Filters(filters) {
             <h3 className="font-semibold my-2">Spending (£)</h3>
             <button
               className={`text-xs border px-1 bg-gray-100 hover:bg-gray-200 rounded ${
-                typeof minSpending === "number" ||
-                typeof maxSpending === "number"
-                  ? ""
-                  : "hidden"
+                includesNumber([minSpending, maxSpending]) ? "" : "hidden"
               }`}
               onClick={() => {
                 setState((x) => ({
