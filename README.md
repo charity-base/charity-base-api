@@ -50,7 +50,7 @@ yarn start
 
 ### Locally
 
-To add a test, create a new file anywhere in the project with the extension `.test.js`. Populate the file with tests using [Jest](https://jestjs.io/) syntax. For example:
+To add a test, create a new file in [tests](tests) with the extension `.test.js`. Populate the file with tests using [Jest](https://jestjs.io/) syntax. For example:
 
 ```javascript
 test("1 + 1 equals 2", () => {
