@@ -2,7 +2,7 @@ import PropTypes from "prop-types"
 import Head from "next/head"
 import getCharitiesList from "web-lib/getCharitiesList"
 import CharityList from "components/CharityList"
-import Filters from "components/Filters"
+import Filters from "components/filters"
 
 export default function ({ count, list, filters }) {
   return (
