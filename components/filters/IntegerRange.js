@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
+import { includesNumber } from "./helpers"
 
 function stringToInt(str) {
   if (typeof str === "undefined") return undefined
@@ -49,7 +50,9 @@ export default function IntegerRange({ initial, onChange, title }) {
       <div className="flex justify-between items-center">
         <h3 className="text-gray-700 font-semibold my-2">{title}</h3>
         <button
-          className={`text-xs border px-1 bg-gray-100 hover:bg-gray-200 rounded`}
+          className={`text-xs text-gray-700 border px-1 bg-gray-100 hover:bg-gray-200 rounded ${
+            includesNumber(initial) ? "" : "hidden"
+          }`}
           onClick={() => update([undefined, undefined])}
         >
           reset
