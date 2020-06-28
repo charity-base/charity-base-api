@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import { useRouter } from "next/router"
-import IntegerRange from "components/IntegerRange"
+import IntegerRange from "./IntegerRange"
 
 function deconstructFilters({ finances }) {
   const d = {}
