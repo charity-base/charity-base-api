@@ -1,5 +1,7 @@
 # CharityBase API + Web App
 
+This is a monorepo incorporating what was previously the `charity-base-api`, `charity-base-auth` and `charity-base-web` repositories. It's built with Next.js.
+
 ## Developing
 
 Install the dependencies:
@@ -40,4 +42,10 @@ Then, start the Node.js server:
 
 ```bash
 yarn start
+```
+
+## Testing
+
+```bash
+yarn test
 ```
