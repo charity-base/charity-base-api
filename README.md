@@ -48,6 +48,22 @@ yarn start
 
 ## Testing
 
+### Locally
+
+To add a test, create a new file anywhere in the project with the extension `.test.js`. Populate the file with tests using [Jest](https://jestjs.io/) syntax. For example:
+
+```javascript
+test("1 + 1 equals 2", () => {
+  expect(1 + 1).toBe(2)
+})
+```
+
+To run all tests:
+
 ```bash
 yarn test
 ```
+
+### With CircleCI
+
+Every GitHub pull request will trigger a run of the tests by CircleCI, according to the config file in [.circleci](.circleci).
