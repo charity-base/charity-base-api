@@ -34,6 +34,9 @@ export default function () {
   return (
     <div className="h-screen pt-16">
       <Head>
+        <title>CharityBase Sandbox</title>
+        <meta property="og:title" content="CharityBase Sandbox" key="title" />
+        <meta name="Description" content="CharityBase GraphiQL API Sandbox" />
         <link
           href="https://unpkg.com/graphiql@0.17.5/graphiql.min.css"
           rel="stylesheet"
