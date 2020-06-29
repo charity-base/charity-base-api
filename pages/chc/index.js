@@ -15,11 +15,13 @@ export default function ({ count, list, filters }) {
       <aside className="flex-shrink-0 py-24 pr-8 xl:pr-16 sticky top-0 h-screen overflow-auto">
         <Filters {...filters} />
       </aside>
-      <div className="py-24">
-        <div>{count} charities</div>
+      <div className="py-24 w-full">
+        <div className="mb-4 text-right text-sm text-gray-700 font-semibold">
+          {count} charities
+        </div>
         <CharityList charities={list} />
       </div>
-      <aside className="flex-shrink-0 py-24 pr-8 xl:pr-16 sticky top-0 h-screen overflow-auto">
+      <aside className="flex-shrink-0 py-24 pl-8 xl:pl-16 sticky top-0 h-screen overflow-auto">
         <div>Tabs go heree go here go here</div>
         <div>Tabs go heree go here go here</div>
         <div>Tabs go heree go here go here</div>
