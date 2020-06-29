@@ -74,7 +74,10 @@ If there are problems with the query, the `data` object may or may not be define
         "line": 4,
         "column": 7
       }
-    ]
+    ],
+    "extensions": {
+      "code": "GRAPHQL_VALIDATION_FAILED"
+    }
   }
 ]
 ```
