@@ -3,25 +3,28 @@ function includesNumber(arr) {
 }
 
 function deconstructFilters({ finances, grants }) {
-  const d = {
+  const flat = {
     incomeRange: [undefined, undefined],
     spendingRange: [undefined, undefined],
     fundersRange: [undefined, undefined],
   }
+
   try {
     const { gte, lt } = finances.latestIncome
-    d.incomeRange = [gte, lt]
-  } catch {}
-  try {
-    const { gte, lt } = finances.latestSpending
-    d.spendingRange = [gte, lt]
-  } catch {}
-  try {
-    const { gte, lt } = grants.funders.length
-    d.fundersRange = [gte, lt]
+    flat.incomeRange = [gte, lt]
   } catch {}
 
-  return d
+  try {
+    const { gte, lt } = finances.latestSpending
+    flat.spendingRange = [gte, lt]
+  } catch {}
+
+  try {
+    const { gte, lt } = grants.funders.length
+    flat.fundersRange = [gte, lt]
+  } catch {}
+
+  return flat
 }
 
 function constructFilters({ incomeRange, spendingRange, fundersRange }) {
@@ -29,12 +32,14 @@ function constructFilters({ incomeRange, spendingRange, fundersRange }) {
 
   if (includesNumber([...incomeRange, ...spendingRange])) {
     filters.finances = {}
+
     if (includesNumber(incomeRange)) {
       filters.finances.latestIncome = {
         gte: incomeRange[0],
         lt: incomeRange[1],
       }
     }
+
     if (includesNumber(spendingRange)) {
       filters.finances.latestSpending = {
         gte: spendingRange[0],

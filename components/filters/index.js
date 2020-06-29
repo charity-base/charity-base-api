@@ -27,7 +27,7 @@ export default function Filters({ finances, grants }) {
   }
 
   return (
-    <div className="p-3 border border-gray-400 rounded">
+    <div className="p-3">
       <div className="space-y-3">
         <IntegerRange
           title="Income (£)"

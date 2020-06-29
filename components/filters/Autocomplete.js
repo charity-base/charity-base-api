@@ -8,7 +8,7 @@ export default function Autocomplete({ title }) {
       </div>
       <div className="relative flex text-gray-700">
         <input
-          className="w-full px-1 text-sm border rounded opacity-50"
+          className="w-full px-1 text-sm border rounded opacity-50 cursor-not-allowed"
           placeholder="Start typing..."
           disabled
         />
