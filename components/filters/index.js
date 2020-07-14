@@ -50,15 +50,15 @@ export default function Filters({ finances, grants }) {
             updateQuery("fundersRange", x)
           }}
         />
-        <Autocomplete title="Funder" />
-        <Autocomplete title="County" />
-        <Autocomplete title="Local Authority" />
-        <Autocomplete title="Areas" />
-        <Autocomplete title="Causes" />
-        <Autocomplete title="Operations" />
-        <Autocomplete title="Beneficiaries" />
-        <Autocomplete title="Trustees" />
-        <Autocomplete title="Themes" />
+        <Autocomplete title="Funder" filterType="funder" />
+        <Autocomplete title="County" filterType="" />
+        <Autocomplete title="Local Authority" filterType="" />
+        <Autocomplete title="Areas" filterType="area" />
+        <Autocomplete title="Causes" filterType="cause" />
+        <Autocomplete title="Operations" filterType="operation" />
+        <Autocomplete title="Beneficiaries" filterType="beneficiary" />
+        <Autocomplete title="Trustees" filterType="trustee" />
+        <Autocomplete title="Themes" filterType="topic" />
       </div>
     </div>
   )
