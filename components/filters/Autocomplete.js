@@ -42,32 +42,36 @@ function fetchItems({ search, filterType }) {
         console.error("QUERY ERRORS")
         throw errors
       }
-      console.log(data)
-      return data.CHC.getFilters.map((x) => x.label)
+      return data.CHC.getFilters
     })
 }
 
-function DropdownCombobox({ title, filterType }) {
+function DropdownCombobox({ title, filterType, initial, onChange }) {
   const [value, setValue] = useState("")
   const [loading, setLoading] = useState(false)
   const [inputItems, setInputItems] = useState(items)
+  const [filters, setFilters] = useState(initial)
 
   useEffect(() => {
     let stale = false
-    if (value) {
-      const timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
+      if (stale) return
+      if (!value) {
+        setLoading(false)
+        setInputItems([])
+      } else {
         setLoading(true)
         fetchItems({ search: value, filterType }).then((items) => {
           if (stale) return
           setInputItems(items)
           setLoading(false)
         })
-      }, DEBOUNCE_TIME)
-
-      return () => {
-        stale = true
-        clearTimeout(timeoutId)
       }
+    }, DEBOUNCE_TIME)
+
+    return () => {
+      stale = true
+      clearTimeout(timeoutId)
     }
   }, [value, filterType])
 
@@ -82,6 +86,11 @@ function DropdownCombobox({ title, filterType }) {
     getItemProps,
   } = useCombobox({
     items: inputItems,
+    selectedItem: null,
+    onSelectedItemChange: ({ selectedItem }) => {
+      if (filters.some((x) => x.id === selectedItem.id)) return
+      setFilters([...filters, selectedItem])
+    },
     onInputValueChange: ({ inputValue }) => {
       setValue(inputValue)
     },
@@ -91,44 +100,53 @@ function DropdownCombobox({ title, filterType }) {
       <label {...getLabelProps()}>
         <h3 className="text-gray-700 font-semibold my-2">{title}</h3>
       </label>
-      <div className="relative text-sm" {...getComboboxProps()}>
-        <input
-          className="w-full px-1 pr-4 border rounded focus:outline-none focus:border-gray-700 focus:shadow"
-          placeholder="Start typing..."
-          {...getInputProps()}
-        />
-        <button
-          {...getToggleButtonProps()}
-          aria-label="toggle menu"
-          className="absolute right-0 h-full mr-1"
+      <div className="relative">
+        <div className="relative text-sm" {...getComboboxProps()}>
+          <input
+            className="w-full px-1 pr-4 border rounded focus:outline-none focus:border-gray-700 focus:shadow"
+            placeholder="Start typing..."
+            {...getInputProps()}
+          />
+          <button
+            {...getToggleButtonProps()}
+            aria-label="toggle menu"
+            className="absolute right-0 h-full mr-1"
+          >
+            &#8595;
+          </button>
+        </div>
+        <ul
+          {...getMenuProps()}
+          className={`absolute bg-white z-50 bottom-0 left-0 right-0 transform translate-y-full px-4 py-4 space-y-4 border shadow-xl rounded ${
+            isOpen ? "" : "hidden"
+          }`}
         >
-          &#8595;
-        </button>
+          {isOpen
+            ? inputItems.map((item, index) => (
+                <li
+                  style={
+                    highlightedIndex === index
+                      ? { backgroundColor: "#bde4ff" }
+                      : {}
+                  }
+                  key={`${item.id}${index}`}
+                  {...getItemProps({ item, index })}
+                >
+                  {item.label}
+                </li>
+              ))
+            : null}
+          {loading ? (
+            <div className="absolute inset-0 bg-white bg-opacity-50" />
+          ) : null}
+        </ul>
       </div>
-      <ul
-        {...getMenuProps()}
-        className={`absolute bg-white z-50 bottom-0 left-0 right-0 transform translate-y-full px-4 py-4 space-y-4 border shadow-xl rounded ${
-          isOpen ? "" : "hidden"
-        }`}
-      >
-        {isOpen
-          ? inputItems.map((item, index) => (
-              <li
-                style={
-                  highlightedIndex === index
-                    ? { backgroundColor: "#bde4ff" }
-                    : {}
-                }
-                key={`${item}${index}`}
-                {...getItemProps({ item, index })}
-              >
-                {item}
-              </li>
-            ))
-          : null}
-        {loading ? (
-          <div className="absolute inset-0 bg-white bg-opacity-50" />
-        ) : null}
+      <ul className="text-sm">
+        {filters.map((x) => (
+          <li key={x.id} className="bg-gray-100 rounded-full px-2 py-1 my-1">
+            {x.label}
+          </li>
+        ))}
       </ul>
     </div>
   )
@@ -139,7 +157,12 @@ export default function Autocomplete({ title, filterType }) {
     <div>
       {/* <div className="flex justify-between items-center"></div> */}
       <div className="relative flex text-gray-700">
-        <DropdownCombobox title={title} filterType={filterType} />
+        <DropdownCombobox
+          title={title}
+          filterType={filterType}
+          initial={[]}
+          onChange={() => {}}
+        />
       </div>
     </div>
   )
