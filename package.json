@@ -28,7 +28,7 @@
     "graphql-tools": "^6.0.10",
     "http-aws-es": "^6.0.0",
     "jest": "^26.1.0",
-    "next": "^9.4.4",
+    "next": "^9.5.0",
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-preset-env": "^6.7.0",
     "prop-types": "^15.7.2",
