@@ -14,6 +14,7 @@ const geoRegionCodes = {
   E12000007: 'London',
   E12000008: 'South East',
   E12000009: 'South West',
+  W99999999: 'Wales',
 }
 
 const geoCountryCodes = {
