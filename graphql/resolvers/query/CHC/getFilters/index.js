@@ -1,65 +1,110 @@
-const { esClient } = require('../../../../../connection')
-const config = require('../../../../../config.json')
+const { esClient } = require("../../../../../connection")
 
-const esIndex = config.elastic.indexes.chc.filters
+const { CHARITY_BASE_ES_AWS_INDEX_CHC_FILTER } = process.env
 
 const MAX_SUGGESTIONS = 12
 
-async function getFilters({ search, id }) {
-  const filterIds = id && id.length > 0
+const FILTER_TYPES = [
+  { id: "trustee", weight: 1.2 },
+  { id: "id", weight: 2 },
+  { id: "area", weight: 3 },
+  { id: "funder", weight: 4 },
+  { id: "topic", weight: 10 },
+  { id: "cause", weight: 5 },
+  { id: "operation", weight: 5 },
+  { id: "beneficiary", weight: 5 },
+]
 
-  if (!filterIds && !search) return []
+async function getFilters({ filterType, id, search }) {
+  const filterIds = id && id.length > 0
+  const cleanSearch =
+    search &&
+    search
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+  if (!filterIds && !cleanSearch) return []
 
   const searchParams = {
-    index: [esIndex],
+    index: [CHARITY_BASE_ES_AWS_INDEX_CHC_FILTER],
     body: {},
-    _source: ['id', 'value', 'label', 'filterType'],
+    _source: ["id", "value", "label", "filterType"],
+    size: MAX_SUGGESTIONS,
+    from: 0,
   }
 
-  if (filterIds) {
-    searchParams.body.query = {
-      bool: {
-        should: id.map(x => ({
-          term: { id: x }
-        }))
-      }
-    }
-  } else if (search) {
-    searchParams.body.suggest = {
-      filterSuggest: {
-        prefix: search.toLowerCase(),
-        completion: {
-          field: 'suggest',
-          size: MAX_SUGGESTIONS,
-          fuzzy: {
-            fuzziness: 1,
-          },
-          contexts: {
-            filter_type: [
-              { context: "id", boost: 1 },
-              { context: "area", boost: 2 },
-              { context: "funder", boost: 3 },
-              { context: "cause", boost: 4 },
-              { context: "operation", boost: 4 },
-              { context: "beneficiary", boost: 4 },
-            ]
-          },
-        }
-      }
-    }
+  // warning: filterType only filters if values are in FILTER_TYPES
+  // e.g. filterType=['fake'] will return all filter types.
+
+  searchParams.body.query = {
+    function_score: {
+      query: {
+        bool: {
+          minimum_should_match: cleanSearch ? 1 : 0,
+          should: cleanSearch
+            ? [
+                {
+                  match: {
+                    suggest: {
+                      query: cleanSearch,
+                      operator: "and",
+                      fuzziness: "AUTO",
+                    },
+                  },
+                },
+                {
+                  // we include a non-fuzzy search to ensure that exact matches have a higher score
+                  match: {
+                    suggest: {
+                      query: cleanSearch,
+                      operator: "and",
+                    },
+                  },
+                },
+              ]
+            : [],
+          filter: [
+            {
+              bool: {
+                should: filterType
+                  ? FILTER_TYPES.filter(
+                      (x) => filterType.indexOf(x.id) > -1
+                    ).map((x) => ({
+                      term: { filterType: x.id },
+                    }))
+                  : [],
+              },
+            },
+            {
+              bool: {
+                should: id
+                  ? id.map((x) => ({
+                      term: { id: x },
+                    }))
+                  : [],
+              },
+            },
+          ],
+        },
+      },
+      functions: FILTER_TYPES.map((x) => ({
+        filter: {
+          term: { filterType: x.id },
+        },
+        weight: x.weight,
+      })),
+    },
   }
 
   try {
     const response = await esClient.search(searchParams)
-    if (!filterIds && search) {
-      return response.suggest.filterSuggest[0].options.map(x => ({
-        ...x._source,
-        score: x._score,
-      }))
-    } else {
-      return response.hits.hits.map(x => x._source)
-    }
-  } catch(e) {
+    const hits = response.hits.hits.map((x) => ({
+      ...x._source,
+      score: x._score,
+    }))
+    return hits
+  } catch (e) {
     throw e
   }
 }

@@ -1,5 +1,6 @@
+// name is deprecated in favour of names
 const ES_FIELDS = [
-  'name',
+  'primaryName',
 ]
 
 async function getList(
@@ -10,7 +11,7 @@ async function getList(
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => x._source.name)
+    return response.hits.hits.map(x => x._source.primaryName)
   } catch(e) {
     throw e
   }

@@ -1,7 +1,8 @@
 const getFiltersOnStringList = require('./getFiltersOnStringList')
+const CAUSE_ID_FIELD = 'causes.id'
 
 const getCausesFilters = causes => getFiltersOnStringList(
-  'causes.id',
+  CAUSE_ID_FIELD,
   causes,
 )
 

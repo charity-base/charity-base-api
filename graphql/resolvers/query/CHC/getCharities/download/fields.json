@@ -1,0 +1,147 @@
+[
+  {
+    "field": "chcId",
+    "label": "Charity ID",
+    "description": "Charity Commission Number"
+  },
+  {
+    "field": "cohId",
+    "label": "Company ID",
+    "description": "Companies House Number"
+  },
+  {
+    "field": "primaryName",
+    "label": "Name",
+    "description": "Primary name"
+  },
+  {
+    "field": "website",
+    "label": "Website",
+    "description": "Website"
+  },
+  {
+    "field": "numPeople.trustees",
+    "label": "Trustees",
+    "description": "Number of trustees"
+  },
+  {
+    "field": "numPeople.employees",
+    "label": "Employees",
+    "description": "Number of employees"
+  },
+  {
+    "field": "numPeople.volunteers",
+    "label": "Volunteers",
+    "description": "Number of volunteers"
+  },
+  {
+    "field": "lastRegistrationDate",
+    "label": "Registered",
+    "description": "Registration date (most recent registration, in the case of multiple registrations)"
+  },
+  {
+    "field": "finances.latest.financialYear.end",
+    "label": "Financial Year",
+    "description": "Latest reported financial year end date"
+  },
+  {
+    "field": "finances.latest.income",
+    "label": "Income",
+    "description": "Latest reported income"
+  },
+  {
+    "field": "finances.latest.spending",
+    "label": "Spending",
+    "description": "Latest reported spending"
+  },
+  {
+    "field": "funding.numFunders",
+    "label": "Funders",
+    "description": "Number of unique funders (from grants published to the 360Giving data standard)"
+  },
+  {
+    "field": "contact.email",
+    "label": "Email",
+    "description": "Email"
+  },
+  {
+    "field": "contact.phone",
+    "label": "Phone",
+    "description": "Phone"
+  },
+  {
+    "field": "contact.address",
+    "label": "Address",
+    "description": "Address"
+  },
+  {
+    "field": "contact.postcode",
+    "label": "Postcode",
+    "description": "Postcode"
+  },
+  {
+    "field": "social.facebook",
+    "label": "Facebook",
+    "description": "Facebook handle"
+  },
+  {
+    "field": "social.twitter",
+    "label": "Twitter",
+    "description": "Twitter handle"
+  },
+  {
+    "field": "postcodeGeo.names.ccg",
+    "label": "CCG",
+    "description": "Clinical commissioning group"
+  },
+  {
+    "field": "postcodeGeo.names.eer",
+    "label": "EER",
+    "description": "European electoral region"
+  },
+  {
+    "field": "postcodeGeo.names.laua",
+    "label": "LAUA",
+    "description": "Local authority and unitary authority"
+  },
+  {
+    "field": "postcodeGeo.names.lsoa11",
+    "label": "LSOA",
+    "description": "Lower layer super output area"
+  },
+  {
+    "field": "postcodeGeo.names.msoa11",
+    "label": "MSOA",
+    "description": "Middle layer super output area"
+  },
+  {
+    "field": "postcodeGeo.names.pcon",
+    "label": "PCon",
+    "description": "Westminster parliamentary constituency"
+  },
+  {
+    "field": "postcodeGeo.names.ru11ind",
+    "label": "RU",
+    "description": "Rural-urban classification"
+  },
+  {
+    "field": "postcodeGeo.names.ttwa",
+    "label": "TTWA",
+    "description": "Travel to work area"
+  },
+  {
+    "field": "postcodeGeo.names.ward",
+    "label": "Ward",
+    "description": "Ward"
+  },
+  {
+    "field": "postcodeGeo.coordinates.lat",
+    "label": "Latitude",
+    "description": "Latitude"
+  },
+  {
+    "field": "postcodeGeo.coordinates.lon",
+    "label": "Longitude",
+    "description": "Longitude"
+  }
+]

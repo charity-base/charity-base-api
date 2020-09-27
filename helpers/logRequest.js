@@ -1,8 +1,9 @@
 const log = require('./logger')
 const { esClient } = require('../connection')
-const config = require('../config')
 
-const API_REQUESTS_INDEX = config.elastic.indexes.requests
+const {
+  CHARITY_BASE_ES_AWS_INDEX_REQUEST,
+} = process.env
 
 const apiRequestMapping = {
   _doc: {
@@ -108,7 +109,7 @@ const logRequest = (req, res, graphQLParams) => {
       cleanup()
 
       const reqLog = {
-        queryTime: Date.now() - t0, // does not include api key lookup
+        queryTime: Date.now() - t0,
         apiKey: req.apiKey,
         ip: req.ip,
         method: req.method,
@@ -127,7 +128,7 @@ const logRequest = (req, res, graphQLParams) => {
 
       try {
         await esClient.create({
-          index: API_REQUESTS_INDEX,
+          index: CHARITY_BASE_ES_AWS_INDEX_REQUEST,
           type: '_doc',
           id: `${t0}-${reqLog.queryTime}`,
           body: reqLog,
@@ -149,5 +150,5 @@ const logRequest = (req, res, graphQLParams) => {
   }
 }
 
-createIndexIfNotExists(API_REQUESTS_INDEX)
+createIndexIfNotExists(CHARITY_BASE_ES_AWS_INDEX_REQUEST)
 module.exports = logRequest

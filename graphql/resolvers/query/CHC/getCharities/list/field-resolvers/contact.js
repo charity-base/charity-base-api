@@ -1,21 +1,42 @@
 const ES_FIELDS = [
-  'contact.address',
-  'contact.email',
-  'contact.person',
-  'contact.phone',
-  'contact.postcode',
+  "contact.address",
+  "contact.email",
+  "contact.phone",
+  "contact.postcode",
+  "social",
 ]
 
-async function getList(
-  searchSource,
-) {
+const getSocialList = (social) => {
+  if (!social) {
+    return []
+  }
+  const arr = []
+  if (social.facebook) {
+    arr.push({
+      platform: "facebook",
+      handle: social.facebook,
+    })
+  }
+  if (social.twitter) {
+    arr.push({
+      platform: "twitter",
+      handle: social.twitter,
+    })
+  }
+  return arr
+}
+
+async function getList(searchSource) {
   try {
     const searchParams = {
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => x._source.contact)
-  } catch(e) {
+    return response.hits.hits.map((x) => ({
+      ...x._source.contact,
+      social: getSocialList(x._source.social),
+    }))
+  } catch (e) {
     throw e
   }
 }

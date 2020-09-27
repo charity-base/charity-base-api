@@ -1,5 +1,5 @@
 // const fs = require('fs')
-const bunyan = require('bunyan')
+const bunyan = require("bunyan")
 
 // const LOGS_DIR = './logs'
 
@@ -8,11 +8,11 @@ const bunyan = require('bunyan')
 // } catch (e) {}
 
 const log = bunyan.createLogger({
-  name: 'main',
+  name: "main",
   streams: [
     {
-      level: 'debug',
-      stream: process.stdout
+      level: "debug",
+      stream: process.stdout,
     },
     // {
     //   level: 'info',
@@ -29,9 +29,9 @@ const log = bunyan.createLogger({
     //   count: 10,
     // },
   ],
-  // level: <level name or number>,      // Optional, see "Levels" section 
-  // serializers: <serializers mapping>, // Optional, see "Serializers" section 
-  // src: <boolean>,                     // Optional, see "src" section 
+  // level: <level name or number>,      // Optional, see "Levels" section
+  // serializers: <serializers mapping>, // Optional, see "Serializers" section
+  // src: <boolean>,                     // Optional, see "src" section
   // foo: 'bar',
 })
 

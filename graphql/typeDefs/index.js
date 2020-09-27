@@ -1,9 +1,10 @@
-const directiveTypes = require('./directive')
-const enumTypes = require('./enum')
-const customTypes = require('./custom')
-const inputTypes = require('./input')
-const listCharitiesTypes = require('./list')
-const aggregateCharitiesTypes = require('./aggregate')
+const directiveTypes = require("./directive")
+const enumTypes = require("./enum")
+const customTypes = require("./custom")
+const inputTypes = require("./input")
+const listCharitiesTypes = require("./list")
+const aggregateCharitiesTypes = require("./aggregate")
+const downloadCharitiesTypes = require("./download")
 
 const highLevelTypes = `
   """
@@ -26,6 +27,12 @@ const highLevelTypes = `
     Aggregations of charities matching query
     """
     aggregate: AggregationTypesCHC
+    """
+    Returns a CSV containing all matches.
+    This method requires special permissions on your API Key.
+    Email \`support@charitybase.uk\` for more info.
+    """
+    download: DownloadCHC @apiKeyAuth(roles: ["download"])
   }
 
   type FilterCHC {
@@ -42,10 +49,12 @@ const highLevelTypes = `
     """
     getCharities(filters: FilterCHCInput!): FilteredCharitiesCHC
     getFilters(
-      "Prefix search term for finding filters. Only used if \`id\` is not defined."
+      "Search term for finding filters."
       search: String
       "List of IDs of desired filters."
       id: [ID]
+      "List of filter types to return."
+      filterType: [String]
     ): [FilterCHC]
   }
 
@@ -64,5 +73,6 @@ module.exports = [
   inputTypes,
   listCharitiesTypes,
   aggregateCharitiesTypes,
+  downloadCharitiesTypes,
   highLevelTypes,
 ]

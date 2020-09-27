@@ -1,7 +1,6 @@
-const precision = require('./precision')
-const AGG_NAME = 'geo_geohash'
-const AGG_NAME_NESTED = 'geo_geohash_nested'
-const ES_FIELD = 'contact.geoCoords'
+const precision = require("./precision")
+const ES_FIELD_GEO_POINT = "postcodeGeoPoint"
+const AGG_NAME = "agg_geo_hash" // distinct from other agg names to allow combining agg queries
 
 async function aggGeohash(search, { top, left, bottom, right }) {
   const searchParams = {
@@ -12,33 +11,34 @@ async function aggGeohash(search, { top, left, bottom, right }) {
         [AGG_NAME]: {
           filter: {
             geo_bounding_box: {
-              [ES_FIELD]: { top, left, bottom, right },
+              [ES_FIELD_GEO_POINT]: { top, left, bottom, right },
             },
           },
           aggs: {
-            [AGG_NAME_NESTED]: {
+            agg2: {
               geohash_grid: {
-                field: ES_FIELD,
+                field: ES_FIELD_GEO_POINT,
                 precision: precision({ top, left, bottom, right }),
               },
-            }
+            },
           },
-        }
-      }
+        },
+      },
     },
     size: 0,
   }
   try {
     const response = await search(searchParams)
-    const buckets = response.aggregations[AGG_NAME][AGG_NAME_NESTED].buckets.map(x => ({
+    const buckets = response.aggregations[AGG_NAME].agg2.buckets.map((x) => ({
       key: `${x.key}`,
       name: `${x.key}`,
       count: x.doc_count,
+      sum: null,
     }))
     return {
       buckets,
     }
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }

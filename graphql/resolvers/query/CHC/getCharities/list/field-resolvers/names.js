@@ -1,32 +1,26 @@
-const NAME_ES_FIELD = 'name'
-const ALTERNATIVE_NAMES_ES_FIELD = 'alternativeNames'
+const NAME_ES_FIELD = "primaryName"
+const ALL_NAMES_ES_FIELD = "names.name"
 
-async function getList(
-  searchSource,
-  { all }
-) {
+async function getList(searchSource, { all }) {
   try {
-    const _source = all ? [
-      NAME_ES_FIELD,
-      ALTERNATIVE_NAMES_ES_FIELD,
-    ] : [
-      NAME_ES_FIELD,
-    ]
+    const _source = all ? [NAME_ES_FIELD, ALL_NAMES_ES_FIELD] : [NAME_ES_FIELD]
 
     const response = await searchSource({ _source })
-    return response.hits.hits.map(doc => {
+    return response.hits.hits.map((doc) => {
       if (!all) {
-        return [{
-          value: doc._source[NAME_ES_FIELD],
-          primary: true,
-        }]
+        return [
+          {
+            value: doc._source[NAME_ES_FIELD],
+            primary: true,
+          },
+        ]
       }
-      return doc._source[ALTERNATIVE_NAMES_ES_FIELD].map(value => ({
-        value,
-        primary: value === doc._source[NAME_ES_FIELD],
+      return doc._source.names.map(({ name }) => ({
+        value: name,
+        primary: name === doc._source[NAME_ES_FIELD],
       }))
     })
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }

@@ -1,4 +1,4 @@
-const getFiltersOnListLength = require('./getFiltersOnListLength')
+const getFiltersOnListLength = require("./getFiltersOnListLength")
 // Return an array of Elasticsearch filters on given field (for which each doc has a list of string values)
 // listFilterInput corresponds to type ListFilterInput defined in GraphQL typeDefs.
 const getFiltersOnStringList = (field, listFilterInput) => {
@@ -11,10 +11,10 @@ const getFiltersOnStringList = (field, listFilterInput) => {
   if (some && some.length > 0) {
     filters.push({
       bool: {
-        should: some.map(value => ({
-          term: { [field]: value }
-        }))
-      }
+        should: some.map((value) => ({
+          term: { [field]: value },
+        })),
+      },
     })
   }
 
@@ -22,24 +22,24 @@ const getFiltersOnStringList = (field, listFilterInput) => {
   if (every && every.length > 0) {
     filters.push({
       bool: {
-        must: every.map(value => ({
-          term: { [field]: value }
-        }))
-      }
+        must: every.map((value) => ({
+          term: { [field]: value },
+        })),
+      },
     })
   }
 
   if (notSome && notSome.length > 0) {
     filters.push({
       bool: {
-        must_not: notSome.map(value => ({
-          term: { [field]: value }
-        }))
-      }
+        must_not: notSome.map((value) => ({
+          term: { [field]: value },
+        })),
+      },
     })
   }
 
-  getFiltersOnListLength(field, length).map(f => filters.push(f))
+  filters.push(...getFiltersOnListLength(field, length))
 
   return filters
 }

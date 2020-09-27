@@ -1,5 +1,5 @@
-const getCharities = require('./getCharities')
-const getFilters = require('./getFilters')
+const getCharities = require("./getCharities")
+const getFilters = require("./getFilters")
 
 const CHC = () => ({
   getCharities,

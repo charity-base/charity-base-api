@@ -15,15 +15,15 @@
  * included in all copies or substantial portions of the Software.
  */
 
-var BASE32_CODES = "0123456789bcdefghjkmnpqrstuvwxyz";
-var BASE32_CODES_DICT = {};
+var BASE32_CODES = "0123456789bcdefghjkmnpqrstuvwxyz"
+var BASE32_CODES_DICT = {}
 for (var i = 0; i < BASE32_CODES.length; i++) {
-  BASE32_CODES_DICT[BASE32_CODES.charAt(i)] = i;
+  BASE32_CODES_DICT[BASE32_CODES.charAt(i)] = i
 }
-var MIN_LAT = -90;
-var MAX_LAT = 90;
-var MIN_LON = -180;
-var MAX_LON = 180;
+var MIN_LAT = -90
+var MAX_LAT = 90
+var MIN_LON = -180
+var MAX_LON = 180
 
 const geohashBounds = (geohash) => {
   var isLon = true,
@@ -31,31 +31,31 @@ const geohashBounds = (geohash) => {
     minLat = MIN_LAT,
     maxLon = MAX_LON,
     minLon = MIN_LON,
-    mid;
+    mid
 
-  var hashValue = 0;
+  var hashValue = 0
   for (var i = 0, l = geohash.length; i < l; i++) {
-    var code = geohash[i].toLowerCase();
-    hashValue = BASE32_CODES_DICT[code];
+    var code = geohash[i].toLowerCase()
+    hashValue = BASE32_CODES_DICT[code]
 
     for (var bits = 4; bits >= 0; bits--) {
-      var bit = (hashValue >> bits) & 1;
+      var bit = (hashValue >> bits) & 1
       if (isLon) {
-        mid = (maxLon + minLon) / 2;
+        mid = (maxLon + minLon) / 2
         if (bit === 1) {
-          minLon = mid;
+          minLon = mid
         } else {
-          maxLon = mid;
+          maxLon = mid
         }
       } else {
-        mid = (maxLat + minLat) / 2;
+        mid = (maxLat + minLat) / 2
         if (bit === 1) {
-          minLat = mid;
+          minLat = mid
         } else {
-          maxLat = mid;
+          maxLat = mid
         }
       }
-      isLon = !isLon;
+      isLon = !isLon
     }
   }
   return {
@@ -63,7 +63,7 @@ const geohashBounds = (geohash) => {
     left: minLon,
     bottom: minLat,
     right: maxLon,
-  };
-};
+  }
+}
 
 module.exports = geohashBounds

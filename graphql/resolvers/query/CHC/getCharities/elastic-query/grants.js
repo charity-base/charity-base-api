@@ -1,11 +1,12 @@
-const getFiltersOnStringList = require('./getFiltersOnStringList')
+const getFiltersOnStringList = require("./getFiltersOnStringList")
+const FUNDER_ID_FIELD = "funding.funders.id"
 
-const getGrantsFilters = grants => {
+const getGrantsFilters = (grants) => {
   if (!grants) return []
 
   const grantFundersFilters = getFiltersOnStringList(
-    'grants.fundingOrganization.id',
-    grants.funders,
+    FUNDER_ID_FIELD,
+    grants.funders
   )
 
   return grantFundersFilters

@@ -1,24 +1,22 @@
-const ES_FIELDS = [
-  'financial',
-]
+const ES_FIELDS = ["finances"]
 
-async function getList(
-  searchSource,
-  { all },
-) {
+async function getList(searchSource, { all }) {
   try {
     const searchParams = {
       _source: ES_FIELDS,
     }
     const response = await searchSource(searchParams)
-    return response.hits.hits.map(x => {
-      const { financial } = x._source
-      if (all) {
-        return financial.annual || []
+    return response.hits.hits.map((x) => {
+      const { finances } = x._source
+      if (!finances) {
+        return []
       }
-      return financial.latest ? [financial.latest] : []
+      if (all) {
+        return finances.annual || []
+      }
+      return finances.latest ? [finances.latest] : []
     })
-  } catch(e) {
+  } catch (e) {
     throw e
   }
 }

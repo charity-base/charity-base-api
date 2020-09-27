@@ -1,18 +1,24 @@
-const AWS = require('aws-sdk')
-const config = require('../../config')
+const AWS = require("aws-sdk")
 
-const accessKeyId = process.env.CHARITY_BASE_DYNAMO_ACCESS_KEY_ID
-const secretAccessKey = process.env.CHARITY_BASE_DYNAMO_SECRET_ACCESS_KEY
+const {
+  CHARITY_BASE_DYNAMO_ACCESS_KEY_ID,
+  CHARITY_BASE_DYNAMO_REGION,
+  CHARITY_BASE_DYNAMO_SECRET_ACCESS_KEY,
+  CHARITY_BASE_DYNAMO_TABLE_AUTH_KEYS,
+} = process.env
 
-const credentials = new AWS.Credentials(accessKeyId, secretAccessKey)
+const credentials = new AWS.Credentials(
+  CHARITY_BASE_DYNAMO_ACCESS_KEY_ID,
+  CHARITY_BASE_DYNAMO_SECRET_ACCESS_KEY
+)
 
 const dynamodb = new AWS.DynamoDB.DocumentClient({
-  apiVersion: '2012-08-10',
+  apiVersion: "2012-08-10",
   credentials,
   params: {
-    TableName: config.dynamo.table,
+    TableName: CHARITY_BASE_DYNAMO_TABLE_AUTH_KEYS,
   },
-  region: config.dynamo.region,
+  region: CHARITY_BASE_DYNAMO_REGION,
 })
 
 module.exports = dynamodb

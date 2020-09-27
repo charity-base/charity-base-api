@@ -99,14 +99,26 @@ const typeDefs = `
     geohashes: [String]
     region: GeoRegion
     country: GeoCountry
+    laua: String
   }
 
   input FinancesFilterInput {
     latestIncome: NumericRangeInput
+    latestSpending: NumericRangeInput
   }
 
   input RegistrationsFilterInput {
     latestRegistrationDate: DateRangeInput
+  }
+
+  input ImageFilterInput {
+    smallLogoExists: Boolean
+    mediumLogoExists: Boolean
+  }
+
+  input SocialFilterInput {
+    twitterExists: Boolean
+    facebookExists: Boolean
   }
 
   input FilterCHCInput {
@@ -120,6 +132,10 @@ const typeDefs = `
     geo: GeoFilterInput
     finances: FinancesFilterInput
     registrations: RegistrationsFilterInput
+    trustees: ListFilterInput
+    topics: ListFilterInput
+    image: ImageFilterInput
+    social: SocialFilterInput
   }
 `
 
