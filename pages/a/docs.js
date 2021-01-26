@@ -16,6 +16,8 @@ function DemoLink({ text }) {
     <a
       target="_blank"
       rel="noreferrer noopener"
+      aria-label="Open in Playground"
+      title="Open in Playground"
       href={encodeURI(
         `${process.env.NEXT_PUBLIC_URL}/api/graphql?query=${text}`
       )}
