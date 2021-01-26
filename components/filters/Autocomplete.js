@@ -5,7 +5,7 @@ import { useCombobox } from "downshift"
 const items = []
 const DEBOUNCE_TIME = 300
 
-const URL = "https://charitybase.uk/api/graphql"
+const URL = `${process.env.NEXT_PUBLIC_URL}/api/graphql`
 const HEADERS = {
   Authorization: `Apikey ${process.env.NEXT_PUBLIC_CB_SANDBOX_API_KEY}`,
   "Content-Type": "application/json",
