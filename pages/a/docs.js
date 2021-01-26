@@ -11,7 +11,7 @@ import prism from "@mapbox/rehype-prism"
 import slug from "rehype-slug"
 import ClipboardCopy from "components/ClipboardCopy"
 
-export default function Home({ html, toc }) {
+export default function Docs({ html, toc }) {
   const docsNode = useRef(null)
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import Head from "next/head"
 import { useRouter } from "next/router"
 import getCharity from "web-lib/getCharity"
 
-export default function ({ charity }) {
+export default function Charity({ charity }) {
   const router = useRouter()
   const { chcId } = router.query
   return (

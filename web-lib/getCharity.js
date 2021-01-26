@@ -85,7 +85,7 @@ const GET_CHARITY = `
   }
 `
 
-export default function ({ id }) {
+export default function getCharity({ id }) {
   return gqlFetcher({
     query: GET_CHARITY,
     variables: { id },

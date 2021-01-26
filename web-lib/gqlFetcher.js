@@ -3,7 +3,7 @@ const DOMAIN =
     ? "https://charitybase.uk"
     : "http://localhost:3000"
 
-export default function (params) {
+export default function gqlFetcher(params) {
   const url =
     typeof window === "undefined" ? `${DOMAIN}/api/graphql` : "/api/graphql"
 

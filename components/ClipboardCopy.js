@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import copy from "copy-to-clipboard"
 
-export default function ({ text }) {
+export default function clipboardCopy({ text }) {
   const [count, setCount] = useState(0)
   const [open, setOpen] = useState(false)
 

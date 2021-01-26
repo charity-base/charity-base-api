@@ -20,7 +20,7 @@ function TabHeader({ title, active }) {
   )
 }
 
-export default function ({ count, list, filters }) {
+export default function Search({ count, list, filters }) {
   return (
     <div className="max-w-screen-xl mx-auto flex px-2 sm:px-4 md:px-8">
       <Head>
