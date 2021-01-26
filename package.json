@@ -28,6 +28,7 @@
     "graphql-tools": "^6.0.10",
     "http-aws-es": "^6.0.0",
     "jest": "^26.1.0",
+    "jsonwebtoken": "^8.5.1",
     "next": "^9.5.0",
     "postcss-flexbugs-fixes": "^4.2.1",
     "postcss-preset-env": "^6.7.0",
@@ -39,6 +40,7 @@
     "remark-parse": "^8.0.2",
     "remark-rehype": "^7.0.0",
     "tailwindcss": "^1.4.6",
-    "unified": "^9.0.0"
+    "unified": "^9.0.0",
+    "uuid": "^8.3.2"
   }
 }
