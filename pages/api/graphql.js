@@ -23,20 +23,20 @@ const apolloServer = new ApolloServer({
       "tracing.tracingSupported": false, // set false to remove x-apollo-tracing header from Schema fetch requests
       "queryPlan.hideQueryPlanResponse": true,
     },
-    tabs: [
-      {
-        endpoint: `${process.env.NEXT_PUBLIC_URL}/api/graphql`,
-        query: `{
-  CHC {
-    getCharities(filters: {}) {
-      count
-    }
-  }
-}`,
-        name: "Count Charities Example",
-        responses: [""],
-      },
-    ],
+    // tabs: [
+    //   {
+    //     endpoint: `${process.env.NEXT_PUBLIC_URL}/api/graphql`,
+    //     query: `{
+    //   CHC {
+    //     getCharities(filters: {}) {
+    //       count
+    //     }
+    //   }
+    // }`,
+    //     name: "Count Charities Example",
+    //     responses: [""],
+    //   },
+    // ],
   },
   introspection: true,
   context: ({ req }) => {

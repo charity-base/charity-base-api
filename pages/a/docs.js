@@ -11,6 +11,54 @@ import prism from "@mapbox/rehype-prism"
 import slug from "rehype-slug"
 import ClipboardCopy from "components/ClipboardCopy"
 
+function DemoLink({ text }) {
+  return (
+    <a
+      target="_blank"
+      rel="noreferrer noopener"
+      href={encodeURI(
+        `${process.env.NEXT_PUBLIC_URL}/api/graphql?query=${text}`
+      )}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        className="w-8 h-8 text-pink-600 hover:text-pink-500"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+        />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
+    </a>
+  )
+}
+
+function CodeBlockButtons({ text, graphql }) {
+  return (
+    <div>
+      <div className="absolute top-0 right-0 p-2">
+        <ClipboardCopy text={text} />
+      </div>
+      {graphql ? (
+        <div className="absolute bottom-0 right-0 p-2">
+          <DemoLink text={text} />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
 export default function Docs({ html, toc }) {
   const docsNode = useRef(null)
 
@@ -21,7 +69,13 @@ export default function Docs({ html, toc }) {
       const container = document.createElement("div")
       node.parentNode.appendChild(container)
       codeBlocks.push(() => node.parentNode.removeChild(container))
-      render(<ClipboardCopy text={node.innerText} />, container)
+      render(
+        <CodeBlockButtons
+          text={node.innerText}
+          graphql={node.className.indexOf("language-graphql") > -1}
+        />,
+        container
+      )
     })
 
     return () => {
