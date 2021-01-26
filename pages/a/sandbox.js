@@ -13,7 +13,6 @@ const DEFAULT_QUERY = `
 `
 
 function graphQLFetcher(graphQLParams) {
-  console.log(`Fetching '${process.env.NEXT_PUBLIC_CB_SANDBOX_API_KEY}'`)
   return fetch("/api/graphql", {
     method: "POST",
     headers: {
