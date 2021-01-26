@@ -38,7 +38,7 @@ const AppBar = () => {
         </a>
       </Link>
       <section className="inline-flex items-center space-x-4" role="navigation">
-        <NavLink href="/chc" label="Search" />
+        {/* <NavLink href="/chc" label="Search" /> */}
         <NavLink href="/about" label="About" />
         <div className="relative group">
           <NavLink href="/a/docs" label="API" matchPath="/a/" />
