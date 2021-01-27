@@ -12,11 +12,10 @@ module.exports = {
   variants: {
     extend: {
       backgroundColor: ["active"],
+      scale: ["active", "group-hover"],
+      opacity: ["disabled"],
+      cursor: ["disabled"],
     },
-    cursor: ["responsive", "disabled"],
-    opacity: ["responsive", "hover", "focus", "disabled", "group-hover"],
-    scale: ["responsive", "hover", "focus", "active", "group-hover"],
-    opacity: ["responsive", "hover", "focus"],
   },
   theme: {
     extend: {
