@@ -39,13 +39,14 @@ const AppBar = () => {
       </Link>
       <section className="inline-flex items-center space-x-4" role="navigation">
         {/* <NavLink href="/chc" label="Search" /> */}
+        {/* <NavLink href="/pricing" label="Pricing" /> */}
         <NavLink href="/about" label="About" />
         <div className="relative group">
           <NavLink href="/a/docs" label="API" matchPath="/a/" />
           <div className="absolute right-0 transition duration-100 opacity-0 transform origin-top-right scale-0 group-hover:scale-100 group-hover:opacity-100">
             <div className="bg-white shadow-lg border border-gray-200 mt-2 px-5 py-4 space-y-4 rounded">
               <NavLink href="/a/docs" label="Docs" secondary />
-              <NavLink href="/a/sandbox" label="Sandbox" secondary />
+              <NavLink href="/api/graphql" label="Playground" secondary />
             </div>
           </div>
         </div>
