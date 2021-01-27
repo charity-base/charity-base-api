@@ -57,6 +57,9 @@ Commission for England & Wales (CHC):
 > Whitespace in the query doesn't affect the response - the newlines and
 > indentation are just for readability.
 
+> All GraphQL query examples in these docs have a pink play button to open them
+> in the [interactive playground](/api/graphql).
+
 ### Response
 
 We get back a JSON response which can contain a `data` object and an `errors`
@@ -119,7 +122,7 @@ encouraged) to fetch data using `POST`. This way you don't have to worry about
 the URL getting too long since the query is sent in a JSON body. The examples in
 this documentation use `POST`.
 
-### Basic Example
+### Basic Example .js .py
 
 These code snippets use the query from above to count all charities registered
 in England & Wales. Remember to replace `YOUR_API_KEY` with your actual key.
@@ -294,7 +297,7 @@ variables which allows us to keep our query strings static. Here's how it works:
 - Send the variable value in a `variables` JSON parameter alongside the `query`
   parameter
 
-Let's define a variable `minIncome` in our query:
+For example, let's define a variable `minIncome` in our query:
 
 ```graphql
 query CountCharitiesCHC($minIncome: Float) {
@@ -316,13 +319,27 @@ request body:
 }
 ```
 
-> The declared variable type e.g. `Float` must match the CharityBase schema.
+> The declared variable type e.g. `Float` must match the type of the relevant
+> property e.g. `gte`, as defined in the schema.
 
 > As with `query`, you may send `variables` as a URL search parameter instead of
 > in the body.
 
-To experiment with the query language and see an interactive schema, visit the
-[playground](/api/graphql).
+### Playground
+
+The [playground](/api/graphql) is an interactive environment to experiment with
+different queries. The left hand panel makes up the query string of your request
+and the right hand panel shows the API's response. Some tips:
+
+- When typing your query, use `ctrl+space` to see suggested properties and
+  `ctrl+enter` to send a request.
+- The `DOCS` tab on the right hand side of the screen shows all the properties
+  and arguments available, including their data types.
+- If your query includes [variables](/a/docs#variables), use the
+  `QUERY VARIABLES` panel in the bottom left to type them out as JSON e.g.
+  `{ "minIncome": 100000 }`
+
+### Schema
 
 ### Versioning
 
