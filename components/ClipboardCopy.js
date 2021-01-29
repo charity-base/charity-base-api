@@ -26,7 +26,7 @@ export default function Copy({ text }) {
         copied
       </div>
       <button
-        className="text-gray-500 hover:text-gray-300 focus:text-white focus:outline-none"
+        className="text-gray-400 hover:text-gray-300 focus:text-white focus:outline-none"
         aria-label="Copy to Clipboard"
         title="Copy to Clipboard"
         onClick={() => {

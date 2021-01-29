@@ -11,6 +11,7 @@ import prism from "@mapbox/rehype-prism"
 import slug from "rehype-slug"
 import ClipboardCopy from "components/ClipboardCopy"
 import { PlayIcon } from "components/icons"
+import AppBar from "components/AppBar"
 
 function DemoLink({ text }) {
   return (
@@ -77,6 +78,7 @@ export default function Docs({ html, toc }) {
           content="CharityBase GraphQL API Documentation"
         />
       </Head>
+      <AppBar />
 
       <aside className="flex-shrink-0 py-24 pr-8 xl:pr-16 sticky top-0 h-screen overflow-auto">
         <h1 className="text-2xl font-semibold my-2">Documentation</h1>
