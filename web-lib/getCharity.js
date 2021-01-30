@@ -37,17 +37,19 @@ const GET_CHARITY = `
               end
             }
           }
-          grants {
-            id
-            title
-            description
-            fundingOrganization {
+          funding {
+            grants {
               id
-              name
+              title
+              description
+              funder {
+                id
+                name
+              }
+              amountAwarded
+              currency
+              awardDate
             }
-            amountAwarded
-            currency
-            awardDate
           }
           id
           image {
