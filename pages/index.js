@@ -66,7 +66,7 @@ export default function Home() {
         </svg>
       </div>
 
-      <div className="bg-white">
+      <div className="bg-white pt-44 pb-60">
         <LogoCloud />
       </div>
       <div className="relative bg-pink-50 py-60 sm:flex sm:space-x-12 sm:justify-center">
@@ -118,11 +118,16 @@ export default function Home() {
             Sponsor
           </a>
         </div>
-        Created open source & free to use.
+        Created open source & free to use
         <br />
-        <span className="uppercase">
-          Worthwhile Applications Ltd, registered company 12946098
-        </span>
+        <div className="mt-4 uppercase">
+          Worthwhile Applications Ltd
+          <span className="hidden sm:inline"> &middot; </span>
+          <span className="sm:hidden">
+            <br />
+          </span>
+          registered company 12946098
+        </div>
       </div>
     </div>
   )
