@@ -32,6 +32,8 @@ const typeDefs = `
     E12000008
     "South West"
     E12000009
+    "Wales (Pseudo)"
+    W99999999
   }
 
   enum GeoCountry {
