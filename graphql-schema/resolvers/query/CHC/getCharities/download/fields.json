@@ -85,6 +85,11 @@
     "description": "Facebook handle"
   },
   {
+    "field": "social.instagram",
+    "label": "Instagram",
+    "description": "Instagram handle"
+  },
+  {
     "field": "social.twitter",
     "label": "Twitter",
     "description": "Twitter handle"

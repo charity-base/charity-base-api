@@ -66,6 +66,7 @@ const typeDefs = `
 
   enum SocialPlatform {
     facebook
+    instagram
     twitter
   }
 `

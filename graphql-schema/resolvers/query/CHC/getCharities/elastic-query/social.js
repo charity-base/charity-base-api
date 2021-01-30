@@ -1,4 +1,5 @@
 const FACEBOOK_FIELD = "social.facebook"
+const INSTAGRAM_FIELD = "social.instagram"
 const TWITTER_FIELD = "social.twitter"
 
 const exists = (field) => ({
@@ -25,6 +26,14 @@ const getFilters = (social) => {
   if (typeof social.facebookExists !== "undefined") {
     filters.push(
       social.facebookExists ? exists(FACEBOOK_FIELD) : notExists(FACEBOOK_FIELD)
+    )
+  }
+
+  if (typeof social.instagramExists !== "undefined") {
+    filters.push(
+      social.instagramExists
+        ? exists(INSTAGRAM_FIELD)
+        : notExists(INSTAGRAM_FIELD)
     )
   }
 

@@ -119,6 +119,7 @@ const typeDefs = `
   input SocialFilterInput {
     twitterExists: Boolean
     facebookExists: Boolean
+    instagramExists: Boolean
   }
 
   input FilterCHCInput {
