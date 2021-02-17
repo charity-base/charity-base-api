@@ -20,15 +20,17 @@
     "aws-sdk": "^2.704.0",
     "bunyan": "^1.8.13",
     "copy-to-clipboard": "^3.3.1",
+    "downshift": "^5.4.6",
     "elasticsearch": "^16.7.1",
-    "graphiql": "0.x",
     "graphql": "14.6.0",
     "graphql-input-number": "^0.0.10",
     "graphql-tools": "^6.0.10",
     "http-aws-es": "^6.0.0",
     "jest": "^26.1.0",
-    "next": "9.4.4",
-    "postcss-flexbugs-fixes": "^4.2.1",
+    "jsonwebtoken": "^8.5.1",
+    "next": "^10.0.5",
+    "postcss": "8.1.7",
+    "postcss-flexbugs-fixes": "5.0.1",
     "postcss-preset-env": "^6.7.0",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
@@ -37,7 +39,8 @@
     "rehype-stringify": "^8.0.0",
     "remark-parse": "^8.0.2",
     "remark-rehype": "^7.0.0",
-    "tailwindcss": "^1.4.6",
-    "unified": "^9.0.0"
+    "tailwindcss": "^2.0.2",
+    "unified": "^9.0.0",
+    "uuid": "^8.3.2"
   }
 }

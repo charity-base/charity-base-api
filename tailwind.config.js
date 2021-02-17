@@ -1,9 +1,27 @@
+const defaultTheme = require("tailwindcss/defaultTheme")
+
 module.exports = {
-  purge: ["./components/**/*.js", "./pages/**/*.js"],
-  theme: {},
+  purge: [
+    "./components/**/*.js",
+    "./components/**/*.tsx",
+    "./components/**/*.mdx",
+    "./pages/**/*.js",
+    "./pages/**/*.tsx",
+    "./pages/**/*.mdx",
+  ],
   variants: {
-    opacity: ["responsive", "hover", "focus", "group-hover"],
-    scale: ["responsive", "hover", "focus", "group-hover"],
+    extend: {
+      backgroundColor: ["active"],
+      scale: ["active", "group-hover"],
+      opacity: ["disabled"],
+      cursor: ["disabled"],
+    },
   },
-  plugins: [],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['"Roboto Mono"', "monospace", ...defaultTheme.fontFamily.sans],
+      },
+    },
+  },
 }

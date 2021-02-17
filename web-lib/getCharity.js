@@ -37,17 +37,19 @@ const GET_CHARITY = `
               end
             }
           }
-          grants {
-            id
-            title
-            description
-            fundingOrganization {
+          funding {
+            grants {
               id
-              name
+              title
+              description
+              funder {
+                id
+                name
+              }
+              amountAwarded
+              currency
+              awardDate
             }
-            amountAwarded
-            currency
-            awardDate
           }
           id
           image {
@@ -85,7 +87,7 @@ const GET_CHARITY = `
   }
 `
 
-export default function ({ id }) {
+export default function getCharity({ id }) {
   return gqlFetcher({
     query: GET_CHARITY,
     variables: { id },

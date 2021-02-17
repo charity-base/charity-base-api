@@ -10,8 +10,41 @@ import html from "rehype-stringify"
 import prism from "@mapbox/rehype-prism"
 import slug from "rehype-slug"
 import ClipboardCopy from "components/ClipboardCopy"
+import { PlayIcon } from "components/icons"
+import AppBar from "components/AppBar"
 
-export default function Home({ html, toc }) {
+function DemoLink({ text }) {
+  return (
+    <a
+      target="_blank"
+      rel="noreferrer noopener"
+      aria-label="Open in Playground"
+      title="Open in Playground"
+      href={encodeURI(
+        `${process.env.NEXT_PUBLIC_URL}/api/graphql?query=${text}`
+      )}
+    >
+      <PlayIcon />
+    </a>
+  )
+}
+
+function CodeBlockButtons({ text, graphql }) {
+  return (
+    <div>
+      <div className="absolute top-0 right-0 p-2">
+        <ClipboardCopy text={text} />
+      </div>
+      {graphql ? (
+        <div className="absolute bottom-0 right-0 p-2">
+          <DemoLink text={text} />
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+export default function Docs({ html, toc }) {
   const docsNode = useRef(null)
 
   useEffect(() => {
@@ -21,7 +54,13 @@ export default function Home({ html, toc }) {
       const container = document.createElement("div")
       node.parentNode.appendChild(container)
       codeBlocks.push(() => node.parentNode.removeChild(container))
-      render(<ClipboardCopy text={node.innerText} />, container)
+      render(
+        <CodeBlockButtons
+          text={node.innerText}
+          graphql={node.className.indexOf("language-graphql") > -1}
+        />,
+        container
+      )
     })
 
     return () => {
@@ -39,6 +78,7 @@ export default function Home({ html, toc }) {
           content="CharityBase GraphQL API Documentation"
         />
       </Head>
+      <AppBar />
 
       <aside className="flex-shrink-0 py-24 pr-8 xl:pr-16 sticky top-0 h-screen overflow-auto">
         <h1 className="text-2xl font-semibold my-2">Documentation</h1>

@@ -17,6 +17,12 @@ const getSocialList = (social) => {
       handle: social.facebook,
     })
   }
+  if (social.instagram) {
+    arr.push({
+      platform: "instagram",
+      handle: social.instagram,
+    })
+  }
   if (social.twitter) {
     arr.push({
       platform: "twitter",

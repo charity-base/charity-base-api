@@ -1,11 +1,9 @@
-const DOMAIN =
-  process.env.NODE_ENV === "production"
-    ? "https://charitybase.uk"
-    : "http://localhost:3000"
-
-export default function (params) {
+export default function gqlFetcher(params) {
+  // use relative url client side
   const url =
-    typeof window === "undefined" ? `${DOMAIN}/api/graphql` : "/api/graphql"
+    typeof window === "undefined"
+      ? `${process.env.NEXT_PUBLIC_URL}/api/graphql`
+      : "/api/graphql"
 
   return fetch(url, {
     method: "POST",

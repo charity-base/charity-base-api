@@ -1,9 +1,63 @@
 @tailwind base;
-
-@import "./custom-base.css";
-
 @tailwind components;
-
 @tailwind utilities;
 
-@import "./custom-graphiql.css";
+@layer base {
+  body {
+    padding: 0;
+    margin: 0;
+    /* font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif; */
+    @apply antialiased;
+  }
+
+  ::selection {
+    background-color: #0070f3;
+    color: #fff;
+  }
+
+  .docs a {
+    @apply text-gray-600 font-semibold;
+  }
+  .docs a:hover {
+    @apply text-black;
+  }
+
+  .docs p {
+    @apply leading-7;
+  }
+
+  .docs h2 {
+    @apply text-4xl;
+  }
+  .docs h3 {
+    @apply text-2xl;
+  }
+  .docs h4 {
+    @apply text-base;
+  }
+
+  .docs h2,
+  .docs h3,
+  .docs h4 {
+    @apply font-bold;
+  }
+}
+
+@layer utilities {
+  .scroll-infinite {
+    animation: scrollInfinite 24s linear infinite;
+    animation-play-state: running;
+  }
+  .scroll-infinite:hover {
+    animation-play-state: paused;
+  }
+  @keyframes scrollInfinite {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    100% {
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+}

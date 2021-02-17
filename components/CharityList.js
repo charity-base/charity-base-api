@@ -6,7 +6,7 @@ function CharityListItem({ id, activities, names, image, registrations }) {
   return (
     <li>
       <Link href="/chc/[chcId]" as={`/chc/${id}`}>
-        <a className="py-4 flex overflow-hidden hover:bg-gray-100">
+        <a className="py-4 px-2 md:px-6 flex overflow-hidden hover:bg-gray-100">
           <div className="w-12 h-12 border rounded-full flex-shrink-0 bg-gray-300 overflow-hidden">
             {image && image.logo && image.logo.small ? (
               <img
@@ -45,7 +45,7 @@ CharityListItem.propTypes = {
 
 function CharityList({ charities }) {
   return (
-    <ul className="divide-y-2 divide-gray-200 px-2 md:px-6">
+    <ul className="divide-y divide-gray-300">
       {charities.map((charity) => (
         <CharityListItem key={charity.id} {...charity} />
       ))}

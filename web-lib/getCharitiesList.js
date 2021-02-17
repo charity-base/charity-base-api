@@ -43,7 +43,7 @@ const LIST_CHARITIES = `
   }
 `
 
-export default function ({ filters, skip, sort }) {
+export default function getCharitiesList({ filters, skip, sort }) {
   return gqlFetcher({
     query: LIST_CHARITIES,
     variables: { filters, skip, sort },
