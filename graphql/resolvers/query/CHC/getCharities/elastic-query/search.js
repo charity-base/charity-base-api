@@ -4,7 +4,7 @@ const getSearchFilters = (search) => {
       {
         match_all: {},
       },
-    ]
+    ];
   }
   return [
     {
@@ -21,10 +21,11 @@ const getSearchFilters = (search) => {
           "operations.name",
           "funding.grants.description",
           "funding.funders.name",
+          "website",
         ],
       },
     },
-  ]
-}
+  ];
+};
 
-module.exports = getSearchFilters
+module.exports = getSearchFilters;
